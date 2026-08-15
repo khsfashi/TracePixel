@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "authoritative_storage_payload_bytes": 1024,
+      "explicit_owned_snapshot_payload_bytes": 1024,
+      "full_batch_edit_count": 256,
+      "native_png_payload_bytes": 1108,
+      "preview_height": 32,
+      "preview_png_payload_bytes": 4196,
+      "preview_raster_payload_bytes": 4096,
+      "preview_row_buffer_payload_bytes": 128,
+      "preview_scale": 2,
+      "preview_width": 32,
+      "size": 16
+    },
+    {
+      "authoritative_storage_payload_bytes": 4096,
+      "explicit_owned_snapshot_payload_bytes": 4096,
+      "full_batch_edit_count": 1024,
+      "native_png_payload_bytes": 4196,
+      "preview_height": 64,
+      "preview_png_payload_bytes": 16516,
+      "preview_raster_payload_bytes": 16384,
+      "preview_row_buffer_payload_bytes": 256,
+      "preview_scale": 2,
+      "preview_width": 64,
+      "size": 32
+    },
+    {
+      "authoritative_storage_payload_bytes": 16384,
+      "explicit_owned_snapshot_payload_bytes": 16384,
+      "full_batch_edit_count": 4096,
+      "native_png_payload_bytes": 16516,
+      "preview_height": 128,
+      "preview_png_payload_bytes": 65737,
+      "preview_raster_payload_bytes": 65536,
+      "preview_row_buffer_payload_bytes": 512,
+      "preview_scale": 2,
+      "preview_width": 128,
+      "size": 64
+    }
+  ],
+  "notes": {
+    "authoritative_storage": "one owned contiguous row-major RGBA8 bytearray",
+    "batch_mutation": "transactional full-batch validation uses temporary O(edit_count) Python staging",
+    "native_export": "encoder borrows a read-only source view; returned PNG bytes are derived output",
+    "preview_export": "no full preview canvas is materialized; one scaled row buffer is reused",
+    "snapshot": "full RGBA copy exists only when rgba_bytes() ownership is explicitly requested"
+  },
+  "schema": "tracepixel.p1-r4-structural-evidence.v1"
+}
