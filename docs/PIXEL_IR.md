@@ -12,7 +12,7 @@ tracepixel.pixel-program.v1
 
 The machine-readable structural contract is `schemas/pixel-program.v1.schema.json`. Python `TypedDict` declarations in `tracepixel.model` mirror that shape for library/tooling ergonomics; Python source code, callables and provider SDK objects are not canonical program state.
 
-A concrete program flows toward the existing P1 raster authority through explicit validation and later execution:
+A concrete program flows toward the existing P1 raster authority through explicit validation and deterministic execution:
 
 ```text
 PixelProgram(v1)
@@ -68,7 +68,7 @@ Each pixel edit is the six-integer JSON array:
 [x, y, r, g, b, a]
 ```
 
-This representation is intentionally close to the P1 transactional batch authority while avoiding one verbose object/key set per pixel. `operations` order and each `pixels` array order are explicit serialized order. Duplicate coordinates remain valid and later execution must preserve the P1 ordered last-write-wins contract.
+This representation is intentionally close to the P1 transactional batch authority while avoiding one verbose object/key set per pixel. `operations` order and each `pixels` array order are explicit serialized order. Duplicate coordinates remain valid and execution preserves the P1 ordered last-write-wins contract.
 
 `set_pixels` alone can express any finite RGBA raster, so P2 does not guess line/rect/fill/art-aware operations before the P2-IR4 compactness evidence. Additional operation kinds require an intentional schema/version decision rather than an open-ended command bag.
 
@@ -76,7 +76,7 @@ This representation is intentionally close to the P1 transactional batch authori
 
 `tracepixel.model.validate_pixel_program(program)` is the dependency-free runtime validation authority for the currently supported PixelProgram version.
 
-Validation is side-effect-free: it creates no `Canvas`, performs no raster mutation and returns the same input object after success rather than deep-copying or normalizing it. P2-IR2 must therefore validate and consume the same program within one execution path rather than treating the mutable input object as permanently certified.
+Validation is side-effect-free: it creates no `Canvas`, performs no raster mutation and returns the same input object after success rather than deep-copying or normalizing it. The executor validates and consumes the same program within one execution path rather than treating the mutable input object as permanently certified.
 
 The validator enforces:
 
@@ -106,15 +106,31 @@ Failures raise `PixelProgramValidationError` with stable `code` and JSON-style `
 
 These error identifiers are intended for deterministic tooling and repair loops. Human-readable error text may contain more detail, but callers should branch on `code` and `path` rather than parse the message.
 
+## P2-IR2 deterministic execution
+
+`tracepixel.model.execute_pixel_program(program)` is the deterministic replay entry point for the supported v1 program.
+
+Execution follows one fixed order:
+
+1. validate the complete input with `validate_pixel_program`,
+2. construct one fresh P1 `Canvas` from the validated dimensions,
+3. execute each serialized operation in order through `Canvas.set_pixels()`,
+4. return that `Canvas` as the only authoritative raster result.
+
+A validation failure occurs before `Canvas` construction, so an invalid program cannot expose partially mutated raster authority. Every successful call returns a fresh independent `Canvas`; replay requires no provider/model and does not mutate, normalize, reorder or deduplicate the input program.
+
+The executor does not implement a second pixel writer. Its private lazy sequence adapter translates each already-validated `[x, y, r, g, b, a]` edit into the existing P1 `(x, y, RGBA8)` batch shape only when `Canvas.set_pixels()` consumes it. This avoids materializing a second O(N) Python edit collection while retaining P1's compact packed transaction staging, validation and ordered last-write-wins semantics.
+
+Empty operation arrays produce a transparent canvas of the declared dimensions. Empty `set_pixels` batches are no-ops. Operation order, edit order and duplicates remain semantically significant.
+
 ## Remaining P2 boundaries
 
 The following remain deliberately deferred:
 
-- **P2-IR2:** transactional deterministic execution through P1 `Canvas`,
 - **P2-IR3:** canonical JSON serialization/order and replay round-trip evidence,
 - **P2-IR4:** operation-vocabulary expansion/reduction and compactness/token-proxy evidence.
 
-The JSON Schema remains the serialized structural contract. P2-IR1 runtime validation is the semantic authority for cross-field canvas bounds and the exact P1 numeric rules that JSON Schema alone does not fully express.
+The JSON Schema remains the serialized structural contract. P2-IR1 runtime validation is the semantic authority for cross-field canvas bounds and the exact P1 numeric rules that JSON Schema alone does not fully express. P2-IR2 only executes that validated v1 contract through P1 raster authority.
 
 ## Versioning rule
 
