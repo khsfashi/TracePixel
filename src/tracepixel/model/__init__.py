@@ -49,6 +49,18 @@ from .serialization import (
     deserialize_pixel_program,
     serialize_pixel_program,
 )
+from .shading_stage import (
+    MAX_SHADING_APPLICATIONS_V1,
+    SHADING_STAGE_ID_V1,
+    SHADING_STAGE_SCHEMA_V1,
+    ShadingApplicationV1,
+    ShadingRelationV1,
+    ShadingStageV1,
+)
+from .shading_stage_validation import (
+    ShadingStageValidationError,
+    validate_shading_stage,
+)
 from .silhouette_stage import (
     SILHOUETTE_STAGE_ID_V1,
     SILHOUETTE_STAGE_SCHEMA_V1,
@@ -67,10 +79,13 @@ __all__ = [
     "MAX_LIGHT_RAMPS_V1",
     "MAX_MAJOR_FORMS_V1",
     "MAX_PALETTE_COLORS_V1",
+    "MAX_SHADING_APPLICATIONS_V1",
     "PALETTE_LIGHT_STAGE_ID_V1",
     "PALETTE_LIGHT_STAGE_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
+    "SHADING_STAGE_ID_V1",
+    "SHADING_STAGE_SCHEMA_V1",
     "SILHOUETTE_STAGE_ID_V1",
     "SILHOUETTE_STAGE_SCHEMA_V1",
     "ArtIntentCanvasV1",
@@ -93,6 +108,10 @@ __all__ = [
     "PixelProgramSerializationError",
     "PixelProgramValidationError",
     "SetPixelsOperationV1",
+    "ShadingApplicationV1",
+    "ShadingRelationV1",
+    "ShadingStageV1",
+    "ShadingStageValidationError",
     "SilhouetteStageV1",
     "SilhouetteStageValidationError",
     "SymmetryAxisV1",
@@ -105,5 +124,6 @@ __all__ = [
     "validate_major_forms_stage",
     "validate_palette_light_stage",
     "validate_pixel_program",
+    "validate_shading_stage",
     "validate_silhouette_stage",
 ]
