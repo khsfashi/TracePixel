@@ -67,6 +67,14 @@ class Canvas:
         for offset, color in zip(offsets, colors, strict=True):
             self._write_rgba8(offset, color)
 
+    def rgba_bytes(self) -> bytes:
+        """Return an owned exact snapshot of the authoritative row-major RGBA8 bytes."""
+        return bytes(self._pixels)
+
+    def _rgba_view(self) -> memoryview:
+        """Borrow a read-only zero-copy view for synchronous package-internal operations."""
+        return memoryview(self._pixels).toreadonly()
+
     def _write_rgba8(self, offset: int, color: Sequence[int]) -> None:
         pixels = self._pixels
         pixels[offset] = color[0]
