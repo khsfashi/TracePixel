@@ -1,3 +1,16 @@
+from .art_intent import (
+    ART_INTENT_SCHEMA_V1,
+    ArtIntentCanvasV1,
+    ArtIntentV1,
+    CompositionIntentV1,
+    FacingV1,
+    LightDirectionV1,
+    OccupiedBoundsV1,
+    SymmetryAxisV1,
+    SymmetryIntentV1,
+    SymmetryStrengthV1,
+)
+from .art_intent_validation import ArtIntentValidationError, validate_art_intent
 from .execution import execute_pixel_program
 from .pixel_ir import (
     PIXEL_PROGRAM_SCHEMA_V1,
@@ -15,16 +28,28 @@ from .serialization import (
 from .validation import PixelProgramValidationError, validate_pixel_program
 
 __all__ = [
+    "ART_INTENT_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
+    "ArtIntentCanvasV1",
+    "ArtIntentV1",
+    "ArtIntentValidationError",
     "CanvasDocumentV1",
+    "CompositionIntentV1",
+    "FacingV1",
+    "LightDirectionV1",
+    "OccupiedBoundsV1",
     "PixelEditV1",
     "PixelProgramV1",
     "PixelProgramSerializationError",
     "PixelProgramValidationError",
     "SetPixelsOperationV1",
+    "SymmetryAxisV1",
+    "SymmetryIntentV1",
+    "SymmetryStrengthV1",
     "deserialize_pixel_program",
     "execute_pixel_program",
     "serialize_pixel_program",
+    "validate_art_intent",
     "validate_pixel_program",
 ]
