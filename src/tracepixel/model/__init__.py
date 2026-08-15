@@ -1,3 +1,4 @@
+from .execution import execute_pixel_program
 from .pixel_ir import (
     PIXEL_PROGRAM_SCHEMA_V1,
     SET_PIXELS_OPERATION_V1,
@@ -16,5 +17,6 @@ __all__ = [
     "PixelProgramV1",
     "PixelProgramValidationError",
     "SetPixelsOperationV1",
+    "execute_pixel_program",
     "validate_pixel_program",
 ]
