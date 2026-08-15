@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:agent-observation:v1",
+  "title": "TracePixel Agent Observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "intent", "current", "qa", "preview", "recent"],
+  "properties": {
+    "schema": {"const": "tracepixel.agent-observation.v1"},
+    "intent": {"$ref": "art-intent.v1.schema.json"},
+    "current": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "revision"],
+      "properties": {
+        "stage": {
+          "type": ["string", "null"],
+          "enum": [null, "silhouette", "major_forms", "palette_light_ramp", "shading", "semantic_details", "outline_cleanup"]
+        },
+        "revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "qa": {"$ref": "qa-findings.v1.schema.json"},
+    "preview": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["media_type", "width", "height", "sha256", "data_base64"],
+          "properties": {
+            "media_type": {"const": "image/png"},
+            "width": {"type": "integer", "minimum": 1},
+            "height": {"type": "integer", "minimum": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "data_base64": {"type": "string", "maxLength": 87384}
+          }
+        }
+      ]
+    },
+    "recent": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["revision", "stage", "proposal_kind", "operation_count", "changed_pixels"],
+        "properties": {
+          "revision": {"type": "integer", "minimum": 0},
+          "stage": {
+            "type": ["string", "null"],
+            "enum": [null, "silhouette", "major_forms", "palette_light_ramp", "shading", "semantic_details", "outline_cleanup"]
+          },
+          "proposal_kind": {"enum": ["pixel_program", "stage_plan"]},
+          "operation_count": {"type": "integer", "minimum": 0},
+          "changed_pixels": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

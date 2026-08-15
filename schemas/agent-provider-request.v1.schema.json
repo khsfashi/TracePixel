@@ -8,22 +8,6 @@
   "properties": {
     "schema": {"const": "tracepixel.agent-provider-request.v1"},
     "instruction": {"type": "string", "minLength": 1},
-    "observation": {
-      "type": "object",
-      "additionalProperties": {"$ref": "#/$defs/jsonValue"}
-    }
-  },
-  "$defs": {
-    "jsonValue": {
-      "anyOf": [
-        {"type": "null"},
-        {"type": "boolean"},
-        {"type": "integer"},
-        {"type": "number"},
-        {"type": "string"},
-        {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}},
-        {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}
-      ]
-    }
+    "observation": {"$ref": "agent-observation.v1.schema.json"}
   }
 }
