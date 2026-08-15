@@ -36,3 +36,5 @@ jobs:
         run: python -m evidence.p2_ir4.benchmark
       - name: P4-Q5 seeded deterministic QA checkpoint
         run: python -m evidence.p4_q5.checkpoint
+      - name: P5-A4 recorded-provider orchestration checkpoint
+        run: python -m evidence.p5_a4.checkpoint
