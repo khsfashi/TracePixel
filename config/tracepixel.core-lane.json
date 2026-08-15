@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-16",
   "current": "P5",
-  "current_child": "P5-A4",
+  "current_child": "P5-A5",
   "active_issue": 32,
   "sequence": [
     "P0",

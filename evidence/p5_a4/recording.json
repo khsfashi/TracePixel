@@ -1,0 +1,47 @@
+{
+  "schema": "tracepixel.p5-a4-recorded-provider.v1",
+  "records": [
+    {
+      "proposal": {
+        "schema": "tracepixel.agent-provider-proposal.v1",
+        "kind": "pixel_program",
+        "payload": {
+          "schema": "tracepixel.pixel-program.v1",
+          "canvas": {"width": 2, "height": 2},
+          "operations": [
+            {
+              "op": "set_pixels",
+              "pixels": [[0, 0, 0, 0, 0, 0]]
+            }
+          ]
+        }
+      },
+      "usage": {
+        "input_tokens": 100,
+        "output_tokens": 20,
+        "api_cost_usd_micros": 50
+      }
+    },
+    {
+      "proposal": {
+        "schema": "tracepixel.agent-provider-proposal.v1",
+        "kind": "pixel_program",
+        "payload": {
+          "schema": "tracepixel.pixel-program.v1",
+          "canvas": {"width": 2, "height": 2},
+          "operations": [
+            {
+              "op": "set_pixels",
+              "pixels": [[0, 0, 10, 20, 30, 255]]
+            }
+          ]
+        }
+      },
+      "usage": {
+        "input_tokens": 120,
+        "output_tokens": 25,
+        "api_cost_usd_micros": 60
+      }
+    }
+  ]
+}
