@@ -23,6 +23,19 @@ from .major_forms_stage_validation import (
     MajorFormsStageValidationError,
     validate_major_forms_stage,
 )
+from .outline_cleanup_stage import (
+    MAX_OUTLINE_CLEANUP_ACTIONS_V1,
+    MAX_PIXELS_PER_OUTLINE_CLEANUP_ACTION_V1,
+    OUTLINE_CLEANUP_STAGE_ID_V1,
+    OUTLINE_CLEANUP_STAGE_SCHEMA_V1,
+    OutlineCleanupActionV1,
+    OutlineCleanupKindV1,
+    OutlineCleanupStageV1,
+)
+from .outline_cleanup_stage_validation import (
+    OutlineCleanupStageValidationError,
+    validate_outline_cleanup_stage,
+)
 from .palette_light_stage import (
     MAX_LIGHT_RAMPS_V1,
     MAX_PALETTE_COLORS_V1,
@@ -90,10 +103,14 @@ __all__ = [
     "MAJOR_FORMS_STAGE_SCHEMA_V1",
     "MAX_LIGHT_RAMPS_V1",
     "MAX_MAJOR_FORMS_V1",
+    "MAX_OUTLINE_CLEANUP_ACTIONS_V1",
     "MAX_PALETTE_COLORS_V1",
+    "MAX_PIXELS_PER_OUTLINE_CLEANUP_ACTION_V1",
     "MAX_PIXELS_PER_SEMANTIC_DETAIL_V1",
     "MAX_SEMANTIC_DETAILS_V1",
     "MAX_SHADING_APPLICATIONS_V1",
+    "OUTLINE_CLEANUP_STAGE_ID_V1",
+    "OUTLINE_CLEANUP_STAGE_SCHEMA_V1",
     "PALETTE_LIGHT_STAGE_ID_V1",
     "PALETTE_LIGHT_STAGE_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
@@ -116,6 +133,10 @@ __all__ = [
     "MajorFormsStageV1",
     "MajorFormsStageValidationError",
     "OccupiedBoundsV1",
+    "OutlineCleanupActionV1",
+    "OutlineCleanupKindV1",
+    "OutlineCleanupStageV1",
+    "OutlineCleanupStageValidationError",
     "PaletteColorV1",
     "PaletteLightStageV1",
     "PaletteLightStageValidationError",
@@ -141,6 +162,7 @@ __all__ = [
     "serialize_pixel_program",
     "validate_art_intent",
     "validate_major_forms_stage",
+    "validate_outline_cleanup_stage",
     "validate_palette_light_stage",
     "validate_pixel_program",
     "validate_semantic_details_stage",
