@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import TypeVar
 
 from tracepixel.raster import Canvas, export_native_png, export_nearest_preview_png
+from tracepixel.raster.canvas import _BATCH_EDIT_STRUCT
 
 SIZES = (16, 32, 64)
 PREVIEW_SCALE = 2
@@ -56,6 +57,7 @@ def build_structural_case(size: int) -> dict[str, object]:
     return {
         "size": size,
         "full_batch_edit_count": len(edits),
+        "transaction_staging_payload_bytes": len(edits) * _BATCH_EDIT_STRUCT.size,
         "authoritative_storage_payload_bytes": canvas.byte_length,
         "explicit_owned_snapshot_payload_bytes": len(snapshot),
         "native_png_payload_bytes": len(native.png),
@@ -78,7 +80,7 @@ def build_structural_evidence() -> dict[str, object]:
             "snapshot": "full RGBA copy exists only when rgba_bytes() ownership is explicitly requested",
             "native_export": "encoder borrows a read-only source view; returned PNG bytes are derived output",
             "preview_export": "no full preview canvas is materialized; one scaled row buffer is reused",
-            "batch_mutation": "transactional full-batch validation uses temporary O(edit_count) Python staging",
+            "batch_mutation": "transactional validation stages one compact fixed 8-byte record per edit before authoritative writes",
         },
         "cases": [build_structural_case(size) for size in SIZES],
     }
@@ -153,7 +155,10 @@ def collect_runtime_case(size: int, *, iterations: int) -> dict[str, object]:
         "size": size,
         "allocation": {
             "set_pixel": set_pixel_allocation,
-            "set_pixels_full_canvas": set_pixels_allocation,
+            "set_pixels_full_canvas": {
+                **set_pixels_allocation,
+                "staging_payload_bytes": len(edits) * _BATCH_EDIT_STRUCT.size,
+            },
             "rgba_snapshot": {
                 **snapshot_allocation,
                 "payload_bytes": len(snapshot),
