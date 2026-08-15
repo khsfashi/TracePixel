@@ -9,7 +9,7 @@ from tracepixel.raster.export import export_native_png, export_nearest_preview_p
 
 FIXTURE_SCHEMA = "tracepixel.replay-fixture.v1"
 FIXTURE_ID = "p1-r3-potion-v1"
-PREVIEW_SCALE = 8
+PREVIEW_SCALE = 4
 PALETTE = {
     ".": (0, 0, 0, 0),
     "K": (35, 28, 45, 255),
@@ -80,7 +80,7 @@ def build_evidence() -> tuple[bytes, bytes, bytes, dict[str, object]]:
         "outputs": {
             "authoritative_rgba": "potion.rgba",
             "native_png": "potion.png",
-            "preview_png": "potion@8x.png",
+            "preview_png": "potion@4x.png",
             "native": native.metadata.as_dict(),
             "preview": preview.metadata.as_dict(),
         },
@@ -93,7 +93,7 @@ def write_evidence(directory: Path) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "potion.rgba").write_bytes(rgba)
     (directory / "potion.png").write_bytes(native_png)
-    (directory / "potion@8x.png").write_bytes(preview_png)
+    (directory / "potion@4x.png").write_bytes(preview_png)
     (directory / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
