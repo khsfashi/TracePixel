@@ -36,6 +36,17 @@ from .provider import (
     validate_agent_provider_proposal,
     validate_agent_provider_request,
 )
+from .telemetry import (
+    AGENT_COMPLEXITY_TELEMETRY_SCHEMA_V1,
+    AgentComplexityTelemetryV1,
+    AgentMeasuredLoopError,
+    AgentMeasuredLoopResult,
+    AgentProviderUsage,
+    AgentProviderUsageSource,
+    AgentTelemetryContractError,
+    run_bounded_edit_loop_with_telemetry,
+    validate_agent_complexity_telemetry,
+)
 
 __all__ = [
     "AGENT_LOOP_BUDGET_SCHEMA_V1",
@@ -70,4 +81,13 @@ __all__ = [
     "StagePlanProposalV1",
     "validate_agent_provider_proposal",
     "validate_agent_provider_request",
+    "AGENT_COMPLEXITY_TELEMETRY_SCHEMA_V1",
+    "AgentComplexityTelemetryV1",
+    "AgentMeasuredLoopError",
+    "AgentMeasuredLoopResult",
+    "AgentProviderUsage",
+    "AgentProviderUsageSource",
+    "AgentTelemetryContractError",
+    "run_bounded_edit_loop_with_telemetry",
+    "validate_agent_complexity_telemetry",
 ]

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:agent-complexity-telemetry:v1",
+  "title": "TracePixel Agent Complexity Telemetry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "input_tokens",
+    "output_tokens",
+    "tool_calls",
+    "operation_calls",
+    "exposed_concept_count",
+    "visual_observation_calls",
+    "iterations",
+    "revisions",
+    "changed_pixels",
+    "wall_time_ns",
+    "api_cost_usd_micros",
+    "human_interventions",
+    "failure_category"
+  ],
+  "properties": {
+    "schema": {"const": "tracepixel.agent-complexity-telemetry.v1"},
+    "input_tokens": {"type": ["integer", "null"], "minimum": 0},
+    "output_tokens": {"type": ["integer", "null"], "minimum": 0},
+    "tool_calls": {"type": "integer", "minimum": 0},
+    "operation_calls": {"type": "integer", "minimum": 0},
+    "exposed_concept_count": {"type": "integer", "minimum": 0},
+    "visual_observation_calls": {"type": "integer", "minimum": 0},
+    "iterations": {"type": "integer", "minimum": 0},
+    "revisions": {"type": "integer", "minimum": 0},
+    "changed_pixels": {"type": "integer", "minimum": 0},
+    "wall_time_ns": {"type": "integer", "minimum": 0},
+    "api_cost_usd_micros": {"type": ["integer", "null"], "minimum": 0},
+    "human_interventions": {"type": "integer", "minimum": 0},
+    "failure_category": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9_.-]+$"
+    }
+  }
+}
