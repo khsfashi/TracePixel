@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:outline-cleanup-stage:v1",
+  "title": "TracePixel Outline Cleanup Stage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stage",
+    "actions",
+    "program"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.outline-cleanup-stage.v1"
+    },
+    "stage": {
+      "const": "outline_cleanup"
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/outlineCleanupAction"
+      }
+    },
+    "program": {
+      "$ref": "pixel-program.v1.schema.json"
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+    },
+    "outlineCleanupAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "kind": {
+          "enum": [
+            "outline",
+            "cleanup"
+          ]
+        }
+      }
+    }
+  }
+}
