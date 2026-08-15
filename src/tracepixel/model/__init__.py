@@ -6,6 +6,7 @@ from .pixel_ir import (
     PixelProgramV1,
     SetPixelsOperationV1,
 )
+from .validation import PixelProgramValidationError, validate_pixel_program
 
 __all__ = [
     "PIXEL_PROGRAM_SCHEMA_V1",
@@ -13,5 +14,7 @@ __all__ = [
     "CanvasDocumentV1",
     "PixelEditV1",
     "PixelProgramV1",
+    "PixelProgramValidationError",
     "SetPixelsOperationV1",
+    "validate_pixel_program",
 ]
