@@ -31,7 +31,7 @@ Owner CI run #1 passed on both Python 3.12 and 3.13 before merge.
 
 ## Roadmap hardening
 
-The project keeps the original P1-P9 sequence, but each phase now has a fixed child lane in `docs/ROADMAP.md` and `config/tracepixel.core-lane.json`.
+The project keeps the original P1-P9 sequence, but each phase has a fixed child lane in `docs/ROADMAP.md` and `config/tracepixel.core-lane.json`.
 
 Cross-cutting additions:
 
@@ -89,7 +89,7 @@ PR #7 implements deterministic export without opening G2:
 
 PR #7 passed GitHub-hosted CI on Python 3.12 and 3.13 before merge.
 
-## P1-R3 replay fixture + first visible preview — complete after PR #8 merges green
+## P1-R3 replay fixture + first visible preview — complete
 
 PR #8 freezes the first recognizable human-visible TracePixel replay fixture without advancing P2 scope early:
 
@@ -104,30 +104,50 @@ PR #8 freezes the first recognizable human-visible TracePixel replay fixture wit
 
 Authoritative RGBA SHA-256 is `bcf8159ae4f8eeb1cde880a85a7b18cca66cfc8c5aaef40798a6a445269f2e27`; native PNG SHA-256 is `d0fb6d9e3acd5d426236c20669089c56c2a1a764b6b8c82e8996591e9adc84d9`; 2x preview PNG SHA-256 is `48bb9254824ce6ca2cba96908daedd9b76e460c2b3d7ebeb25449c40e179c20a`.
 
-The first PR #8 implementation head `a5dec0f09e24b8911697984eb5a4160285379300` passed GitHub-hosted CI run #17 on Python 3.12 and 3.13 before the child handoff was advanced. The final handoff head must also be green before merge.
+PR #8 final head `0d084881ff7f9f63afe9f26046b470ab9c24b141` passed GitHub-hosted CI run #19 before merge.
+
+## P1-R4 memory/performance evidence — complete via PR #9
+
+PR #9 records the final P1 engineering checkpoint without turning machine-local timings into correctness claims:
+
+- committed/golden structural evidence at 16x16, 32x32 and 64x64,
+- exact authoritative RGBA payloads of 1,024 / 4,096 / 16,384 bytes,
+- explicit owned RGBA snapshots of the same payload sizes only when requested,
+- deterministic native PNG output payloads of 1,108 / 4,196 / 16,516 bytes,
+- 2x preview raster payloads of 4,096 / 16,384 / 65,536 bytes while only one 128 / 256 / 512-byte scaled row buffer is reused,
+- 2x preview PNG output payloads of 4,196 / 16,516 / 65,737 bytes,
+- environment-labelled `tracemalloc` allocation and `perf_counter_ns` replay/native-export/preview-export evidence in portable CI,
+- no runtime timing or allocator value used as a pass/fail performance threshold.
+
+The first P1-R4 implementation measurement exposed an avoidable mutation-path cost: CPython 3.13.15 on the GitHub-hosted Ubuntu runner measured 785,800 traced peak extra bytes for a 64x64 full-canvas `set_pixels()` batch while authoritative RGBA payload was 16,384 bytes. The cause was duplicate Python-object staging collections for batch shape, offsets and colors.
+
+PR #9 therefore keeps the same P1 transaction semantics but stages each validated edit as one packed 8-byte `<IBBBB` record (byte offset + RGBA). Full-canvas staging payload is now exactly 2,048 / 8,192 / 32,768 bytes for 16x16 / 32x32 / 64x64. On implementation CI run #26, both CPython 3.12.13 and 3.13.15 measured 33,365 traced peak extra bytes for the 64x64 full-batch path; the CPython 3.13 comparison is a 95.8% peak reduction from the initial environment-labelled sample. Existing rollback and ordered duplicate/last-write-wins tests remain green.
+
+Implementation head `a5920c30e8c494a3d49d06bfe5feba23ce9bf7f1` passed GitHub-hosted CI run #26 on Python 3.12 and 3.13. The final handoff head must also be green before PR #9 merges.
+
+No provider, VLM, GPU, image dependency, secret or self-hosted runner was introduced in P1.
 
 ## Current core lane
 
-**P1 — Deterministic raster core / issue #2** remains the active phase.
+P1 — deterministic raster core is complete when PR #9 merges green and issue #2 is closed.
 
-Exact current child after PR #8 merges green:
+The exact next lane is:
 
 ```text
-P1-R4 memory/performance evidence
+P2 — Versioned Pixel IR and bounded operation vocabulary / issue #10
+P2-IR0 schema
 ```
 
-P1-R4 must record environment-labelled 16x16, 32x32 and 64x64 evidence for authoritative storage bytes, unavoidable export/output copies, temporary allocation behavior in mutation paths, and replay/export timing. It is an engineering microbenchmark/architecture checkpoint, not a portable performance claim.
+`config/tracepixel.core-lane.json` advances to `P2` / `P2-IR0` in the PR #9 handoff. P2 must first freeze the smallest versioned serialized IR boundary between intent/program representation and the existing P1 raster authority. Python source code itself must not become canonical program state.
 
-P1 must prove exact canvas/pixel mutation and deterministic authoritative pixel replay plus native PNG and nearest-neighbor preview fixtures **before any LLM/provider is introduced**.
-
-Do not jump to Agent integration, Aseprite/MCP, VLM review or the home Windows runner while P1 remains open or has an active implementation PR.
+Do not jump to staged authoring, Agent/provider integration, Aseprite/MCP, VLM review or the home Windows runner while P2 remains active or has an implementation PR.
 
 ## Early engineering checkpoints
 
 Before the scored B0 cohort:
 
 ```text
-P1-R4 raster memory/copy evidence
+P1-R4 raster memory/copy evidence — complete
 P2-IR4 IR compactness/replay/invalidity evidence
 P4-Q5 seeded deterministic QA coverage
 P5-A5 non-scored Agent complexity pilot
@@ -140,9 +160,9 @@ These are architecture diagnostics, not held-out product claims. They may change
 Human visibility is incremental:
 
 ```text
-P1-R3 -> native PNG + enlarged nearest preview
+P1-R3 -> native PNG + enlarged nearest preview — complete
 P3-S7 -> stage-by-stage preview evidence
-P4-Q5 -> preview + deterministic QA
+P4-Q5 -> preview + deterministic QA findings
 P5-A5 -> first opt-in AI-authored raster preview
 P6-V5 -> mobile static gallery/review flow
 ```
@@ -182,9 +202,8 @@ P9 does not begin automatically from positive benchmark results: it additionally
 
 The next `@GitHub TracePixel 다음 작업 진행해줘` must resolve live state first.
 
-- If issue #2 has an implementation PR, continue/fix that PR until its exact-head checks are green and the active P1 child is complete.
-- If #2 is open with no implementation PR, begin the `current_child` from `config/tracepixel.core-lane.json` only.
-- Advance through `P1-R0 -> R1 -> R2 -> R3 -> R4` in order unless an explicit owner decision changes the contract.
+- If issue #10 has an implementation PR, continue/fix that PR until its exact-head checks are green and the active P2 child is complete.
+- If issue #10 is open with no implementation PR, begin `P2-IR0` from `config/tracepixel.core-lane.json` only.
+- Advance through `P2-IR0 -> IR1 -> IR2 -> IR3 -> IR4` in order unless an explicit owner decision changes the contract.
 - Stop at unresolved owner gates rather than guessing.
-- Only after all P1 children merge green should the lane advance to P2-IR0.
 - Live GitHub state wins over stale prose.
