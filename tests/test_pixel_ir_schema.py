@@ -20,6 +20,7 @@ class PixelIrSchemaTests(unittest.TestCase):
         self.assertEqual(SET_PIXELS_OPERATION_V1, "set_pixels")
 
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(schema["$schema"], "https://json-schema.org/draft/2020-12/schema")
         self.assertEqual(schema["$id"], "urn:tracepixel:schema:pixel-program:v1")
         self.assertEqual(schema["properties"]["schema"]["const"], PIXEL_PROGRAM_SCHEMA_V1)
         self.assertEqual(
