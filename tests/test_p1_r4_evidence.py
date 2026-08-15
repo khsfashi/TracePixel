@@ -33,12 +33,15 @@ class P1R4EvidenceTests(unittest.TestCase):
             with self.subTest(size=case["size"]):
                 size = case["size"]
                 authority = size * size * 4
+                edit_count = size * size
                 preview_width = size * 2
                 preview_height = size * 2
 
                 self.assertEqual(case["authoritative_storage_payload_bytes"], authority)
                 self.assertEqual(case["explicit_owned_snapshot_payload_bytes"], authority)
-                self.assertEqual(case["full_batch_edit_count"], size * size)
+                self.assertEqual(case["full_batch_edit_count"], edit_count)
+                self.assertEqual(case["transaction_staging_payload_bytes"], edit_count * 8)
+                self.assertEqual(case["transaction_staging_payload_bytes"], authority * 2)
                 self.assertEqual(case["preview_width"], preview_width)
                 self.assertEqual(case["preview_height"], preview_height)
                 self.assertEqual(
@@ -73,8 +76,13 @@ class P1R4EvidenceTests(unittest.TestCase):
         self.assertEqual([case["size"] for case in runtime_cases], [16, 32, 64])
         for case in runtime_cases:
             with self.subTest(size=case["size"]):
+                size = case["size"]
                 allocation = case["allocation"]
                 timing = case["timing"]
+                self.assertEqual(
+                    allocation["set_pixels_full_canvas"]["staging_payload_bytes"],
+                    size * size * 8,
+                )
                 for measurement in allocation.values():
                     self.assertGreaterEqual(measurement["retained_extra_bytes"], 0)
                     self.assertGreaterEqual(measurement["peak_extra_bytes"], 0)
