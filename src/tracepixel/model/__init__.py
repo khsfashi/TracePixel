@@ -12,6 +12,17 @@ from .art_intent import (
 )
 from .art_intent_validation import ArtIntentValidationError, validate_art_intent
 from .execution import execute_pixel_program
+from .major_forms_stage import (
+    MAJOR_FORMS_STAGE_ID_V1,
+    MAJOR_FORMS_STAGE_SCHEMA_V1,
+    MAX_MAJOR_FORMS_V1,
+    MajorFormV1,
+    MajorFormsStageV1,
+)
+from .major_forms_stage_validation import (
+    MajorFormsStageValidationError,
+    validate_major_forms_stage,
+)
 from .pixel_ir import (
     PIXEL_PROGRAM_SCHEMA_V1,
     SET_PIXELS_OPERATION_V1,
@@ -38,6 +49,9 @@ from .validation import PixelProgramValidationError, validate_pixel_program
 
 __all__ = [
     "ART_INTENT_SCHEMA_V1",
+    "MAJOR_FORMS_STAGE_ID_V1",
+    "MAJOR_FORMS_STAGE_SCHEMA_V1",
+    "MAX_MAJOR_FORMS_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
     "SILHOUETTE_STAGE_ID_V1",
@@ -49,6 +63,9 @@ __all__ = [
     "CompositionIntentV1",
     "FacingV1",
     "LightDirectionV1",
+    "MajorFormV1",
+    "MajorFormsStageV1",
+    "MajorFormsStageValidationError",
     "OccupiedBoundsV1",
     "PixelEditV1",
     "PixelProgramV1",
@@ -64,6 +81,7 @@ __all__ = [
     "execute_pixel_program",
     "serialize_pixel_program",
     "validate_art_intent",
+    "validate_major_forms_stage",
     "validate_pixel_program",
     "validate_silhouette_stage",
 ]
