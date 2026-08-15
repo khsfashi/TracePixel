@@ -12,13 +12,29 @@ This file is context. Live GitHub state and `config/tracepixel.core-lane.json` a
 
 TracePixel is an independent research/production-tool project for agent-authored, deterministic small pixel assets. It should prove its value by benchmark before any Trace2D integration claim.
 
+## P0 foundation — complete
+
+P0 merged via PR #1 / squash `5626a11dbd9bc7dbe7459f5d088ffdd2bb11c6f2`.
+
+Delivered:
+
+- product and Agent authority contracts,
+- preregistered benchmark methodology,
+- reference-project/research register,
+- machine-readable continuation lane,
+- dependency-free Python 3.12+ package skeleton,
+- compact deterministic `tracepixel doctor` command,
+- GitHub-hosted CI on Python 3.12 and 3.13,
+- public-repository safety rule excluding automatic untrusted PR execution on a future home self-hosted runner.
+
+Owner CI run #1 passed on both Python 3.12 and 3.13 before merge.
+
 ## Current core lane
 
-Bootstrap foundation is being established first:
+**P1 — Deterministic raster core / issue #2** is the exact active item.
 
 ```text
-P0 repository/agent/benchmark foundation
- -> P1 deterministic raster core
+P1 deterministic raster core
  -> P2 Pixel IR + bounded operation vocabulary
  -> P3 staged authoring pipeline
  -> P4 deterministic pixel QA
@@ -31,21 +47,9 @@ P0 repository/agent/benchmark foundation
  -> P9 Trace2D adapter experiment
 ```
 
-The exact sequence is also machine-readable in `config/tracepixel.core-lane.json`.
+P1 must prove exact canvas/palette/pixel mutation and deterministic authoritative pixel replay plus native PNG and nearest-neighbor preview fixtures **before any LLM/provider is introduced**.
 
-## P0 acceptance
-
-P0 is complete when main contains:
-
-- product/agent contracts,
-- preregistered benchmark methodology,
-- external reference register,
-- minimal installable Python package,
-- deterministic smoke/doctor command,
-- portable GitHub-hosted CI,
-- no provider key, GPU or self-hosted runner requirement.
-
-After P0 merges green, the exact next item is **P1 deterministic raster core**. P1 should prove exact canvas/palette/pixel mutation and deterministic native PNG + nearest-neighbor preview fixtures before any LLM is introduced.
+Do not jump to Agent integration, Aseprite/MCP, VLM review or the home Windows runner while P1 remains open or has an active implementation PR.
 
 ## Preview direction
 
@@ -60,8 +64,19 @@ native PNG
 + static HTML gallery
 ```
 
+The deterministic native/enlarged image pair begins in P1. Stage sheets and the mobile gallery are P6 after the underlying Pixel IR, staged pipeline, QA and Agent evidence contracts exist.
+
 A home Windows PC may later act as an owner-triggered preview runner. It is not part of normal public-PR CI.
 
 ## Trace2D boundary
 
 TracePixel does not modify Trace2D's runtime architecture. A future adapter may expose successful generation results as provider-neutral RGBA/metadata/manifests that can enter Trace2D's existing Sprite/Asset Intelligence preparation paths. Integration is deferred until the independent B0/B1 evidence warrants it.
+
+## Continuation rule
+
+The next `@GitHub TracePixel 다음 작업 진행해줘` must resolve live state first.
+
+- If issue #2 has an implementation PR, continue/fix that PR until its exact-head checks are green and P1 is complete.
+- If #2 is open with no implementation PR, begin P1 only.
+- Only after P1 merges green should the lane advance to P2.
+- Live GitHub state wins over stale prose.
