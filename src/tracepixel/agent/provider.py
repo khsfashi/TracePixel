@@ -12,6 +12,12 @@ from tracepixel.model import (
     validate_stage_plan,
 )
 
+from .observation import (
+    AgentObservationContractError,
+    AgentObservationV1,
+    validate_agent_observation,
+)
+
 AGENT_PROVIDER_REQUEST_SCHEMA_V1 = "tracepixel.agent-provider-request.v1"
 AGENT_PROVIDER_PROPOSAL_SCHEMA_V1 = "tracepixel.agent-provider-proposal.v1"
 
@@ -28,11 +34,11 @@ JsonValueV1: TypeAlias = (
 
 
 class AgentProviderRequestV1(TypedDict):
-    """Provider-neutral request envelope. P5-A1 will narrow observation contents."""
+    """Provider-neutral request carrying one bounded P5-A1 observation."""
 
     schema: Literal["tracepixel.agent-provider-request.v1"]
     instruction: str
-    observation: dict[str, JsonValueV1]
+    observation: AgentObservationV1
 
 
 class PixelProgramProposalV1(TypedDict):
@@ -149,8 +155,16 @@ def _rebase_payload_path(path: str) -> str:
     return "$.payload"
 
 
+def _rebase_observation_path(path: str) -> str:
+    if path == "$":
+        return "$.observation"
+    if path.startswith("$"):
+        return f"$.observation{path[1:]}"
+    return "$.observation"
+
+
 def validate_agent_provider_request(request: object) -> AgentProviderRequestV1:
-    """Validate the A0 provider-neutral request without defining A1 observation semantics."""
+    """Validate the provider-neutral request and its bounded P5-A1 observation."""
 
     root = _require_exact_object(
         request,
@@ -173,6 +187,14 @@ def validate_agent_provider_request(request: object) -> AgentProviderRequestV1:
     if type(observation) is not dict:
         _fail("invalid_type", "$.observation", "must be a JSON object")
     _validate_json_value(observation, "$.observation")
+    try:
+        validate_agent_observation(observation)
+    except AgentObservationContractError as exc:
+        _fail(
+            "invalid_observation",
+            _rebase_observation_path(exc.path),
+            f"AgentObservation validator rejected with {exc.code}: {exc.message}",
+        )
     return cast(AgentProviderRequestV1, request)
 
 

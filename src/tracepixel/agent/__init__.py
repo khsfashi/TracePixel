@@ -1,3 +1,15 @@
+from .observation import (
+    AGENT_OBSERVATION_SCHEMA_V1,
+    MAX_AGENT_PREVIEW_BYTES_V1,
+    MAX_AGENT_RECENT_REVISIONS_V1,
+    AgentCurrentContextV1,
+    AgentObservationContractError,
+    AgentObservationV1,
+    AgentPreviewObservationV1,
+    AgentRecentRevisionV1,
+    build_agent_observation,
+    validate_agent_observation,
+)
 from .provider import (
     AGENT_PROVIDER_PROPOSAL_SCHEMA_V1,
     AGENT_PROVIDER_REQUEST_SCHEMA_V1,
@@ -14,6 +26,16 @@ from .provider import (
 )
 
 __all__ = [
+    "AGENT_OBSERVATION_SCHEMA_V1",
+    "MAX_AGENT_PREVIEW_BYTES_V1",
+    "MAX_AGENT_RECENT_REVISIONS_V1",
+    "AgentCurrentContextV1",
+    "AgentObservationContractError",
+    "AgentObservationV1",
+    "AgentPreviewObservationV1",
+    "AgentRecentRevisionV1",
+    "build_agent_observation",
+    "validate_agent_observation",
     "AGENT_PROVIDER_PROPOSAL_SCHEMA_V1",
     "AGENT_PROVIDER_REQUEST_SCHEMA_V1",
     "AgentProposalKindV1",
