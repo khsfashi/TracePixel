@@ -73,7 +73,7 @@ PR #6 implements the frozen R0 authority without reopening G1:
 
 PR #6 passed GitHub-hosted CI on Python 3.12 and 3.13 before merge.
 
-## P1-R2 deterministic export — complete after PR #7 merges green
+## P1-R2 deterministic export — complete
 
 PR #7 implements deterministic export without opening G2:
 
@@ -87,20 +87,36 @@ PR #7 implements deterministic export without opening G2:
 - enlarged preview materializes one scaled row at a time rather than a second authoritative canvas,
 - no Pillow/libpng wrapper, provider, GPU requirement or new semantic drawing operation.
 
-The PR #7 implementation head `34964826ccfaafa8d0fcb42aad27a83f50ae5b81` passed GitHub-hosted CI run #13 on Python 3.12 and 3.13 before the child handoff was advanced. The final handoff head must also be green before merge.
+PR #7 passed GitHub-hosted CI on Python 3.12 and 3.13 before merge.
+
+## P1-R3 replay fixture + first visible preview — complete after PR #8 merges green
+
+PR #8 freezes the first recognizable human-visible TracePixel replay fixture without advancing P2 scope early:
+
+- a 16x16 potion fixture expressed as fixture-local row/palette data,
+- replay through only the existing `Canvas.set_pixels()` mutation surface,
+- committed 1024-byte authoritative `potion.rgba` golden truth,
+- deterministic native 16x16 PNG evidence,
+- deterministic 2x / 32x32 nearest-neighbor preview evidence,
+- stable `tracepixel.p1-r3-evidence.v1` manifest with fixture/program/output SHA-256 metadata,
+- tests that require regenerated authoritative RGBA, native PNG, preview PNG and structural metadata to match committed evidence exactly,
+- no provider, VLM, image dependency, semantic drawing primitive, public Pixel IR or second canonical store.
+
+Authoritative RGBA SHA-256 is `bcf8159ae4f8eeb1cde880a85a7b18cca66cfc8c5aaef40798a6a445269f2e27`; native PNG SHA-256 is `d0fb6d9e3acd5d426236c20669089c56c2a1a764b6b8c82e8996591e9adc84d9`; 2x preview PNG SHA-256 is `48bb9254824ce6ca2cba96908daedd9b76e460c2b3d7ebeb25449c40e179c20a`.
+
+The first PR #8 implementation head `a5dec0f09e24b8911697984eb5a4160285379300` passed GitHub-hosted CI run #17 on Python 3.12 and 3.13 before the child handoff was advanced. The final handoff head must also be green before merge.
 
 ## Current core lane
 
 **P1 — Deterministic raster core / issue #2** remains the active phase.
 
-Exact current child after PR #7 merges green:
+Exact current child after PR #8 merges green:
 
 ```text
-P1-R3 replay fixture + first visible preview
- -> P1-R4 memory/performance evidence
+P1-R4 memory/performance evidence
 ```
 
-P1-R3 must commit at least one recognizable small non-humanoid fixture such as a potion, key, gem or simple sword/symbol and prove exact authoritative RGBA equality, stable structural metadata, native PNG output and enlarged nearest-neighbor preview. This is the first roadmap point where the owner should be able to inspect an actual generated TracePixel raster result.
+P1-R4 must record environment-labelled 16x16, 32x32 and 64x64 evidence for authoritative storage bytes, unavoidable export/output copies, temporary allocation behavior in mutation paths, and replay/export timing. It is an engineering microbenchmark/architecture checkpoint, not a portable performance claim.
 
 P1 must prove exact canvas/pixel mutation and deterministic authoritative pixel replay plus native PNG and nearest-neighbor preview fixtures **before any LLM/provider is introduced**.
 
