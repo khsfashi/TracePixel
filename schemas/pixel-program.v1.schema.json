@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:pixel-program:v1",
+  "title": "TracePixel PixelProgram v1",
+  "description": "Structural schema frozen by P2-IR0. Runtime validation semantics are implemented in P2-IR1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "canvas",
+    "operations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.pixel-program.v1"
+    },
+    "canvas": {
+      "$ref": "#/$defs/canvas"
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/setPixelsOperation"
+      }
+    }
+  },
+  "$defs": {
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        }
+      }
+    },
+    "pixelEdit": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "integer" },
+        { "type": "integer" },
+        { "type": "integer" },
+        { "type": "integer" },
+        { "type": "integer" },
+        { "type": "integer" }
+      ],
+      "items": false,
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "setPixelsOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "pixels"
+      ],
+      "properties": {
+        "op": {
+          "const": "set_pixels"
+        },
+        "pixels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pixelEdit"
+          }
+        }
+      }
+    }
+  }
+}

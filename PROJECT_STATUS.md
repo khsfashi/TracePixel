@@ -119,28 +119,47 @@ PR #9 records the final P1 engineering checkpoint without turning machine-local 
 - environment-labelled `tracemalloc` allocation and `perf_counter_ns` replay/native-export/preview-export evidence in portable CI,
 - no runtime timing or allocator value used as a pass/fail performance threshold.
 
-The first P1-R4 implementation measurement exposed an avoidable mutation-path cost: CPython 3.13.15 on the GitHub-hosted Ubuntu runner measured 785,800 traced peak extra bytes for a 64x64 full-canvas `set_pixels()` batch while authoritative RGBA payload was 16,384 bytes. The cause was duplicate Python-object staging collections for batch shape, offsets and colors.
+The first P1-R4 CI measurement exposed an avoidable mutation-path cost: CPython 3.13.15 on the GitHub-hosted Ubuntu runner measured 785,800 traced peak extra bytes for a 64x64 full-canvas `set_pixels()` batch while authoritative RGBA payload was 16,384 bytes. The cause was duplicate Python-object staging collections for batch shape, offsets and colors.
 
 PR #9 therefore keeps the same P1 transaction semantics but stages each validated edit as one packed 8-byte `<IBBBB` record (byte offset + RGBA). Full-canvas staging payload is now exactly 2,048 / 8,192 / 32,768 bytes for 16x16 / 32x32 / 64x64. On implementation CI run #26, both CPython 3.12.13 and 3.13.15 measured 33,365 traced peak extra bytes for the 64x64 full-batch path; the CPython 3.13 comparison is a 95.8% peak reduction from the initial environment-labelled sample. Existing rollback and ordered duplicate/last-write-wins tests remain green.
 
-Implementation head `a5920c30e8c494a3d49d06bfe5feba23ce9bf7f1` passed GitHub-hosted CI run #26 on Python 3.12 and 3.13. The final handoff head must also be green before PR #9 merges.
+Implementation head `a5920c30e8c494a3d49d06bfe5feba23ce9bf7f1` passed GitHub-hosted CI run #26 on Python 3.12 and 3.13. PR #9 subsequently merged and issue #2 closed as completed.
 
 No provider, VLM, GPU, image dependency, secret or self-hosted runner was introduced in P1.
 
+## P2-IR0 PixelProgram schema — complete after PR #11 merges green
+
+PR #11 freezes the smallest public serialized program boundary needed before runtime validation/execution:
+
+- schema identity `tracepixel.pixel-program.v1`,
+- a closed top-level `schema` / `canvas` / ordered `operations` envelope,
+- a dependency-free JSON Schema structural authority at `schemas/pixel-program.v1.schema.json`,
+- provider-neutral `TypedDict` mirrors under `tracepixel.model` for library/tooling ergonomics,
+- one initial exact `set_pixels` operation,
+- compact ordered pixel edits encoded as `[x, y, r, g, b, a]`,
+- no unbounded metadata/extensions bag inside canonical replay data,
+- no serialized `ArtIntent` or `StagePlan` contract yet; staged-authoring semantics remain deferred to P3,
+- no runtime validation, execution, canonical JSON serialization or operation-vocabulary expansion pulled forward from IR1-IR4.
+
+`set_pixels` can express any finite RGBA raster, so IR0 does not guess geometric or art-aware convenience operations before the P2-IR4 compactness evidence. The schema preserves explicit operation/edit ordering and is designed to map into the existing P1 transactional raster authority once IR1/IR2 are implemented.
+
+Implementation head `06e5fa34adbcb7635f203b558dfaba18491e6115` passed GitHub-hosted CI run #30 on Python 3.12 and 3.13. The final handoff head must also be green before PR #11 merges.
+
+No provider/model dependency, VLM, GPU requirement, image dependency, secret, self-hosted runner or new pixel authority was introduced.
+
 ## Current core lane
 
-P1 — deterministic raster core is complete when PR #9 merges green and issue #2 is closed.
+P2 — Versioned Pixel IR and bounded operation vocabulary / issue #10 remains the active phase.
 
-The exact next lane is:
+Exact current child after PR #11 merges green:
 
 ```text
-P2 — Versioned Pixel IR and bounded operation vocabulary / issue #10
-P2-IR0 schema
+P2-IR1 validation
 ```
 
-`config/tracepixel.core-lane.json` advances to `P2` / `P2-IR0` in the PR #9 handoff. P2 must first freeze the smallest versioned serialized IR boundary between intent/program representation and the existing P1 raster authority. Python source code itself must not become canonical program state.
+`config/tracepixel.core-lane.json` advances to `P2-IR1` in the PR #11 handoff. IR1 should validate the frozen v1 structure and finite semantic constraints before any raster mutation, including supported schema/op identity, canvas dimensions, edit tuple shape, coordinates and RGBA8 ranges. Invalid programs must fail before authoritative mutation. Runtime execution itself remains P2-IR2.
 
-Do not jump to staged authoring, Agent/provider integration, Aseprite/MCP, VLM review or the home Windows runner while P2 remains active or has an implementation PR.
+Do not jump to deterministic execution, canonical serialization, operation-vocabulary expansion, staged authoring, Agent/provider integration, Aseprite/MCP, VLM review or the home Windows runner while the earlier P2 child remains active.
 
 ## Early engineering checkpoints
 
@@ -203,7 +222,7 @@ P9 does not begin automatically from positive benchmark results: it additionally
 The next `@GitHub TracePixel 다음 작업 진행해줘` must resolve live state first.
 
 - If issue #10 has an implementation PR, continue/fix that PR until its exact-head checks are green and the active P2 child is complete.
-- If issue #10 is open with no implementation PR, begin `P2-IR0` from `config/tracepixel.core-lane.json` only.
+- If issue #10 is open with no implementation PR, begin the `current_child` from `config/tracepixel.core-lane.json` only.
 - Advance through `P2-IR0 -> IR1 -> IR2 -> IR3 -> IR4` in order unless an explicit owner decision changes the contract.
 - Stop at unresolved owner gates rather than guessing.
 - Live GitHub state wins over stale prose.
