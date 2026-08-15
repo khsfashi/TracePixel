@@ -43,6 +43,16 @@ from tracepixel.qa.structural import (
     StructuralFactsV1,
     analyze_structural,
 )
+from tracepixel.qa.tile_edge import (
+    TILE_EDGE_QA_SCHEMA_V1,
+    CornerEqualityFactsV1,
+    EdgeEqualityFactsV1,
+    TileEdgeContractCheckV1,
+    TileEdgeQaConfigurationError,
+    TileEdgeQaV1,
+    TileEdgeRequirementV1,
+    analyze_tile_edges,
+)
 
 __all__ = [
     "COLOR_QA_SCHEMA_V1",
@@ -80,4 +90,12 @@ __all__ = [
     "MarginsV1",
     "StructuralFactsV1",
     "analyze_structural",
+    "TILE_EDGE_QA_SCHEMA_V1",
+    "CornerEqualityFactsV1",
+    "EdgeEqualityFactsV1",
+    "TileEdgeContractCheckV1",
+    "TileEdgeQaConfigurationError",
+    "TileEdgeQaV1",
+    "TileEdgeRequirementV1",
+    "analyze_tile_edges",
 ]
