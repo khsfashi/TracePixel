@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tracepixel"
+version = "0.0.0"
+description = "Agent-first deterministic pixel asset authoring and benchmarking toolkit"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "khsfashi" }]
+dependencies = []
+
+[project.scripts]
+tracepixel = "tracepixel.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,40 @@
+{
+  "schema": "tracepixel.core-lane.v1",
+  "updated": "2026-08-15",
+  "current": "P0",
+  "sequence": [
+    "P0",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "B0",
+    "P7",
+    "B1",
+    "P8",
+    "P9"
+  ],
+  "items": {
+    "P0": "Repository and benchmark foundation",
+    "P1": "Deterministic raster core",
+    "P2": "Versioned Pixel IR and bounded operation vocabulary",
+    "P3": "Explicit staged authoring pipeline",
+    "P4": "Deterministic pixel QA",
+    "P5": "Provider-neutral Agent loop and complexity evidence",
+    "P6": "Preview evidence and mobile static gallery",
+    "B0": "Matched development-visible architecture benchmark",
+    "P7": "Targeted repair and human feedback loop",
+    "B1": "Held-out generalization benchmark",
+    "P8": "Production breadth for icons, props and tiles",
+    "P9": "Trace2D adapter experiment"
+  },
+  "rules": [
+    "Continue an active implementation PR before opening later core-lane scope.",
+    "Do not advance the current item until its acceptance criteria and required checks are green.",
+    "Do not mutate or rerun a frozen scored benchmark cohort to improve its score.",
+    "Public pull-request CI must not execute on the owner home self-hosted runner.",
+    "Trace2D integration remains deferred until independent benchmark evidence justifies it."
+  ]
+}
