@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:agent-loop-budget:v1",
+  "title": "TracePixel Agent Loop Budget v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "max_iterations",
+    "max_tool_calls",
+    "max_operations",
+    "max_pixel_edits"
+  ],
+  "properties": {
+    "schema": {"const": "tracepixel.agent-loop-budget.v1"},
+    "max_iterations": {"type": "integer", "minimum": 0},
+    "max_tool_calls": {"type": "integer", "minimum": 0},
+    "max_operations": {"type": "integer", "minimum": 0},
+    "max_pixel_edits": {"type": "integer", "minimum": 0}
+  }
+}
