@@ -8,11 +8,11 @@ The fixture is a **16×16 potion**. It deliberately uses only the existing P1 `C
 
 - `potion.rgba` — exact 1024-byte authoritative row-major RGBA8 replay truth.
 - `potion.png` — deterministic native 16×16 encoder-v1 PNG.
-- `potion@8x.png` — deterministic 128×128 nearest-neighbor preview.
+- `potion@4x.png` — deterministic 64×64 nearest-neighbor preview.
 - `manifest.json` — stable fixture/program/output metadata and SHA-256 evidence.
 - `potion.py` — deterministic fixture program and evidence regenerator.
 
-![8x nearest-neighbor potion preview](potion@8x.png)
+![4x nearest-neighbor potion preview](potion@4x.png)
 
 ## Regenerate
 
