@@ -43,21 +43,37 @@ Cross-cutting additions:
 
 The purpose is to let future `TracePixel next/continue` work proceed autonomously on reversible engineering details while stopping before product/scope decisions that require owner judgment.
 
+## P1-R0 raster authority — complete after this handoff merges green
+
+P1-R0 freezes the baseline that later raster code must preserve:
+
+- top-left origin, zero-based half-open integer coordinates,
+- one contiguous row-major RGBA8 canonical pixel store,
+- exact straight/unpremultiplied alpha bytes with transparent RGB preserved,
+- palette/index data is derived or authoring metadata rather than competing pixel authority,
+- 4096 per-axis safety ceiling / 64 MiB maximum authoritative RGBA allocation,
+- explicit raster contract error categories,
+- all-or-nothing ordered batch mutation semantics with deterministic last-write-wins duplicates,
+- authoritative replay truth is dimensions plus exact RGBA bytes; PNG bytes are export evidence unless an encoder contract later proves byte identity.
+
+Executable layout/bounds/color validation lives in `tracepixel.raster.CanvasSpec` and `docs/RASTER_AUTHORITY.md` is the written authority.
+
+No Canvas mutation implementation or image dependency is introduced by R0.
+
 ## Current core lane
 
-**P1 — Deterministic raster core / issue #2** is the exact active item.
+**P1 — Deterministic raster core / issue #2** remains the active phase.
 
-Exact current child:
+Exact current child after this handoff merges green:
 
 ```text
-P1-R0 raster authority contract
- -> P1-R1 canvas + transactional mutation
+P1-R1 canvas + transactional mutation
  -> P1-R2 deterministic export
  -> P1-R3 replay fixture + first visible preview
  -> P1-R4 memory/performance evidence
 ```
 
-The next implementation must begin with **P1-R0** unless live GitHub state shows an already-active P1 implementation PR.
+P1-R1 must implement the smallest owned Canvas against the frozen R0 contract: exact get/set plus bounded transactional batch mutation, with invalid batches causing no partial authoritative change.
 
 P1 must prove exact canvas/pixel mutation and deterministic authoritative pixel replay plus native PNG and nearest-neighbor preview fixtures **before any LLM/provider is introduced**.
 
@@ -124,7 +140,7 @@ P9 does not begin automatically from positive benchmark results: it additionally
 The next `@GitHub TracePixel 다음 작업 진행해줘` must resolve live state first.
 
 - If issue #2 has an implementation PR, continue/fix that PR until its exact-head checks are green and the active P1 child is complete.
-- If #2 is open with no implementation PR, begin **P1-R0 only**.
+- If #2 is open with no implementation PR, begin the `current_child` from `config/tracepixel.core-lane.json` only.
 - Advance through `P1-R0 -> R1 -> R2 -> R3 -> R4` in order unless an explicit owner decision changes the contract.
 - Stop at unresolved owner gates rather than guessing.
 - Only after all P1 children merge green should the lane advance to P2-IR0.
