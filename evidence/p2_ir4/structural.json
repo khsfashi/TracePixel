@@ -1,0 +1,180 @@
+{
+  "all_fixture_replays_equal": true,
+  "baselines": {
+    "bare_edit_array": "compact JSON payload lower bound without schema/canvas/operation context",
+    "raw_primitive_call_stream": "compact JSON engineering baseline with one set_pixel call per edit"
+  },
+  "fixtures": [
+    {
+      "bare_edit_array_bytes": 1976,
+      "bare_edit_array_token_proxy": 494,
+      "canonical_envelope_over_bare_edits_bytes": 119,
+      "canonical_pixel_program_bytes": 2095,
+      "canonical_token_proxy": 524,
+      "canonical_vs_raw_primitive_saved_bytes": 1048,
+      "edit_count": 95,
+      "exact_replay_equal": true,
+      "fixture": "potion-16",
+      "height": 16,
+      "public_operation_count": 1,
+      "raw_primitive_call_count": 95,
+      "raw_primitive_call_stream_bytes": 3143,
+      "raw_primitive_token_proxy": 786,
+      "width": 16
+    },
+    {
+      "bare_edit_array_bytes": 2062,
+      "bare_edit_array_token_proxy": 516,
+      "canonical_envelope_over_bare_edits_bytes": 119,
+      "canonical_pixel_program_bytes": 2181,
+      "canonical_token_proxy": 546,
+      "canonical_vs_raw_primitive_saved_bytes": 1084,
+      "edit_count": 98,
+      "exact_replay_equal": true,
+      "fixture": "gem-16",
+      "height": 16,
+      "public_operation_count": 1,
+      "raw_primitive_call_count": 98,
+      "raw_primitive_call_stream_bytes": 3265,
+      "raw_primitive_token_proxy": 817,
+      "width": 16
+    },
+    {
+      "bare_edit_array_bytes": 1150,
+      "bare_edit_array_token_proxy": 288,
+      "canonical_envelope_over_bare_edits_bytes": 119,
+      "canonical_pixel_program_bytes": 1269,
+      "canonical_token_proxy": 318,
+      "canonical_vs_raw_primitive_saved_bytes": 592,
+      "edit_count": 57,
+      "exact_replay_equal": true,
+      "fixture": "key-16",
+      "height": 16,
+      "public_operation_count": 1,
+      "raw_primitive_call_count": 57,
+      "raw_primitive_call_stream_bytes": 1861,
+      "raw_primitive_token_proxy": 466,
+      "width": 16
+    }
+  ],
+  "invalidity": {
+    "all_expected_failures_observed": true,
+    "validation_cases": [
+      {
+        "case": "root_type",
+        "expected_code": "invalid_type",
+        "expected_match": true,
+        "expected_path": "$",
+        "observed_code": "invalid_type",
+        "observed_path": "$",
+        "rejected": true
+      },
+      {
+        "case": "missing_schema",
+        "expected_code": "invalid_fields",
+        "expected_match": true,
+        "expected_path": "$",
+        "observed_code": "invalid_fields",
+        "observed_path": "$",
+        "rejected": true
+      },
+      {
+        "case": "unsupported_schema",
+        "expected_code": "unsupported_schema",
+        "expected_match": true,
+        "expected_path": "$.schema",
+        "observed_code": "unsupported_schema",
+        "observed_path": "$.schema",
+        "rejected": true
+      },
+      {
+        "case": "invalid_canvas",
+        "expected_code": "invalid_canvas",
+        "expected_match": true,
+        "expected_path": "$.canvas",
+        "observed_code": "invalid_canvas",
+        "observed_path": "$.canvas",
+        "rejected": true
+      },
+      {
+        "case": "unsupported_operation",
+        "expected_code": "unsupported_operation",
+        "expected_match": true,
+        "expected_path": "$.operations[0].op",
+        "observed_code": "unsupported_operation",
+        "observed_path": "$.operations[0].op",
+        "rejected": true
+      },
+      {
+        "case": "invalid_edit",
+        "expected_code": "invalid_edit",
+        "expected_match": true,
+        "expected_path": "$.operations[0].pixels[0]",
+        "observed_code": "invalid_edit",
+        "observed_path": "$.operations[0].pixels[0]",
+        "rejected": true
+      },
+      {
+        "case": "invalid_coordinate",
+        "expected_code": "invalid_coordinate",
+        "expected_match": true,
+        "expected_path": "$.operations[0].pixels[0]",
+        "observed_code": "invalid_coordinate",
+        "observed_path": "$.operations[0].pixels[0]",
+        "rejected": true
+      },
+      {
+        "case": "invalid_color",
+        "expected_code": "invalid_color",
+        "expected_match": true,
+        "expected_path": "$.operations[0].pixels[0]",
+        "observed_code": "invalid_color",
+        "observed_path": "$.operations[0].pixels[0]",
+        "rejected": true
+      }
+    ],
+    "wire_cases": [
+      {
+        "case": "wire_non_bytes",
+        "expected_code": "invalid_type",
+        "expected_match": true,
+        "observed_code": "invalid_type",
+        "rejected": true
+      },
+      {
+        "case": "wire_malformed_json",
+        "expected_code": "invalid_json",
+        "expected_match": true,
+        "observed_code": "invalid_json",
+        "rejected": true
+      }
+    ]
+  },
+  "public_operation_vocabulary": [
+    "set_pixels"
+  ],
+  "schema": "tracepixel.p2-ir4-engineering-evidence.v1",
+  "scope": "engineering-checkpoint-not-scored-product-claim",
+  "token_proxy": {
+    "actual_model_tokens": false,
+    "definition": "ceil(utf8_bytes/4) per serialized form"
+  },
+  "totals": {
+    "bare_edit_array_bytes": 5188,
+    "bare_edit_array_token_proxy": 1298,
+    "canonical_envelope_over_bare_edits_bytes": 357,
+    "canonical_pixel_program_bytes": 5545,
+    "canonical_token_proxy": 1388,
+    "canonical_vs_raw_primitive_saved_bytes": 2724,
+    "edit_count": 250,
+    "fixture_count": 3,
+    "public_operation_count": 3,
+    "raw_primitive_call_count": 250,
+    "raw_primitive_call_stream_bytes": 8269,
+    "raw_primitive_token_proxy": 2069
+  },
+  "vocabulary_decision": {
+    "decision": "retain-single-set_pixels-operation-for-pixel-program-v1",
+    "reason": "the fixed visible fixture set replays exactly with one public operation per fixture; no overlapping convenience operation has measured evidence that justifies increasing the v1 concept budget"
+  }
+}
