@@ -32,3 +32,5 @@ jobs:
         run: tracepixel doctor
       - name: P1-R4 engineering microbenchmark
         run: python -m evidence.p1_r4.benchmark --iterations 7
+      - name: P2-IR4 engineering microbenchmark
+        run: python -m evidence.p2_ir4.benchmark
