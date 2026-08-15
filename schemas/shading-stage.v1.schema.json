@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:shading-stage:v1",
+  "title": "TracePixel Shading Stage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stage",
+    "applications",
+    "program"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.shading-stage.v1"
+    },
+    "stage": {
+      "const": "shading"
+    },
+    "applications": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/shadingApplication"
+      }
+    },
+    "program": {
+      "$ref": "pixel-program.v1.schema.json"
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+    },
+    "shadingApplication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ramp_id",
+        "source_role",
+        "target_role",
+        "relation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "ramp_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "source_role": {
+          "$ref": "#/$defs/slug"
+        },
+        "target_role": {
+          "$ref": "#/$defs/slug"
+        },
+        "relation": {
+          "enum": [
+            "toward_light",
+            "away_from_light"
+          ]
+        }
+      }
+    }
+  }
+}
