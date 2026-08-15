@@ -34,18 +34,18 @@
       "compression": "deflate-stored",
       "encoder": "tracepixel.png.rgba8.store.v1",
       "filter": "none",
-      "height": 128,
+      "height": 64,
       "kind": "nearest-preview",
       "pixel_format": "RGBA8",
-      "png_sha256": "9f6f393c66ba3b4b69a98c8aa6c25014fff472ace2ed4fbd92039d50a070bd38",
+      "png_sha256": "6dda903d759e7f45307a9c8eab2e1be54f5ad6a2596ce624751094ddf545ed17",
       "resampling": "nearest-neighbor",
-      "scale": 8,
+      "scale": 4,
       "schema": "tracepixel.png-export.v1",
       "source_height": 16,
       "source_width": 16,
-      "width": 128
+      "width": 64
     },
-    "preview_png": "potion@8x.png"
+    "preview_png": "potion@4x.png"
   },
   "schema": "tracepixel.p1-r3-evidence.v1"
 }
