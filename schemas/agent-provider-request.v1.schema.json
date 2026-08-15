@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:agent-provider-request:v1",
+  "title": "TracePixel Agent Provider Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "instruction", "observation"],
+  "properties": {
+    "schema": {"const": "tracepixel.agent-provider-request.v1"},
+    "instruction": {"type": "string", "minLength": 1},
+    "observation": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/jsonValue"}
+    }
+  },
+  "$defs": {
+    "jsonValue": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "boolean"},
+        {"type": "integer"},
+        {"type": "number"},
+        {"type": "string"},
+        {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}},
+        {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}
+      ]
+    }
+  }
+}

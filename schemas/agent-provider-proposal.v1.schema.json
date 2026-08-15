@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:agent-provider-proposal:v1",
+  "title": "TracePixel Agent Provider Proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "payload"],
+  "properties": {
+    "schema": {"const": "tracepixel.agent-provider-proposal.v1"},
+    "kind": {"enum": ["pixel_program", "stage_plan"]},
+    "payload": {"type": "object"}
+  }
+}
