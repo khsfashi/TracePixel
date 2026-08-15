@@ -11,7 +11,11 @@ from .art_intent import (
     SymmetryStrengthV1,
 )
 from .art_intent_validation import ArtIntentValidationError, validate_art_intent
-from .execution import execute_pixel_program
+from .execution import (
+    PixelProgramCanvasMismatchError,
+    apply_pixel_program,
+    execute_pixel_program,
+)
 from .major_forms_stage import (
     MAJOR_FORMS_STAGE_ID_V1,
     MAJOR_FORMS_STAGE_SCHEMA_V1,
@@ -95,6 +99,32 @@ from .silhouette_stage_validation import (
     SilhouetteStageValidationError,
     validate_silhouette_stage,
 )
+from .stage_evidence import (
+    STAGE_PIPELINE_EVIDENCE_SCHEMA_V1,
+    StagePipelineEvidenceV1,
+    StagePreviewEvidenceV1,
+    StageTransitionEvidenceV1,
+    TouchedBoundsV1,
+    replay_stage_pipeline_evidence,
+    serialize_stage_pipeline_evidence,
+)
+from .stage_pipeline import (
+    StagePipelineResult,
+    StagePreviewSnapshot,
+    execute_stage_pipeline,
+)
+from .stage_plan import (
+    STAGE_PLAN_SCHEMA_V1,
+    STAGE_SEQUENCE_V1,
+    StageDocumentV1,
+    StageIdV1,
+    StageInputIdV1,
+    StagePipelineValidationError,
+    StagePlanEntryV1,
+    StagePlanV1,
+    StageStatusV1,
+    validate_stage_plan,
+)
 from .validation import PixelProgramValidationError, validate_pixel_program
 
 __all__ = [
@@ -121,6 +151,9 @@ __all__ = [
     "SHADING_STAGE_SCHEMA_V1",
     "SILHOUETTE_STAGE_ID_V1",
     "SILHOUETTE_STAGE_SCHEMA_V1",
+    "STAGE_PIPELINE_EVIDENCE_SCHEMA_V1",
+    "STAGE_PLAN_SCHEMA_V1",
+    "STAGE_SEQUENCE_V1",
     "ArtIntentCanvasV1",
     "ArtIntentV1",
     "ArtIntentValidationError",
@@ -141,8 +174,9 @@ __all__ = [
     "PaletteLightStageV1",
     "PaletteLightStageValidationError",
     "PixelEditV1",
-    "PixelProgramV1",
+    "PixelProgramCanvasMismatchError",
     "PixelProgramSerializationError",
+    "PixelProgramV1",
     "PixelProgramValidationError",
     "SemanticDetailV1",
     "SemanticDetailsStageV1",
@@ -154,12 +188,29 @@ __all__ = [
     "ShadingStageValidationError",
     "SilhouetteStageV1",
     "SilhouetteStageValidationError",
+    "StageDocumentV1",
+    "StageIdV1",
+    "StageInputIdV1",
+    "StagePipelineEvidenceV1",
+    "StagePipelineResult",
+    "StagePipelineValidationError",
+    "StagePlanEntryV1",
+    "StagePlanV1",
+    "StagePreviewEvidenceV1",
+    "StagePreviewSnapshot",
+    "StageStatusV1",
+    "StageTransitionEvidenceV1",
     "SymmetryAxisV1",
     "SymmetryIntentV1",
     "SymmetryStrengthV1",
+    "TouchedBoundsV1",
+    "apply_pixel_program",
     "deserialize_pixel_program",
     "execute_pixel_program",
+    "execute_stage_pipeline",
+    "replay_stage_pipeline_evidence",
     "serialize_pixel_program",
+    "serialize_stage_pipeline_evidence",
     "validate_art_intent",
     "validate_major_forms_stage",
     "validate_outline_cleanup_stage",
@@ -168,4 +219,5 @@ __all__ = [
     "validate_semantic_details_stage",
     "validate_shading_stage",
     "validate_silhouette_stage",
+    "validate_stage_plan",
 ]

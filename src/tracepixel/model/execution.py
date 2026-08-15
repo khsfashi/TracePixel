@@ -4,10 +4,14 @@ from collections.abc import Sequence
 
 from tracepixel.raster import Canvas
 
-from .pixel_ir import PixelEditV1
+from .pixel_ir import PixelEditV1, PixelProgramV1
 from .validation import validate_pixel_program
 
 PixelMutation = tuple[int, int, tuple[int, int, int, int]]
+
+
+class PixelProgramCanvasMismatchError(ValueError):
+    """Raised when an otherwise-valid PixelProgram targets a different Canvas size."""
 
 
 class _ValidatedPixelBatch(Sequence[PixelMutation]):
@@ -31,14 +35,31 @@ class _ValidatedPixelBatch(Sequence[PixelMutation]):
         return x, y, (red, green, blue, alpha)
 
 
+def _apply_validated_pixel_program(canvas: Canvas, program: PixelProgramV1) -> Canvas:
+    canvas_document = program["canvas"]
+    if canvas.width != canvas_document["width"] or canvas.height != canvas_document["height"]:
+        raise PixelProgramCanvasMismatchError(
+            "PixelProgram canvas "
+            f"{canvas_document['width']}x{canvas_document['height']} does not match "
+            f"target Canvas {canvas.width}x{canvas.height}"
+        )
+
+    for operation in program["operations"]:
+        canvas.set_pixels(_ValidatedPixelBatch(operation["pixels"]))
+    return canvas
+
+
+def apply_pixel_program(canvas: Canvas, program: object) -> Canvas:
+    """Validate and apply one PixelProgram v1 to an existing authoritative Canvas."""
+
+    validated = validate_pixel_program(program)
+    return _apply_validated_pixel_program(canvas, validated)
+
+
 def execute_pixel_program(program: object) -> Canvas:
     """Validate and deterministically execute one PixelProgram v1 into a fresh Canvas."""
 
     validated = validate_pixel_program(program)
     canvas_document = validated["canvas"]
     canvas = Canvas(canvas_document["width"], canvas_document["height"])
-
-    for operation in validated["operations"]:
-        canvas.set_pixels(_ValidatedPixelBatch(operation["pixels"]))
-
-    return canvas
+    return _apply_validated_pixel_program(canvas, validated)

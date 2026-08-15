@@ -6,9 +6,12 @@ from unittest.mock import patch
 
 from tracepixel.model import (
     PIXEL_PROGRAM_SCHEMA_V1,
+    PixelProgramCanvasMismatchError,
     PixelProgramValidationError,
+    apply_pixel_program,
     execute_pixel_program,
 )
+from tracepixel.raster import Canvas
 
 
 def executable_program() -> dict[str, object]:
@@ -83,6 +86,27 @@ class PixelIrExecutionTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "invalid_color")
         self.assertEqual(caught.exception.path, "$.operations[1].pixels[0]")
         canvas_type.assert_not_called()
+
+    def test_applies_validated_program_to_existing_canvas_without_replacing_authority(self) -> None:
+        canvas = Canvas(2, 2)
+        canvas.set_pixel(0, 1, (90, 91, 92, 93))
+
+        returned = apply_pixel_program(canvas, executable_program())
+
+        self.assertIs(returned, canvas)
+        self.assertEqual(canvas.get_pixel(0, 0), (5, 6, 7, 8))
+        self.assertEqual(canvas.get_pixel(1, 0), (10, 11, 12, 13))
+        self.assertEqual(canvas.get_pixel(0, 1), (90, 91, 92, 93))
+        self.assertEqual(canvas.get_pixel(1, 1), (20, 21, 22, 23))
+
+    def test_existing_canvas_application_rejects_dimension_mismatch_before_mutation(self) -> None:
+        canvas = Canvas(1, 1)
+        before = canvas.rgba_bytes()
+
+        with self.assertRaises(PixelProgramCanvasMismatchError):
+            apply_pixel_program(canvas, executable_program())
+
+        self.assertEqual(canvas.rgba_bytes(), before)
 
 
 if __name__ == "__main__":
