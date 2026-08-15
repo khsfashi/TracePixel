@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:semantic-details-stage:v1",
+  "title": "TracePixel Semantic Details Stage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stage",
+    "details",
+    "program"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.semantic-details-stage.v1"
+    },
+    "stage": {
+      "const": "semantic_details"
+    },
+    "details": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/semanticDetail"
+      }
+    },
+    "program": {
+      "$ref": "pixel-program.v1.schema.json"
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+    },
+    "semanticDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        }
+      }
+    }
+  }
+}
