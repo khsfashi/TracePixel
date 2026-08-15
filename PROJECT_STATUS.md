@@ -127,7 +127,7 @@ Implementation head `a5920c30e8c494a3d49d06bfe5feba23ce9bf7f1` passed GitHub-hos
 
 No provider, VLM, GPU, image dependency, secret or self-hosted runner was introduced in P1.
 
-## P2-IR0 PixelProgram schema — complete after PR #11 merges green
+## P2-IR0 PixelProgram schema — complete via PR #11
 
 PR #11 freezes the smallest public serialized program boundary needed before runtime validation/execution:
 
@@ -143,23 +143,42 @@ PR #11 freezes the smallest public serialized program boundary needed before run
 
 `set_pixels` can express any finite RGBA raster, so IR0 does not guess geometric or art-aware convenience operations before the P2-IR4 compactness evidence. The schema preserves explicit operation/edit ordering and is designed to map into the existing P1 transactional raster authority once IR1/IR2 are implemented.
 
-Implementation head `06e5fa34adbcb7635f203b558dfaba18491e6115` passed GitHub-hosted CI run #30 on Python 3.12 and 3.13. The final handoff head must also be green before PR #11 merges.
+Final PR #11 head `695364ce50218ffdf513887d2df65f9371a5504d` passed GitHub-hosted CI run #33 on Python 3.12 and 3.13 before merge.
 
 No provider/model dependency, VLM, GPU requirement, image dependency, secret, self-hosted runner or new pixel authority was introduced.
+
+## P2-IR1 runtime validation — complete after PR #12 merges green
+
+PR #12 adds the dependency-free semantic gate for the frozen v1 PixelProgram without pulling execution forward:
+
+- exact JSON object/array shape validation with closed field sets,
+- supported schema and operation discriminator validation,
+- P1 `CanvasSpec` reuse for exact-integer canvas dimensions and 4096-per-axis bounds,
+- exact six-value pixel edit shape,
+- P1 coordinate validation for exact integers and canvas-relative bounds,
+- P1 RGBA8 validation for exact integer channels in `[0, 255]`,
+- deterministic `PixelProgramValidationError.code` and JSON-style `.path` fields for repair/tooling,
+- valid programs are not deep-copied, normalized, deduplicated or reordered,
+- duplicate coordinates remain valid for later ordered last-write-wins execution,
+- validation creates no `Canvas` and performs no raster mutation.
+
+Implementation head `3fb83a6fe5acbaa3613b9c3e2c8709925164e467` passed GitHub-hosted CI run #35 on Python 3.12 and 3.13. The final handoff head must also be green before PR #12 merges.
+
+Runtime execution, canonical serialization and operation-vocabulary expansion remain deferred to IR2-IR4 respectively.
 
 ## Current core lane
 
 P2 — Versioned Pixel IR and bounded operation vocabulary / issue #10 remains the active phase.
 
-Exact current child after PR #11 merges green:
+Exact current child after PR #12 merges green:
 
 ```text
-P2-IR1 validation
+P2-IR2 deterministic executor
 ```
 
-`config/tracepixel.core-lane.json` advances to `P2-IR1` in the PR #11 handoff. IR1 should validate the frozen v1 structure and finite semantic constraints before any raster mutation, including supported schema/op identity, canvas dimensions, edit tuple shape, coordinates and RGBA8 ranges. Invalid programs must fail before authoritative mutation. Runtime execution itself remains P2-IR2.
+`config/tracepixel.core-lane.json` advances to `P2-IR2` only after the IR1 implementation head passed portable CI. IR2 should execute only validated v1 operations through the existing P1 `Canvas` authority, preserve operation/edit ordering and duplicate-coordinate semantics, and require no provider/model for replay.
 
-Do not jump to deterministic execution, canonical serialization, operation-vocabulary expansion, staged authoring, Agent/provider integration, Aseprite/MCP, VLM review or the home Windows runner while the earlier P2 child remains active.
+Do not jump to canonical serialization, operation-vocabulary expansion, staged authoring, Agent/provider integration, Aseprite/MCP, VLM review or the home Windows runner while the earlier P2 child remains active.
 
 ## Early engineering checkpoints
 
