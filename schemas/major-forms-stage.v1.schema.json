@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:major-forms-stage:v1",
+  "title": "TracePixel Major Forms Stage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stage",
+    "forms",
+    "program"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.major-forms-stage.v1"
+    },
+    "stage": {
+      "const": "major_forms"
+    },
+    "forms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/form"
+      }
+    },
+    "program": {
+      "$ref": "pixel-program.v1.schema.json"
+    }
+  },
+  "$defs": {
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+        }
+      }
+    }
+  }
+}
