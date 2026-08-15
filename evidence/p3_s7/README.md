@@ -2,10 +2,12 @@
 
 This directory commits one deterministic 16x16 potion-like fixture that executes the full P3 S1-S6 path with no skipped stages.
 
-`fixture.py` owns the frozen ArtIntent and StagePlan inputs. Running it regenerates:
+Committed evidence:
 
 - `final.rgba` — final authoritative 16x16 RGBA8 bytes;
-- `01-silhouette@2x.png` through `06-outline-cleanup@2x.png` — deterministic nearest-neighbor stage snapshots;
-- `manifest.json` — canonical transition evidence plus file/digest mapping (generated locally; the exact transition contract is replay-tested in CI).
+- `stage-preview.svg` — human-inspectable contact sheet showing the six raster states in stage order;
+- `fixture.py` — frozen ArtIntent and StagePlan inputs plus deterministic evidence regeneration.
 
-CI regenerates the fixture and requires exact equality with every committed raster artifact. These files are engineering/replay evidence, not a perceptual-quality score.
+Running `fixture.py` regenerates `final.rgba`, six deterministic `@2x.png` nearest-neighbor previews, and `manifest.json` locally. CI freezes the final RGBA bytes and all six generated PNG SHA-256 values, while the SVG is supplementary visual evidence that remains safe to store through text-only GitHub tooling.
+
+The SVG is not raster authority and is not used for replay. Canonical transition evidence always hashes the authoritative RGBA state and the deterministic PNG export produced by TracePixel.
