@@ -24,7 +24,7 @@
     "P2": "Versioned Pixel IR and bounded operation vocabulary",
     "P3": "Explicit staged authoring pipeline",
     "P4": "Deterministic pixel QA",
-    "P5": "Provider-neutral Agent loop",
+    "P5": "Provider-neutral Agent loop and complexity evidence",
     "P6": "Preview evidence and mobile static gallery",
     "B0": "Matched development-visible architecture benchmark",
     "P7": "Targeted repair and human feedback loop",
