@@ -30,19 +30,19 @@ class P1R3ReplayFixtureTests(unittest.TestCase):
         _, native_png, preview_png, manifest = build_evidence()
 
         self.assertEqual(native_png, (EVIDENCE_DIR / "potion.png").read_bytes())
-        self.assertEqual(preview_png, (EVIDENCE_DIR / "potion@8x.png").read_bytes())
+        self.assertEqual(preview_png, (EVIDENCE_DIR / "potion@4x.png").read_bytes())
         self.assertEqual(manifest["outputs"]["native"]["kind"], "native")
         self.assertEqual(
             manifest["outputs"]["preview"]["kind"],
             "nearest-preview",
         )
-        self.assertEqual(manifest["outputs"]["preview"]["scale"], 8)
+        self.assertEqual(manifest["outputs"]["preview"]["scale"], 4)
         self.assertEqual(
             (
                 manifest["outputs"]["preview"]["width"],
                 manifest["outputs"]["preview"]["height"],
             ),
-            (128, 128),
+            (64, 64),
         )
 
 
