@@ -43,9 +43,9 @@ Cross-cutting additions:
 
 The purpose is to let future `TracePixel next/continue` work proceed autonomously on reversible engineering details while stopping before product/scope decisions that require owner judgment.
 
-## P1-R0 raster authority — complete after this handoff merges green
+## P1-R0 raster authority — complete
 
-P1-R0 freezes the baseline that later raster code must preserve:
+P1-R0 froze the baseline that later raster code must preserve:
 
 - top-left origin, zero-based half-open integer coordinates,
 - one contiguous row-major RGBA8 canonical pixel store,
@@ -58,22 +58,36 @@ P1-R0 freezes the baseline that later raster code must preserve:
 
 Executable layout/bounds/color validation lives in `tracepixel.raster.CanvasSpec` and `docs/RASTER_AUTHORITY.md` is the written authority.
 
-No Canvas mutation implementation or image dependency is introduced by R0.
+## P1-R1 canvas + transactional mutation — complete after PR #6 merges green
+
+PR #6 implements the frozen R0 authority without reopening G1:
+
+- one owned contiguous `bytearray` backing store,
+- deterministic transparent-black initial state,
+- exact `get_pixel` and `set_pixel`,
+- ordered `set_pixels` transactional batch mutation,
+- full batch shape/coordinate/color validation before authoritative writes,
+- invalid batches leave authoritative pixels unchanged,
+- duplicate coordinates resolve by deterministic last-write-wins order,
+- no PNG/image dependency, semantic drawing primitive, provider call or second canonical pixel store.
+
+The first PR #6 implementation head `c8bec922a2859f081af4dc1be0e4537cdefab871` passed GitHub-hosted CI on Python 3.12 and 3.13 before the child handoff was advanced. The final handoff head must also be green before merge.
 
 ## Current core lane
 
 **P1 — Deterministic raster core / issue #2** remains the active phase.
 
-Exact current child after this handoff merges green:
+Exact current child after PR #6 merges green:
 
 ```text
-P1-R1 canvas + transactional mutation
- -> P1-R2 deterministic export
+P1-R2 deterministic export
  -> P1-R3 replay fixture + first visible preview
  -> P1-R4 memory/performance evidence
 ```
 
-P1-R1 must implement the smallest owned Canvas against the frozen R0 contract: exact get/set plus bounded transactional batch mutation, with invalid batches causing no partial authoritative change.
+P1-R2 must provide native-size PNG, nearest-neighbor enlarged preview and explicit export metadata while keeping authoritative RGBA bytes as replay truth. PNG byte identity may only be claimed if encoder/configuration behavior is explicitly controlled and tested.
+
+Do not add a substantial PNG/image dependency without owner gate G2. Prefer the smallest deterministic implementation that satisfies P1-R2 and keep antialiasing/resampling implicit behavior out of the contract.
 
 P1 must prove exact canvas/pixel mutation and deterministic authoritative pixel replay plus native PNG and nearest-neighbor preview fixtures **before any LLM/provider is introduced**.
 

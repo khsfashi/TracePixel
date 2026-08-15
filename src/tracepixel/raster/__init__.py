@@ -1,5 +1,6 @@
 """Deterministic raster authority surfaces."""
 
+from tracepixel.raster.canvas import BatchEditError, Canvas
 from tracepixel.raster.contract import (
     BYTES_PER_PIXEL,
     MAX_CANVAS_BYTES,
@@ -21,6 +22,8 @@ __all__ = [
     "MAX_CANVAS_DIMENSION",
     "MAX_CANVAS_PIXELS",
     "RGBA8",
+    "BatchEditError",
+    "Canvas",
     "CanvasSizeError",
     "CanvasSpec",
     "ColorValueError",
