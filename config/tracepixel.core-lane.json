@@ -1,9 +1,9 @@
 {
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-15",
-  "current": "P3",
-  "current_child": "P3-S7",
-  "active_issue": 16,
+  "current": "P4",
+  "current_child": "P4-Q1",
+  "active_issue": 25,
   "sequence": [
     "P0",
     "P1",
