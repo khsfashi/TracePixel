@@ -1,3 +1,15 @@
+from .loop import (
+    AGENT_LOOP_BUDGET_SCHEMA_V1,
+    AgentLoopBudgetV1,
+    AgentLoopContractError,
+    AgentLoopResult,
+    AgentLoopStatusV1,
+    AgentPreviewFrame,
+    AgentPreviewObserver,
+    AgentQaEvaluator,
+    run_bounded_edit_loop,
+    validate_agent_loop_budget,
+)
 from .observation import (
     AGENT_OBSERVATION_SCHEMA_V1,
     MAX_AGENT_PREVIEW_BYTES_V1,
@@ -26,6 +38,16 @@ from .provider import (
 )
 
 __all__ = [
+    "AGENT_LOOP_BUDGET_SCHEMA_V1",
+    "AgentLoopBudgetV1",
+    "AgentLoopContractError",
+    "AgentLoopResult",
+    "AgentLoopStatusV1",
+    "AgentPreviewFrame",
+    "AgentPreviewObserver",
+    "AgentQaEvaluator",
+    "run_bounded_edit_loop",
+    "validate_agent_loop_budget",
     "AGENT_OBSERVATION_SCHEMA_V1",
     "MAX_AGENT_PREVIEW_BYTES_V1",
     "MAX_AGENT_RECENT_REVISIONS_V1",
