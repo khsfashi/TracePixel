@@ -11,7 +11,8 @@
       "preview_row_buffer_payload_bytes": 128,
       "preview_scale": 2,
       "preview_width": 32,
-      "size": 16
+      "size": 16,
+      "transaction_staging_payload_bytes": 2048
     },
     {
       "authoritative_storage_payload_bytes": 4096,
@@ -24,7 +25,8 @@
       "preview_row_buffer_payload_bytes": 256,
       "preview_scale": 2,
       "preview_width": 64,
-      "size": 32
+      "size": 32,
+      "transaction_staging_payload_bytes": 8192
     },
     {
       "authoritative_storage_payload_bytes": 16384,
@@ -37,12 +39,13 @@
       "preview_row_buffer_payload_bytes": 512,
       "preview_scale": 2,
       "preview_width": 128,
-      "size": 64
+      "size": 64,
+      "transaction_staging_payload_bytes": 32768
     }
   ],
   "notes": {
     "authoritative_storage": "one owned contiguous row-major RGBA8 bytearray",
-    "batch_mutation": "transactional full-batch validation uses temporary O(edit_count) Python staging",
+    "batch_mutation": "transactional validation stages one compact fixed 8-byte record per edit before authoritative writes",
     "native_export": "encoder borrows a read-only source view; returned PNG bytes are derived output",
     "preview_export": "no full preview canvas is materialized; one scaled row buffer is reused",
     "snapshot": "full RGBA copy exists only when rgba_bytes() ownership is explicitly requested"
