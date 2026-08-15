@@ -106,7 +106,76 @@ For a scored comparison:
 - use multiple trials for nondeterministic methods,
 - keep development-visible and held-out sets distinct.
 
-## 8. B0 purpose
+## 8. Pre-B0 engineering checkpoints
+
+TracePixel does not wait until B0 to discover obvious architectural regressions. These are **engineering measurements, not scored product claims**.
+
+### P1 raster checkpoint
+
+Record representative 16x16, 32x32 and 64x64:
+
+- authoritative storage bytes,
+- unavoidable copies for export,
+- temporary allocation behavior,
+- replay/export timing as environment-labelled local evidence.
+
+Purpose: reject object-per-pixel or copy-heavy authority before higher layers depend on it.
+
+### P2 IR checkpoint
+
+For a small fixed visible fixture set, compare at minimum:
+
+- serialized representation size,
+- operation count,
+- validation failures,
+- exact replay equality,
+- rough token proxy or actual model tokens if a provider is already available without changing phase boundaries.
+
+Purpose: catch an IR that is more verbose or fragile than the raw primitive representation it is meant to improve.
+
+### P4 QA checkpoint
+
+Maintain seeded pass/fail fixtures for each deterministic analyzer family. Record coverage by rule/finding category, not aesthetic score.
+
+Purpose: prove the verifier can detect known structural defects before Agent scoring depends on it.
+
+### P5 Agent pilot
+
+Before P6/B0, run a small non-scored visible pilot to measure:
+
+- input/output tokens,
+- operation/tool calls,
+- observation calls,
+- revisions,
+- deterministic acceptance rate,
+- failure category.
+
+Purpose: detect context/tool-surface blowups before freezing the B0 cohort.
+
+Engineering checkpoints may cause architecture changes. They must never be presented as held-out benchmark evidence.
+
+## 9. B0 preregistration freeze
+
+B0 scoring starts only after one exact commit freezes:
+
+- task IDs/text,
+- development-visible fixtures,
+- hidden structural constraints/verifier version,
+- baseline adapter identities and versions,
+- repository commit under test,
+- model/provider IDs and settings,
+- token/tool/visual/time/cost budgets,
+- retry and exclusion rules,
+- trial count per nondeterministic method,
+- deterministic score aggregation,
+- perceptual evaluation procedure,
+- human-intervention policy,
+- failure taxonomy,
+- artifact/result retention rules.
+
+The freeze commit is part of the benchmark evidence and must be cited by later result documents.
+
+## 10. B0 purpose and execution
 
 B0 is an architecture diagnostic, not a final marketing claim.
 
@@ -119,8 +188,41 @@ It should answer:
 - Which deterministic operations genuinely reduce iterations?
 - Does a generated-image baseline win perceptually while losing exact constraints, and where?
 
-B0 results may change the later authoring surface, but the frozen B0 cohort itself is preserved as historical evidence.
+B0 execution must preserve every attempt, including unsuccessful ones. The frozen cohort is immutable after scoring. B0 results may motivate later architecture changes, but the original cohort is never rerun/relabelled/repaired to improve its score.
 
-## 9. B1 entry gate
+## 11. B0 result layers
 
-B1 begins only after B0 postmortem-driven changes are implemented. B1 uses held-out task variants frozen before scoring and tests generalization rather than rerunning B0 until TracePixel wins.
+Report separately:
+
+1. **completion/success** under the preregistered definition,
+2. **deterministic structural score**,
+3. **Agent complexity/budget evidence**,
+4. **perceptual/VLM evidence** where used,
+5. **blind human evaluation** where available,
+6. **failure taxonomy/postmortem**.
+
+Do not collapse a structurally invalid but attractive image into the same meaning as a structurally valid but aesthetically weak image.
+
+## 12. B1 entry gate and freeze
+
+B1 begins only after:
+
+1. B0 is complete and immutable,
+2. B0 postmortem-driven changes selected for promotion are implemented and tested,
+3. held-out task variants are frozen before scoring,
+4. budgets/scoring/baselines are preregistered again,
+5. development-visible B0 tasks are not reused as held-out evidence.
+
+B1 tests generalization rather than rerunning B0 until TracePixel wins.
+
+## 13. Promotion gates after B1
+
+Results should explicitly support or reject promotions for:
+
+- T4 tile/autotile breadth,
+- T5 simple creatures,
+- T6 humanoids,
+- T7 animation/multi-frame consistency,
+- Trace2D adapter experimentation.
+
+Humanoid/animation/Trace2D integration are owner-decision gates even if benchmark evidence is positive; positive evidence allows a decision, it does not silently expand scope.

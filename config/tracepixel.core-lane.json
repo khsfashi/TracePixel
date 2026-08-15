@@ -1,7 +1,8 @@
 {
-  "schema": "tracepixel.core-lane.v1",
+  "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-15",
   "current": "P1",
+  "current_child": "P1-R0",
   "active_issue": 2,
   "sequence": [
     "P0",
@@ -31,11 +32,124 @@
     "P8": "Production breadth for icons, props and tiles",
     "P9": "Trace2D adapter experiment"
   },
+  "child_sequences": {
+    "P1": [
+      "P1-R0",
+      "P1-R1",
+      "P1-R2",
+      "P1-R3",
+      "P1-R4"
+    ],
+    "P2": [
+      "P2-IR0",
+      "P2-IR1",
+      "P2-IR2",
+      "P2-IR3",
+      "P2-IR4"
+    ],
+    "P3": [
+      "P3-S0",
+      "P3-S1",
+      "P3-S2",
+      "P3-S3",
+      "P3-S4",
+      "P3-S5",
+      "P3-S6",
+      "P3-S7"
+    ],
+    "P4": [
+      "P4-Q0",
+      "P4-Q1",
+      "P4-Q2",
+      "P4-Q3",
+      "P4-Q4",
+      "P4-Q5"
+    ],
+    "P5": [
+      "P5-A0",
+      "P5-A1",
+      "P5-A2",
+      "P5-A3",
+      "P5-A4",
+      "P5-A5"
+    ],
+    "P6": [
+      "P6-V0",
+      "P6-V1",
+      "P6-V2",
+      "P6-V3",
+      "P6-V4",
+      "P6-V5",
+      "P6-V6"
+    ],
+    "B0": [
+      "B0-F0",
+      "B0-H0",
+      "B0-B0",
+      "B0-S0",
+      "B0-P0"
+    ],
+    "P7": [
+      "P7-F0",
+      "P7-F1",
+      "P7-F2",
+      "P7-F3",
+      "P7-F4",
+      "P7-F5"
+    ],
+    "B1": [
+      "B1-F0",
+      "B1-S0",
+      "B1-P0"
+    ],
+    "P8": [
+      "P8-B0",
+      "P8-B1",
+      "P8-B2",
+      "P8-B3",
+      "P8-B4",
+      "P8-B5",
+      "P8-B6"
+    ],
+    "P9": [
+      "P9-T0",
+      "P9-T1",
+      "P9-T2",
+      "P9-T3"
+    ]
+  },
+  "engineering_checkpoints": {
+    "P1-R4": "Raster memory/copy microbenchmark",
+    "P2-IR4": "IR compactness/replay/invalidity microbenchmark",
+    "P4-Q5": "Seeded deterministic QA coverage suite",
+    "P5-A5": "Non-scored Agent complexity pilot before B0"
+  },
+  "preview_milestones": {
+    "P1-R3": "Native PNG and nearest-neighbor enlarged preview",
+    "P3-S7": "Stage-by-stage preview evidence",
+    "P4-Q5": "Preview plus deterministic QA findings",
+    "P5-A5": "First opt-in AI-authored raster preview",
+    "P6-V5": "Mobile static review flow"
+  },
+  "owner_gates": [
+    "G1 authoritative pixel representation",
+    "G2 image/PNG dependency",
+    "G3 first real Agent provider/model",
+    "G4 VLM/perceptual judge",
+    "G5 Aseprite/MCP scored baseline",
+    "G6 home Windows self-hosted preview runner",
+    "G7 simple-creature promotion when materially new constraints appear",
+    "G8 humanoid scope promotion",
+    "G9 animation/multi-frame promotion",
+    "G10 Trace2D adapter experiment"
+  ],
   "rules": [
-    "Continue an active implementation PR before opening later core-lane scope.",
-    "Do not advance the current item until its acceptance criteria and required checks are green.",
+    "Continue an active implementation PR before opening later core-lane or child-lane scope.",
+    "Do not advance the current child until its acceptance criteria and required checks are green.",
+    "Stop at unresolved owner gates documented in docs/DECISION_GATES.md; do not silently choose scope/product decisions.",
+    "Run preregistered engineering checkpoints before the scored B0 cohort where specified.",
     "Do not mutate or rerun a frozen scored benchmark cohort to improve its score.",
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
-    "Trace2D integration remains deferred until independent benchmark evidence justifies it."
+    "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
