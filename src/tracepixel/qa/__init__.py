@@ -1,4 +1,4 @@
-"""Deterministic pixel-QA fact surfaces."""
+"""Deterministic pixel-QA fact and policy surfaces."""
 
 from tracepixel.qa.color import (
     COLOR_QA_SCHEMA_V1,
@@ -20,6 +20,22 @@ from tracepixel.qa.connectivity import (
     ConnectivityQaV1,
     IsolatedPixelFactsV1,
     analyze_connectivity,
+)
+from tracepixel.qa.policy import (
+    MAX_QA_POLICY_RULES_V1,
+    QA_FINDINGS_SCHEMA_V1,
+    QA_POLICY_SCHEMA_V1,
+    QaCategoryV1,
+    QaFindingV1,
+    QaFindingsV1,
+    QaPolicyEvaluationError,
+    QaPolicyRuleV1,
+    QaPolicyV1,
+    QaPolicyValidationError,
+    QaRuleIdV1,
+    QaSeverityV1,
+    evaluate_qa_policy,
+    validate_qa_policy,
 )
 from tracepixel.qa.shape_outline import (
     SHAPE_OUTLINE_QA_SCHEMA_V1,
@@ -72,6 +88,20 @@ __all__ = [
     "ConnectivityQaV1",
     "IsolatedPixelFactsV1",
     "analyze_connectivity",
+    "MAX_QA_POLICY_RULES_V1",
+    "QA_FINDINGS_SCHEMA_V1",
+    "QA_POLICY_SCHEMA_V1",
+    "QaCategoryV1",
+    "QaFindingV1",
+    "QaFindingsV1",
+    "QaPolicyEvaluationError",
+    "QaPolicyRuleV1",
+    "QaPolicyV1",
+    "QaPolicyValidationError",
+    "QaRuleIdV1",
+    "QaSeverityV1",
+    "evaluate_qa_policy",
+    "validate_qa_policy",
     "SHAPE_OUTLINE_QA_SCHEMA_V1",
     "AxisSymmetryFactsV1",
     "ExposedEdgeFactsV1",

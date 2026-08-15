@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tracepixel.dev/schemas/qa-findings.v1.schema.json",
+  "title": "TracePixel QA Findings v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "findings"],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.qa-findings.v1"
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule", "category", "severity"],
+        "properties": {
+          "rule": {
+            "enum": [
+              "structural.non_empty",
+              "structural.no_translucency",
+              "structural.no_edge_contact",
+              "color.palette_membership",
+              "color.maximum_colors",
+              "color.transparent_rgb_policy",
+              "connectivity.single_component",
+              "connectivity.no_isolated_pixels",
+              "shape.required_symmetry",
+              "tile.contract"
+            ]
+          },
+          "category": {
+            "enum": ["structural", "color", "connectivity", "shape", "tile"]
+          },
+          "severity": {
+            "enum": ["info", "warning", "error"]
+          }
+        }
+      }
+    }
+  }
+}

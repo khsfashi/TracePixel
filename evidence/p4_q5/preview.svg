@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="320" viewBox="0 0 760 320">
+  <rect width="760" height="320" fill="#f7f7f7"/>
+  <style>
+    text { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fill: #222; }
+    .title { font-size: 18px; font-weight: 700; }
+    .label { font-size: 13px; }
+    .cell { stroke: #999; stroke-width: 1; }
+  </style>
+
+  <text x="30" y="30" class="title">clean — 0 findings</text>
+  <g transform="translate(30 50)" shape-rendering="crispEdges">
+    <rect width="150" height="150" fill="#e4e4e4" stroke="#333"/>
+    <path d="M30 0V150M60 0V150M90 0V150M120 0V150M0 30H150M0 60H150M0 90H150M0 120H150" stroke="#999"/>
+    <rect x="60" y="30" width="30" height="30" fill="rgb(20,40,200)" class="cell"/>
+    <rect x="60" y="60" width="30" height="30" fill="rgb(20,40,200)" class="cell"/>
+    <rect x="60" y="90" width="30" height="30" fill="rgb(20,40,200)" class="cell"/>
+  </g>
+  <text x="30" y="225" class="label">centered • opaque • 1 component • symmetric • clear edges</text>
+
+  <text x="390" y="30" class="title">seeded_defects — 9 findings</text>
+  <g transform="translate(390 50)" shape-rendering="crispEdges">
+    <rect width="150" height="150" fill="#e4e4e4" stroke="#333"/>
+    <path d="M30 0V150M60 0V150M90 0V150M120 0V150M0 30H150M0 60H150M0 90H150M0 120H150" stroke="#999"/>
+    <rect x="0" y="0" width="30" height="30" fill="rgb(200,30,30)" class="cell"/>
+    <rect x="60" y="30" width="30" height="30" fill="rgb(20,40,200)" class="cell"/>
+    <rect x="60" y="60" width="30" height="30" fill="rgb(20,40,200)" class="cell"/>
+    <rect x="30" y="60" width="30" height="30" fill="rgb(30,200,60)" fill-opacity="0.5" class="cell"/>
+    <path d="M123 123L147 147M147 123L123 147" stroke="#555" stroke-width="3"/>
+  </g>
+  <text x="390" y="225" class="label">red: edge + isolated</text>
+  <text x="390" y="245" class="label">green: alpha 128 + outside palette</text>
+  <text x="390" y="265" class="label">× at (4,4): hidden RGB (9,9,9), alpha 0</text>
+  <text x="390" y="285" class="label">required symmetry / tile contract also fail exactly</text>
+
+  <text x="30" y="305" class="label">Explanatory SVG only; authoritative facts come from Q0–Q4 and structural.json.</text>
+</svg>
