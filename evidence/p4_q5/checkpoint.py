@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 from tracepixel.qa import (
     QA_POLICY_SCHEMA_V1,
@@ -104,10 +105,29 @@ def canonical_json(evidence: object) -> str:
     return json.dumps(evidence, sort_keys=True, separators=(",", ":"), ensure_ascii=True) + "\n"
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Verify or regenerate P4-Q5 seeded QA evidence")
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="regenerate structural.json instead of verifying the committed checkpoint",
+    )
+    args = parser.parse_args(argv)
+
     output = Path(__file__).with_name("structural.json")
-    output.write_text(canonical_json(build_evidence()), encoding="utf-8")
-    print(output)
+    generated = canonical_json(build_evidence())
+    if args.write:
+        output.write_text(generated, encoding="utf-8")
+        print(f"wrote {output}")
+        return
+
+    committed = output.read_text(encoding="utf-8")
+    if committed != generated:
+        raise SystemExit(
+            "P4-Q5 seeded evidence drifted; inspect the deterministic change and run "
+            "`python -m evidence.p4_q5.checkpoint --write` only when intentionally updating it"
+        )
+    print("P4-Q5 seeded evidence matches committed structural.json")
 
 
 if __name__ == "__main__":
