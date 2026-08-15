@@ -13,6 +13,14 @@ from tracepixel.qa.color import (
     TransparentRgbPolicyV1,
     analyze_color,
 )
+from tracepixel.qa.connectivity import (
+    CONNECTIVITY_NEIGHBORS_V1,
+    CONNECTIVITY_QA_SCHEMA_V1,
+    ConnectedComponentFactsV1,
+    ConnectivityQaV1,
+    IsolatedPixelFactsV1,
+    analyze_connectivity,
+)
 from tracepixel.qa.structural import (
     STRUCTURAL_QA_SCHEMA_V1,
     AlphaFactsV1,
@@ -36,6 +44,12 @@ __all__ = [
     "TransparentRgbFactsV1",
     "TransparentRgbPolicyV1",
     "analyze_color",
+    "CONNECTIVITY_NEIGHBORS_V1",
+    "CONNECTIVITY_QA_SCHEMA_V1",
+    "ConnectedComponentFactsV1",
+    "ConnectivityQaV1",
+    "IsolatedPixelFactsV1",
+    "analyze_connectivity",
     "STRUCTURAL_QA_SCHEMA_V1",
     "AlphaFactsV1",
     "BoundsV1",
