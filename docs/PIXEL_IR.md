@@ -12,11 +12,12 @@ tracepixel.pixel-program.v1
 
 The machine-readable structural contract is `schemas/pixel-program.v1.schema.json`. Python `TypedDict` declarations in `tracepixel.model` mirror that shape for library/tooling ergonomics; Python source code, callables and provider SDK objects are not canonical program state.
 
-A concrete program flows toward the existing P1 raster authority through explicit validation and deterministic execution:
+A concrete program flows toward the existing P1 raster authority through explicit validation, canonical serialization when persisted/transmitted, and deterministic execution:
 
 ```text
 PixelProgram(v1)
  -> P2-IR1 validation
+ -> P2-IR3 canonical JSON bytes (when serialized)
  -> P2-IR2 deterministic executor
  -> Canvas / authoritative RGBA8
 ```
@@ -76,7 +77,7 @@ This representation is intentionally close to the P1 transactional batch authori
 
 `tracepixel.model.validate_pixel_program(program)` is the dependency-free runtime validation authority for the currently supported PixelProgram version.
 
-Validation is side-effect-free: it creates no `Canvas`, performs no raster mutation and returns the same input object after success rather than deep-copying or normalizing it. The executor validates and consumes the same program within one execution path rather than treating the mutable input object as permanently certified.
+Validation is side-effect-free: it creates no `Canvas`, performs no raster mutation and returns the same input object after success rather than deep-copying or normalizing it. The executor and serializer validate the supplied object at their boundary instead of treating mutable Python objects as permanently certified.
 
 The validator enforces:
 
@@ -108,7 +109,7 @@ These error identifiers are intended for deterministic tooling and repair loops.
 
 ## P2-IR2 deterministic execution
 
-`tracepixel.model.execute_pixel_program(program)` is the deterministic replay entry point for the supported v1 program.
+`tracepixel.model.execute_pixel_program(program)` is the deterministic replay entry point for an in-memory supported v1 program.
 
 Execution follows one fixed order:
 
@@ -123,17 +124,48 @@ The executor does not implement a second pixel writer. Its private lazy sequence
 
 Empty operation arrays produce a transparent canvas of the declared dimensions. Empty `set_pixels` batches are no-ops. Operation order, edit order and duplicates remain semantically significant.
 
-## Remaining P2 boundaries
+## P2-IR3 canonical serialization and round-trip replay
 
-The following remain deliberately deferred:
+`tracepixel.model.serialize_pixel_program(program)` validates the complete v1 program and emits the canonical byte representation for persisted or transmitted replay state.
 
-- **P2-IR3:** canonical JSON serialization/order and replay round-trip evidence,
-- **P2-IR4:** operation-vocabulary expansion/reduction and compactness/token-proxy evidence.
+The v1 canonical JSON byte contract is:
 
-The JSON Schema remains the serialized structural contract. P2-IR1 runtime validation is the semantic authority for cross-field canvas bounds and the exact P1 numeric rules that JSON Schema alone does not fully express. P2-IR2 only executes that validated v1 contract through P1 raster authority.
+- UTF-8 bytes,
+- no BOM,
+- no trailing newline,
+- no insignificant whitespace,
+- JSON object keys sorted lexicographically at every object level,
+- JSON array order preserved exactly,
+- integer values emitted as ordinary base-10 JSON integers,
+- no provider/model state and no alternate binary representation.
+
+Because v1 accepts only exact integers for numeric fields and fixed ASCII schema/operation strings, this restricted canonical surface avoids floating-point and Unicode-normalization ambiguity. `operations`, `pixels`, and duplicate-coordinate order remain untouched because those arrays are semantically significant.
+
+`serialize_pixel_program` does not mutate, reorder, deduplicate or normalize the caller's Python object. Key sorting affects only emitted JSON object-key order. The returned `bytes` object is the canonical replay payload.
+
+`tracepixel.model.deserialize_pixel_program(payload)` accepts UTF-8 JSON `bytes`, decodes them with the Python standard library, and then runs the same P2-IR1 semantic validator. A valid but non-canonical JSON spelling is accepted on input; reserializing the decoded program produces the one canonical byte spelling. Malformed wire input raises `PixelProgramSerializationError` with stable code `invalid_type` or `invalid_json`; semantically invalid decoded documents continue to raise `PixelProgramValidationError`.
+
+IR3 round-trip/replay invariants are:
+
+```text
+canonical = serialize_pixel_program(program)
+decoded = deserialize_pixel_program(canonical)
+serialize_pixel_program(decoded) == canonical
+execute_pixel_program(decoded).rgba_bytes() == execute_pixel_program(program).rgba_bytes()
+```
+
+Tests additionally pin the exact canonical bytes for an ordered/duplicate-containing fixture and prove that different Python dict insertion order does not alter canonical output. Serialization/deserialization remains dependency-free and provider-free.
+
+## Remaining P2 boundary
+
+The following remains deliberately deferred:
+
+- **P2-IR4:** operation-vocabulary expansion/reduction and compactness/token-proxy/invalidity evidence.
+
+The JSON Schema remains the serialized structural contract. P2-IR1 runtime validation is the semantic authority for cross-field canvas bounds and exact P1 numeric rules. P2-IR2 executes validated in-memory data through P1 raster authority. P2-IR3 defines one deterministic emitted byte spelling and round-trip replay path; it does not broaden the operation vocabulary.
 
 ## Versioning rule
 
 A serialized program always carries an explicit schema identity. Incompatible changes to required fields, field meaning or supported operation shape require a new schema identity; they must not silently reinterpret an existing `tracepixel.pixel-program.v1` document.
 
-Canonical byte serialization is not claimed yet. That contract belongs to P2-IR3.
+The canonical JSON byte contract above is part of the supported v1 serialization behavior. A future incompatible byte-level rule must be introduced intentionally rather than silently changing the output of `serialize_pixel_program` for the same valid v1 program.
