@@ -51,12 +51,18 @@ A concrete PixelProgram must replay without a provider call.
 
 ## 4. Pixel storage
 
-P1 should benchmark and choose a compact contiguous authority, initially favoring one of:
+P1-R0 freezes one canonical raster authority: a mutable contiguous row-major RGBA8 byte buffer with exact straight-alpha channel bytes.
 
-- packed RGBA8 byte storage, or
-- palette-index buffer + explicit palette when the operation requires indexed semantics.
+- one pixel occupies exactly four bytes in `R,G,B,A` order,
+- coordinate origin is top-left with `x` increasing right and `y` increasing down,
+- ordinary raster state does not use one heap object per pixel,
+- palette/index data may constrain or compress authoring but is derived/non-canonical in the P1 baseline,
+- derived hashes, PNGs and enlarged previews never become competing pixel authority,
+- ordinary inspection/mutation should avoid full-buffer copies.
 
-Do not use one heap object per pixel. Views should avoid copying decoded buffers merely for inspection. Derived enlarged previews are separate outputs, never authoritative source pixels.
+The exact bounds, alpha/color semantics, transactional failure model and deterministic evidence boundary are frozen in [`RASTER_AUTHORITY.md`](RASTER_AUTHORITY.md) and executable metadata lives in `tracepixel.raster.CanvasSpec`.
+
+Replacing canonical RGBA8 with indexed authority or maintaining competing canonical stores reopens owner gate G1.
 
 ## 5. Operation design
 
