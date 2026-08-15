@@ -44,6 +44,18 @@ from .pixel_ir import (
     PixelProgramV1,
     SetPixelsOperationV1,
 )
+from .semantic_details_stage import (
+    MAX_PIXELS_PER_SEMANTIC_DETAIL_V1,
+    MAX_SEMANTIC_DETAILS_V1,
+    SEMANTIC_DETAILS_STAGE_ID_V1,
+    SEMANTIC_DETAILS_STAGE_SCHEMA_V1,
+    SemanticDetailV1,
+    SemanticDetailsStageV1,
+)
+from .semantic_details_stage_validation import (
+    SemanticDetailsStageValidationError,
+    validate_semantic_details_stage,
+)
 from .serialization import (
     PixelProgramSerializationError,
     deserialize_pixel_program,
@@ -79,10 +91,14 @@ __all__ = [
     "MAX_LIGHT_RAMPS_V1",
     "MAX_MAJOR_FORMS_V1",
     "MAX_PALETTE_COLORS_V1",
+    "MAX_PIXELS_PER_SEMANTIC_DETAIL_V1",
+    "MAX_SEMANTIC_DETAILS_V1",
     "MAX_SHADING_APPLICATIONS_V1",
     "PALETTE_LIGHT_STAGE_ID_V1",
     "PALETTE_LIGHT_STAGE_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
+    "SEMANTIC_DETAILS_STAGE_ID_V1",
+    "SEMANTIC_DETAILS_STAGE_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
     "SHADING_STAGE_ID_V1",
     "SHADING_STAGE_SCHEMA_V1",
@@ -107,6 +123,9 @@ __all__ = [
     "PixelProgramV1",
     "PixelProgramSerializationError",
     "PixelProgramValidationError",
+    "SemanticDetailV1",
+    "SemanticDetailsStageV1",
+    "SemanticDetailsStageValidationError",
     "SetPixelsOperationV1",
     "ShadingApplicationV1",
     "ShadingRelationV1",
@@ -124,6 +143,7 @@ __all__ = [
     "validate_major_forms_stage",
     "validate_palette_light_stage",
     "validate_pixel_program",
+    "validate_semantic_details_stage",
     "validate_shading_stage",
     "validate_silhouette_stage",
 ]
