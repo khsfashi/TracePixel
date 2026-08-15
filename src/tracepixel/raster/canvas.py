@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import struct
 from collections.abc import Sequence
 
 from tracepixel.raster.contract import (
@@ -8,6 +9,8 @@ from tracepixel.raster.contract import (
     RasterContractError,
     validate_rgba8,
 )
+
+_BATCH_EDIT_STRUCT = struct.Struct("<IBBBB")
 
 
 class BatchEditError(RasterContractError):
@@ -56,16 +59,13 @@ class Canvas:
         self._write_rgba8(offset, color)
 
     def set_pixels(self, edits: object) -> None:
-        batch = _validate_batch_shape(edits)
-        offsets = [self._spec.offset(x, y) for x, y, _ in batch]
-
-        colors: list[RGBA8] = []
-        for _, _, color in batch:
-            validate_rgba8(color)
-            colors.append((color[0], color[1], color[2], color[3]))
-
-        for offset, color in zip(offsets, colors, strict=True):
-            self._write_rgba8(offset, color)
+        staged = _stage_batch(self._spec, edits)
+        pixels = self._pixels
+        for offset, red, green, blue, alpha in _BATCH_EDIT_STRUCT.iter_unpack(staged):
+            pixels[offset] = red
+            pixels[offset + 1] = green
+            pixels[offset + 2] = blue
+            pixels[offset + 3] = alpha
 
     def rgba_bytes(self) -> bytes:
         """Return an owned exact snapshot of the authoritative row-major RGBA8 bytes."""
@@ -83,16 +83,27 @@ class Canvas:
         pixels[offset + 3] = color[3]
 
 
-def _validate_batch_shape(edits: object) -> list[tuple[object, object, Sequence[int]]]:
+def _stage_batch(spec: CanvasSpec, edits: object) -> bytearray:
     if not isinstance(edits, Sequence) or isinstance(edits, (str, bytes, bytearray)):
         raise BatchEditError("pixel batch must be an ordered sequence of edits")
 
-    batch: list[tuple[object, object, Sequence[int]]] = []
-    for edit in edits:
+    staged = bytearray(len(edits) * _BATCH_EDIT_STRUCT.size)
+    for index, edit in enumerate(edits):
         if not isinstance(edit, Sequence) or isinstance(edit, (str, bytes, bytearray)):
             raise BatchEditError("each pixel edit must be a three-item sequence")
         if len(edit) != 3:
             raise BatchEditError("each pixel edit must contain x, y, and RGBA8 color")
+
         x, y, color = edit
-        batch.append((x, y, color))
-    return batch
+        offset = spec.offset(x, y)
+        validate_rgba8(color)
+        _BATCH_EDIT_STRUCT.pack_into(
+            staged,
+            index * _BATCH_EDIT_STRUCT.size,
+            offset,
+            color[0],
+            color[1],
+            color[2],
+            color[3],
+        )
+    return staged
