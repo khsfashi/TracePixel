@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:stage-plan:v1",
+  "title": "TracePixel Stage Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "stages"],
+  "properties": {
+    "schema": {"const": "tracepixel.stage-plan.v1"},
+    "stages": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "prefixItems": [
+        {"$ref": "#/$defs/silhouetteEntry"},
+        {"$ref": "#/$defs/majorFormsEntry"},
+        {"$ref": "#/$defs/paletteLightEntry"},
+        {"$ref": "#/$defs/shadingEntry"},
+        {"$ref": "#/$defs/semanticDetailsEntry"},
+        {"$ref": "#/$defs/outlineCleanupEntry"}
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "skipReason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": ".*\\S.*"
+    },
+    "silhouetteEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "silhouette"},
+        "document": {"oneOf": [{"$ref": "silhouette-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "silhouette-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    },
+    "majorFormsEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "major_forms"},
+        "document": {"oneOf": [{"$ref": "major-forms-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "major-forms-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    },
+    "paletteLightEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "palette_light_ramp"},
+        "document": {"oneOf": [{"$ref": "palette-light-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "palette-light-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    },
+    "shadingEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "shading"},
+        "document": {"oneOf": [{"$ref": "shading-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "shading-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    },
+    "semanticDetailsEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "semantic_details"},
+        "document": {"oneOf": [{"$ref": "semantic-details-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "semantic-details-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    },
+    "outlineCleanupEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "document", "skip_reason"],
+      "properties": {
+        "stage": {"const": "outline_cleanup"},
+        "document": {"oneOf": [{"$ref": "outline-cleanup-stage.v1.schema.json"}, {"type": "null"}]},
+        "skip_reason": {"oneOf": [{"$ref": "#/$defs/skipReason"}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {"properties": {"document": {"$ref": "outline-cleanup-stage.v1.schema.json"}, "skip_reason": {"type": "null"}}},
+        {"properties": {"document": {"type": "null"}, "skip_reason": {"$ref": "#/$defs/skipReason"}}}
+      ]
+    }
+  }
+}

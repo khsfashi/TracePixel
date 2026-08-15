@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:stage-pipeline-evidence:v1",
+  "title": "TracePixel Stage Pipeline Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "art_intent_sha256",
+    "stage_plan_sha256",
+    "canvas",
+    "stages",
+    "final_rgba_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "tracepixel.stage-pipeline-evidence.v1"},
+    "art_intent_sha256": {"$ref": "#/$defs/sha256"},
+    "stage_plan_sha256": {"$ref": "#/$defs/sha256"},
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1, "maximum": 4096},
+        "height": {"type": "integer", "minimum": 1, "maximum": 4096}
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/stageTransition"}
+    },
+    "final_rgba_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "integer", "minimum": 0},
+        "y": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "scale", "width", "height", "png_sha256"],
+      "properties": {
+        "kind": {"const": "nearest-preview"},
+        "scale": {"type": "integer", "minimum": 2},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "png_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stageTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "input_stage",
+        "status",
+        "skip_reason",
+        "input_rgba_sha256",
+        "output_rgba_sha256",
+        "program",
+        "program_sha256",
+        "operation_count",
+        "edit_count",
+        "touched_bounds",
+        "preview"
+      ],
+      "properties": {
+        "stage": {
+          "enum": ["silhouette", "major_forms", "palette_light_ramp", "shading", "semantic_details", "outline_cleanup"]
+        },
+        "input_stage": {
+          "enum": ["art_intent", "silhouette", "major_forms", "palette_light_ramp", "shading", "semantic_details"]
+        },
+        "status": {"enum": ["applied", "skipped"]},
+        "skip_reason": {"oneOf": [{"type": "string", "minLength": 1, "maxLength": 128}, {"type": "null"}]},
+        "input_rgba_sha256": {"$ref": "#/$defs/sha256"},
+        "output_rgba_sha256": {"$ref": "#/$defs/sha256"},
+        "program": {"oneOf": [{"$ref": "pixel-program.v1.schema.json"}, {"type": "null"}]},
+        "program_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "operation_count": {"type": "integer", "minimum": 0},
+        "edit_count": {"type": "integer", "minimum": 0},
+        "touched_bounds": {"oneOf": [{"$ref": "#/$defs/bounds"}, {"type": "null"}]},
+        "preview": {"oneOf": [{"$ref": "#/$defs/preview"}, {"type": "null"}]}
+      }
+    }
+  }
+}
