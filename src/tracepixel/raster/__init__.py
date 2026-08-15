@@ -15,6 +15,13 @@ from tracepixel.raster.contract import (
     validate_dimensions,
     validate_rgba8,
 )
+from tracepixel.raster.export import (
+    ExportScaleError,
+    PngExport,
+    PngExportMetadata,
+    export_native_png,
+    export_nearest_preview_png,
+)
 
 __all__ = [
     "BYTES_PER_PIXEL",
@@ -27,8 +34,13 @@ __all__ = [
     "CanvasSizeError",
     "CanvasSpec",
     "ColorValueError",
+    "ExportScaleError",
     "PixelCoordinateError",
+    "PngExport",
+    "PngExportMetadata",
     "RasterContractError",
+    "export_native_png",
+    "export_nearest_preview_png",
     "validate_dimensions",
     "validate_rgba8",
 ]
