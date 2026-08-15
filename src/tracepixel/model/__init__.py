@@ -23,6 +23,19 @@ from .major_forms_stage_validation import (
     MajorFormsStageValidationError,
     validate_major_forms_stage,
 )
+from .palette_light_stage import (
+    MAX_LIGHT_RAMPS_V1,
+    MAX_PALETTE_COLORS_V1,
+    PALETTE_LIGHT_STAGE_ID_V1,
+    PALETTE_LIGHT_STAGE_SCHEMA_V1,
+    LightRampV1,
+    PaletteColorV1,
+    PaletteLightStageV1,
+)
+from .palette_light_stage_validation import (
+    PaletteLightStageValidationError,
+    validate_palette_light_stage,
+)
 from .pixel_ir import (
     PIXEL_PROGRAM_SCHEMA_V1,
     SET_PIXELS_OPERATION_V1,
@@ -51,7 +64,11 @@ __all__ = [
     "ART_INTENT_SCHEMA_V1",
     "MAJOR_FORMS_STAGE_ID_V1",
     "MAJOR_FORMS_STAGE_SCHEMA_V1",
+    "MAX_LIGHT_RAMPS_V1",
     "MAX_MAJOR_FORMS_V1",
+    "MAX_PALETTE_COLORS_V1",
+    "PALETTE_LIGHT_STAGE_ID_V1",
+    "PALETTE_LIGHT_STAGE_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
     "SILHOUETTE_STAGE_ID_V1",
@@ -63,10 +80,14 @@ __all__ = [
     "CompositionIntentV1",
     "FacingV1",
     "LightDirectionV1",
+    "LightRampV1",
     "MajorFormV1",
     "MajorFormsStageV1",
     "MajorFormsStageValidationError",
     "OccupiedBoundsV1",
+    "PaletteColorV1",
+    "PaletteLightStageV1",
+    "PaletteLightStageValidationError",
     "PixelEditV1",
     "PixelProgramV1",
     "PixelProgramSerializationError",
@@ -82,6 +103,7 @@ __all__ = [
     "serialize_pixel_program",
     "validate_art_intent",
     "validate_major_forms_stage",
+    "validate_palette_light_stage",
     "validate_pixel_program",
     "validate_silhouette_stage",
 ]
