@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:silhouette-stage:v1",
+  "title": "TracePixel Silhouette Stage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stage",
+    "program"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.silhouette-stage.v1"
+    },
+    "stage": {
+      "const": "silhouette"
+    },
+    "program": {
+      "$ref": "pixel-program.v1.schema.json"
+    }
+  }
+}
