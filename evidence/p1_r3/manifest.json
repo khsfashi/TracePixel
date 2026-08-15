@@ -1,0 +1,51 @@
+{
+  "fixture": {
+    "authoritative_rgba_sha256": "bcf8159ae4f8eeb1cde880a85a7b18cca66cfc8c5aaef40798a6a445269f2e27",
+    "edit_count": 95,
+    "height": 16,
+    "id": "p1-r3-potion-v1",
+    "program_sha256": "cf84fcf5f5da670db17a581eeae2a4085ae59ec4bf724886a3a79567367cf888",
+    "schema": "tracepixel.replay-fixture.v1",
+    "width": 16
+  },
+  "outputs": {
+    "authoritative_rgba": "potion.rgba",
+    "native": {
+      "alpha_mode": "straight",
+      "authoritative_rgba_sha256": "bcf8159ae4f8eeb1cde880a85a7b18cca66cfc8c5aaef40798a6a445269f2e27",
+      "compression": "deflate-stored",
+      "encoder": "tracepixel.png.rgba8.store.v1",
+      "filter": "none",
+      "height": 16,
+      "kind": "native",
+      "pixel_format": "RGBA8",
+      "png_sha256": "d0fb6d9e3acd5d426236c20669089c56c2a1a764b6b8c82e8996591e9adc84d9",
+      "resampling": "none",
+      "scale": 1,
+      "schema": "tracepixel.png-export.v1",
+      "source_height": 16,
+      "source_width": 16,
+      "width": 16
+    },
+    "native_png": "potion.png",
+    "preview": {
+      "alpha_mode": "straight",
+      "authoritative_rgba_sha256": "bcf8159ae4f8eeb1cde880a85a7b18cca66cfc8c5aaef40798a6a445269f2e27",
+      "compression": "deflate-stored",
+      "encoder": "tracepixel.png.rgba8.store.v1",
+      "filter": "none",
+      "height": 32,
+      "kind": "nearest-preview",
+      "pixel_format": "RGBA8",
+      "png_sha256": "48bb9254824ce6ca2cba96908daedd9b76e460c2b3d7ebeb25449c40e179c20a",
+      "resampling": "nearest-neighbor",
+      "scale": 2,
+      "schema": "tracepixel.png-export.v1",
+      "source_height": 16,
+      "source_width": 16,
+      "width": 32
+    },
+    "preview_png": "potion@2x.png"
+  },
+  "schema": "tracepixel.p1-r3-evidence.v1"
+}
