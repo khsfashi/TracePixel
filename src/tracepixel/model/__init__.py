@@ -25,12 +25,23 @@ from .serialization import (
     deserialize_pixel_program,
     serialize_pixel_program,
 )
+from .silhouette_stage import (
+    SILHOUETTE_STAGE_ID_V1,
+    SILHOUETTE_STAGE_SCHEMA_V1,
+    SilhouetteStageV1,
+)
+from .silhouette_stage_validation import (
+    SilhouetteStageValidationError,
+    validate_silhouette_stage,
+)
 from .validation import PixelProgramValidationError, validate_pixel_program
 
 __all__ = [
     "ART_INTENT_SCHEMA_V1",
     "PIXEL_PROGRAM_SCHEMA_V1",
     "SET_PIXELS_OPERATION_V1",
+    "SILHOUETTE_STAGE_ID_V1",
+    "SILHOUETTE_STAGE_SCHEMA_V1",
     "ArtIntentCanvasV1",
     "ArtIntentV1",
     "ArtIntentValidationError",
@@ -44,6 +55,8 @@ __all__ = [
     "PixelProgramSerializationError",
     "PixelProgramValidationError",
     "SetPixelsOperationV1",
+    "SilhouetteStageV1",
+    "SilhouetteStageValidationError",
     "SymmetryAxisV1",
     "SymmetryIntentV1",
     "SymmetryStrengthV1",
@@ -52,4 +65,5 @@ __all__ = [
     "serialize_pixel_program",
     "validate_art_intent",
     "validate_pixel_program",
+    "validate_silhouette_stage",
 ]
