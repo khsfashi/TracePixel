@@ -161,7 +161,9 @@ class CodexCliProviderTests(unittest.TestCase):
         self.assertIn('model_reasoning_effort="low"', command)
         self.assertIn("--output-schema", command)
         self.assertTrue(runner.prompt and "TRACEPIXEL_REQUEST=" in runner.prompt)
-        self.assertTrue(runner.prompt and "do not inspect the filesystem" in runner.prompt)
+        self.assertTrue(
+            runner.prompt and "do not inspect the filesystem" in runner.prompt.lower()
+        )
 
         usage = provider.last_usage()
         self.assertIsNotNone(usage)
