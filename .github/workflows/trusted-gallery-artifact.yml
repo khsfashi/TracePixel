@@ -1,6 +1,9 @@
 name: Trusted Static Gallery Artifact
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -14,8 +17,8 @@ jobs:
   publish-gallery:
     if: >-
       github.repository == 'khsfashi/TracePixel' &&
-      github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/main'
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
