@@ -59,14 +59,15 @@ class B0F0PreregistrationTests(unittest.TestCase):
             self.assertEqual(constraints["connected_components"], 1)
             self.assertEqual(constraints["maximum_isolated_visible_pixels"], 0)
 
-    def test_budget_and_trials_are_finite_and_match_existing_small_asset_boundary(self) -> None:
+    def test_budget_and_trials_are_finite_and_allow_bounded_revision_headroom(self) -> None:
         budget = self.freeze["budgets"]
         self.assertEqual(budget["trials_per_task_per_scored_method"], 2)
         self.assertEqual(budget["max_provider_calls_per_trial"], 4)
         self.assertEqual(budget["max_iterations_per_trial"], 4)
         self.assertEqual(budget["max_tool_calls_per_trial"], 4)
         self.assertEqual(budget["max_operations_per_trial"], 16)
-        self.assertEqual(budget["max_pixel_edits_per_trial"], 256)
+        self.assertEqual(budget["max_pixel_edits_per_trial"], 1024)
+        self.assertIn("Cumulative", budget["pixel_edit_budget_semantics"])
         self.assertEqual(budget["max_visual_observation_calls_per_trial"], 0)
         self.assertEqual(budget["human_interventions_during_generation"], 0)
         self.assertGreater(budget["provider_call_timeout_seconds"], 0)
