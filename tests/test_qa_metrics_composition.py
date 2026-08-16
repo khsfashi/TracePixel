@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import html
 import json
 from pathlib import Path
+import re
 from tempfile import TemporaryDirectory
 import unittest
 
@@ -47,6 +49,41 @@ class QaMetricsCompositionTests(unittest.TestCase):
             hashlib.sha256(first.svg).hexdigest(),
         )
         self.assertEqual(first.manifest["image"]["source_image_scaling"], "none")  # type: ignore[index]
+
+    def test_reference_composition_uses_mobile_safe_vertical_stack(self) -> None:
+        composition = build_qa_metrics_composition(build_reference_bundle())
+        record = composition.manifest["composition"]
+        assert isinstance(record, dict)
+        self.assertEqual(record["layout"], "vertical-stack-v1")
+        self.assertLessEqual(record["width"], 400)
+        self.assertEqual(record["content_width"], record["width"] - 32)
+        self.assertGreater(record["height"], record["width"])
+
+        svg = composition.svg.decode("utf-8")
+        self.assertIn(">preview PNG</text>", svg)
+        self.assertIn(">exact source bytes</text>", svg)
+        self.assertIn(">scaling: none</text>", svg)
+        self.assertNotIn("preview PNG · exact source bytes · scaling none", svg)
+
+        text_nodes = re.findall(
+            r'<text x="(\d+)" y="(\d+)"[^>]*font-size="(\d+)"[^>]*>(.*?)</text>',
+            svg,
+        )
+        self.assertGreater(len(text_nodes), 20)
+        self.assertEqual({x for x, _, _, _ in text_nodes}, {"16"})
+
+        max_chars_by_size = {16: 30, 15: 36, 14: 38, 12: 46, 11: 46}
+        previous_y = -1
+        for _, y_text, size_text, payload in text_nodes:
+            y = int(y_text)
+            size = int(size_text)
+            self.assertGreater(y, previous_y)
+            previous_y = y
+            self.assertLessEqual(
+                len(html.unescape(payload)),
+                max_chars_by_size[size],
+                f"SVG text exceeds mobile-safe line budget: {payload!r}",
+            )
 
     def test_manifest_digest_mismatch_is_rejected(self) -> None:
         bundle = build_reference_bundle()
