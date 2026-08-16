@@ -50,3 +50,5 @@ jobs:
         run: python -m evidence.p6_v4.checkpoint
       - name: P6-V5 mobile review surface checkpoint
         run: python -m evidence.p6_v5.checkpoint
+      - name: B0-H0 matched harness checkpoint
+        run: python -m evidence.b0_h0.checkpoint
