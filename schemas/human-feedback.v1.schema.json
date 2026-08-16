@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:human-feedback:v1",
+  "title": "TracePixel P7-F5 Human Feedback v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "evidence",
+    "evidence_manifest_sha256",
+    "review",
+    "feedback_intake",
+    "completion",
+    "authority"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.human-feedback.v1"
+    },
+    "evidence": {
+      "$ref": "urn:tracepixel:schema:repair-evidence:v1"
+    },
+    "evidence_manifest_sha256": {
+      "$ref": "#/$defs/digest"
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "decision",
+        "summary"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "decision": {
+          "enum": [
+            "accept",
+            "request_repair"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      }
+    },
+    "feedback_intake": {
+      "oneOf": [
+        {
+          "$ref": "urn:tracepixel:schema:feedback-intake:v1"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_qa_status",
+        "human_authoring_status",
+        "composite_completion"
+      ],
+      "properties": {
+        "deterministic_qa_status": {
+          "enum": [
+            "no-findings",
+            "findings-present"
+          ]
+        },
+        "human_authoring_status": {
+          "enum": [
+            "accepted",
+            "repair-requested"
+          ]
+        },
+        "composite_completion": {
+          "const": "not-defined"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human",
+        "deterministic_qa",
+        "perceptual",
+        "vlm"
+      ],
+      "properties": {
+        "human": {
+          "const": "repository-owner"
+        },
+        "deterministic_qa": {
+          "const": "retained-not-overridden"
+        },
+        "perceptual": {
+          "const": "owner-human-only"
+        },
+        "vlm": {
+          "const": "not-used"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
