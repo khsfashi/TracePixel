@@ -1,0 +1,62 @@
+name: Owner Codex Smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tracepixel-owner-codex-smoke
+  cancel-in-progress: false
+
+jobs:
+  p5-a5-real-provider:
+    if: github.repository == 'khsfashi/TracePixel' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, windows, x64, tracepixel-owner]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout trusted main
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install TracePixel
+        shell: pwsh
+        run: python -m pip install -e .
+
+      - name: Verify Codex owner environment
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          codex --version
+          if ($LASTEXITCODE -ne 0) { throw "codex --version failed with exit code $LASTEXITCODE" }
+          codex login status
+          if ($LASTEXITCODE -ne 0) { throw "codex login status failed with exit code $LASTEXITCODE" }
+
+      - name: Prepare evidence directory
+        shell: pwsh
+        run: |
+          Remove-Item -LiteralPath artifacts/p5-a5-reference-run -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+
+      - name: Run P5-A5 real-provider smoke
+        shell: pwsh
+        run: python -m evidence.p5_a5.smoke --output-dir artifacts/p5-a5-reference-run
+
+      - name: Upload P5-A5 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p5-a5-codex-smoke-${{ github.sha }}
+          path: artifacts/p5-a5-reference-run
+          if-no-files-found: warn
+          retention-days: 30
