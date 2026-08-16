@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:repair-evidence:v1",
+  "title": "TracePixel P7-F4 Before/After Repair Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "execution",
+    "preview_scale",
+    "before_native_png",
+    "before_preview_png",
+    "after_native_png",
+    "after_preview_png",
+    "qa_evidence",
+    "gallery_html",
+    "authority"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tracepixel.repair-evidence.v1"
+    },
+    "execution": {
+      "$ref": "urn:tracepixel:schema:repair-execution:v1"
+    },
+    "preview_scale": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "before_native_png": {
+      "$ref": "#/$defs/artifact"
+    },
+    "before_preview_png": {
+      "$ref": "#/$defs/artifact"
+    },
+    "after_native_png": {
+      "$ref": "#/$defs/artifact"
+    },
+    "after_preview_png": {
+      "$ref": "#/$defs/artifact"
+    },
+    "qa_evidence": {
+      "$ref": "#/$defs/artifact"
+    },
+    "gallery_html": {
+      "$ref": "#/$defs/artifact"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raster",
+        "deterministic_qa",
+        "human",
+        "perceptual"
+      ],
+      "properties": {
+        "raster": {
+          "const": "authoritative-rgba-derived"
+        },
+        "deterministic_qa": {
+          "const": "deterministic"
+        },
+        "human": {
+          "const": "not-recorded"
+        },
+        "perceptual": {
+          "const": "not-included"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "size_bytes",
+        "sha256",
+        "authoritative_rgba_sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "media_type": {
+          "enum": [
+            "image/png",
+            "application/json",
+            "text/html"
+          ]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "authoritative_rgba_sha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
