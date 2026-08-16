@@ -9,6 +9,15 @@ REPAIR_EVIDENCE_SCHEMA_V1 = "tracepixel.repair-evidence.v1"
 
 RepairEvidenceMediaTypeV1 = Literal["image/png", "application/json", "text/html"]
 
+_BUNDLE_ARTIFACT_KEYS = (
+    "before_native_png",
+    "before_preview_png",
+    "after_native_png",
+    "after_preview_png",
+    "qa_evidence",
+    "gallery_html",
+)
+
 
 class RepairEvidenceArtifactV1(TypedDict):
     """One byte-addressed F4 review artifact bound to optional authoritative RGBA identity."""
@@ -52,6 +61,24 @@ class RepairEvidenceFile:
 class RepairEvidenceBundle:
     manifest: RepairEvidenceV1
     files: tuple[RepairEvidenceFile, ...]
+
+    def __post_init__(self) -> None:
+        """Keep one immutable, closed materialization path set per valid F4 manifest."""
+
+        actual_paths = [item.path for item in self.files]
+        if len(actual_paths) != len(set(actual_paths)):
+            raise ValueError("repair evidence bundle file paths must be unique")
+
+        # Malformed manifests are rejected by validate_repair_evidence(). When the path-bearing
+        # shape is present, fail early here so a writer can never verify one file and then
+        # overwrite it through a duplicate or undeclared later entry.
+        try:
+            expected_paths = {"manifest.json"}
+            expected_paths.update(self.manifest[key]["path"] for key in _BUNDLE_ARTIFACT_KEYS)
+        except (KeyError, TypeError):
+            return
+        if set(actual_paths) != expected_paths:
+            raise ValueError("repair evidence bundle files must exactly match manifest artifact paths")
 
     def file_bytes(self, path: str) -> bytes:
         for item in self.files:
