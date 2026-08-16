@@ -1,0 +1,51 @@
+name: B0 Owner Blind Review Artifact
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tracepixel-b0-owner-review
+  cancel-in-progress: true
+
+jobs:
+  publish-review:
+    if: >-
+      github.repository == 'khsfashi/TracePixel' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout trusted main commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          clean: true
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install TracePixel
+        run: python -m pip install -e .
+
+      - name: Build offline Korean-first blind review package
+        run: python -m evidence.b0_s0.mobile_review --output artifacts/b0-owner-review --source-sha ${{ github.sha }}
+
+      - name: Upload public blind review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tracepixel-b0-owner-review-${{ github.sha }}
+          path: artifacts/b0-owner-review
+          if-no-files-found: error
+          retention-days: 14
