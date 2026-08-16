@@ -1,0 +1,310 @@
+{
+  "schema": "tracepixel.b1-preregistration.v1",
+  "benchmark_id": "B1",
+  "freeze_status": "frozen",
+  "frozen_at_utc_date": "2026-08-17",
+  "repository_commit_under_test": "0ee45b1e466d4d1ec4e077b835ae31d47a1379a1",
+  "predecessor_evidence": {
+    "b0_freeze_commit": "c4b31288867fd4c4cf5ea3664808bd6f47cca1db",
+    "b0_postmortem_commit": "3145b0c5b27690e6cb088cdf01e789dad846da39",
+    "b0_preregistration_path": "evidence/b0/preregistration.v1.json",
+    "b0_postmortem_path": "evidence/b0/postmortem.v1.json",
+    "p7_to_b1_handoff_commit": "0ee45b1e466d4d1ec4e077b835ae31d47a1379a1",
+    "rule": "B0 evidence is immutable development-visible evidence. B1 uses only newly frozen task variants and newly produced attempts; no B0 output may be copied, seeded, relabelled, rescored, or rerun as B1 evidence."
+  },
+  "purpose": "Held-out generalization diagnostic for the post-B0/P7 TracePixel architecture on newly frozen constrained small pixel assets; not a universal art-quality or production-readiness claim.",
+  "scored_methods": [
+    {
+      "id": "tracepixel-post-p7-v1",
+      "family": "tracepixel-staged-repair-agent",
+      "description": "Post-P7 TracePixel staged Agent surface. Required authoring stages must be explicitly applied or skipped before completion; deterministic findings may enter the bounded P7 localization/repair path before final QA.",
+      "provider_surface": "openai-codex-cli",
+      "provider_auth_mode": "chatgpt",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "low",
+      "vision_input": false,
+      "codex_cli_version": "codex-cli 0.147.0",
+      "sandbox": "read-only",
+      "ephemeral": true
+    },
+    {
+      "id": "raw-pixel-program-v1",
+      "family": "raw-primitive-agent",
+      "description": "Matched low-level baseline using the same provider/model and visible task information but without TracePixel stage, localization, or repair guidance. It receives only the v1 PixelProgram set_pixels surface plus the same task-applicable deterministic QA feedback between bounded revisions.",
+      "provider_surface": "openai-codex-cli",
+      "provider_auth_mode": "chatgpt",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "low",
+      "vision_input": false,
+      "codex_cli_version": "codex-cli 0.147.0",
+      "sandbox": "read-only",
+      "ephemeral": true
+    }
+  ],
+  "non_scored_baselines": [
+    {
+      "family": "raw-llm-python-pillow",
+      "status": "deferred",
+      "reason": "No newly frozen equally pinned dependency/runtime adapter is included in B1-F0; do not manufacture a scored competitor from an unmatched environment."
+    },
+    {
+      "family": "texel-studio-like-agent",
+      "status": "qualitative-reference-only",
+      "reason": "No direct matched B1 adapter is frozen."
+    },
+    {
+      "family": "aseprite-mcp-agent",
+      "status": "not-scored",
+      "reason": "Owner gate G5 remains unresolved; inclusion as a scored B1 baseline is forbidden."
+    },
+    {
+      "family": "image-generation-postprocess",
+      "status": "deferred",
+      "reason": "No matched image-generation provider/settings/postprocess recipe is frozen for B1."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "B1-T0-01",
+      "tier": "T0",
+      "visible_text": "Create a centered purple plus-shaped rune on a 16x16 transparent canvas. Keep at least 4 transparent pixels of margin on every side, use at most 2 visible colors, make the complete visible shape exactly symmetric horizontally and vertically, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 4,
+        "maximum_visible_colors": 2,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "horizontal_symmetry": true,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T1-01",
+      "tier": "T1",
+      "visible_text": "Create a small silver dagger facing left on a 16x16 transparent canvas. Keep at least 1 transparent pixel of margin on every side, use at most 5 visible colors, keep the dagger as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 5,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T1-02",
+      "tier": "T1",
+      "visible_text": "Create a small green leaf icon angled upward to the right on a 16x16 transparent canvas. Keep at least 2 transparent pixels of margin on every side, use at most 5 visible colors, keep the leaf as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 2,
+        "maximum_visible_colors": 5,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T2-01",
+      "tier": "T2",
+      "visible_text": "Create a front-facing iron helmet with a dark visor on a 16x16 transparent canvas. Center it, keep at least 1 transparent pixel of margin on every side, use at most 7 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 7,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T2-02",
+      "tier": "T2",
+      "visible_text": "Create a small campfire with a warm orange flame above dark crossed logs on a 16x16 transparent canvas. Keep at least 1 transparent pixel of margin on every side, use at most 7 visible colors, keep the campfire as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 7,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T3-01",
+      "tier": "T3",
+      "visible_text": "Create a front-facing closed treasure chest with a gold latch on a 16x16 transparent canvas. Center it, keep at least 1 transparent pixel of margin on every side, use at most 8 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 8,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B1-T3-02",
+      "tier": "T3",
+      "visible_text": "Create a small red-capped mushroom with a pale stem on a 16x16 transparent canvas. Center it, keep at least 1 transparent pixel of margin on every side, use at most 7 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 7,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    }
+  ],
+  "held_out_boundary": {
+    "selection_rule": "B1 task IDs and visible task texts are newly frozen after P7 and must not equal any B0 task ID or visible_text.",
+    "asset_output_rule": "Generation prompts, adapters, and scored execution must not read, copy, seed from, or transform B0 final RGBA/PNG outputs.",
+    "development_reference_rule": "B0 postmortem may inform architecture and benchmark design, but B0 attempt outputs and owner scores are not B1 scored evidence.",
+    "no_score_improving_rerun": "B0 attempts are never rerun or relabelled. B1 unsuccessful attempts are retained under their original scheduled identity."
+  },
+  "information_matching": {
+    "rule": "Every scored method receives the exact same B1 task visible_text and no method receives hidden_structural_constraints as prompt text. Method-specific instructions may only describe that method's frozen authoring surface and output schema.",
+    "deterministic_feedback": "After an accepted revision, both methods may receive the same task-applicable deterministic QA facts. TracePixel-specific stage/localization/repair state is exposed only to tracepixel-post-p7-v1 because it is the architecture under test.",
+    "human_feedback_during_generation": "disabled for the scored B1-v1 cohort; repository-owner review occurs only after generation so method comparison is not confounded by selective interactive hints.",
+    "external_reference_images": false
+  },
+  "budgets": {
+    "trials_per_task_per_scored_method": 2,
+    "max_provider_calls_per_trial": 8,
+    "max_iterations_per_trial": 8,
+    "max_tool_calls_per_trial": 8,
+    "max_operations_per_trial": 32,
+    "max_pixel_edits_per_trial": 2048,
+    "pixel_edit_budget_semantics": "Cumulative across accepted proposals; 2048 permits at most eight full 16x16 canvas-equivalent edit passes. The larger B1 ceiling exists so the post-P7 staged method can traverse all six staged authoring steps and still retain bounded repair headroom.",
+    "max_visual_observation_calls_per_trial": 0,
+    "max_reported_input_tokens_per_provider_call": 24000,
+    "max_reported_output_tokens_per_provider_call": 4000,
+    "provider_call_timeout_seconds": 180,
+    "trial_wall_timeout_seconds": 1200,
+    "api_cost_policy": "No separately metered API-key billing is permitted. The frozen provider boundary is the existing ChatGPT-authenticated Codex CLI plan; api_cost_usd_micros remains null when the provider exposes no per-call price.",
+    "human_interventions_during_generation": 0
+  },
+  "retry_policy": {
+    "semantic_retry_after_valid_provider_response": 0,
+    "transport_retry": "At most one identical-request retry is allowed only when a provider/transport failure returns no usable proposal bytes. Both call records are retained and the retry consumes the same trial's provider-call budget.",
+    "budget_exhaustion_retry": 0,
+    "manual_repair_retry": 0
+  },
+  "exclusion_policy": {
+    "after_provider_invocation": "No scored attempt is excluded after provider invocation; provider, validation, verifier, semantic, timeout and budget failures remain failures in the result set.",
+    "pre_invocation_harness_failure": "A demonstrable harness/setup failure before provider invocation may be marked void_infrastructure and rerun once with the same attempt ID plus a rerun suffix. The original record must remain retained and the reason/fix commit must be recorded.",
+    "task_relabeling": "Forbidden after this freeze.",
+    "cross_cohort_substitution": "Forbidden: no B0 attempt or output may replace a scheduled B1 attempt."
+  },
+  "failure_taxonomy": [
+    "budget_exhaustion",
+    "timeout",
+    "transport_provider_failure",
+    "invalid_operation_or_ir",
+    "deterministic_verifier_rejection",
+    "semantic_visual_failure",
+    "human_rejection",
+    "void_infrastructure"
+  ],
+  "deterministic_scoring": {
+    "per_rule": "Each frozen task-applicable structural rule is binary pass/fail from deterministic QA only.",
+    "per_trial_structural_fraction": "passed_applicable_rules / applicable_rules; missing or unusable final output scores 0.",
+    "per_trial_structural_pass": "true only when every applicable structural rule passes.",
+    "completion": "true only when the method returns a harness-valid final artifact within all frozen budgets, regardless of whether every structural rule passes.",
+    "stage_completion_for_tracepixel": "Reported separately: every required authoring stage must be explicitly applied or skipped before tracepixel-post-p7-v1 may claim authoring completion. It is not folded into the deterministic structural fraction.",
+    "aggregation": "For each method report scheduled trial count, completion rate, structural-pass rate, and arithmetic mean structural fraction across all scheduled non-void trials. Failed/non-completing trials remain in denominators and contribute zero structural fraction. void_infrastructure records are reported separately and never silently removed.",
+    "tie_breaking": "No single winner is declared from a composite score; completion, deterministic structure, stage coverage, repair cost, complexity and human perception remain separate result layers."
+  },
+  "complexity_reporting": {
+    "required_when_available": [
+      "input_tokens",
+      "output_tokens",
+      "tool_calls",
+      "operation_calls",
+      "visual_observation_calls",
+      "iterations",
+      "revisions",
+      "changed_pixels",
+      "changed_operations",
+      "repair_cycles",
+      "authored_stages",
+      "skipped_stages",
+      "unaffected_region_stability",
+      "wall_time",
+      "api_cost_usd_micros",
+      "human_interventions",
+      "failure_category"
+    ],
+    "method_specific_null_policy": "Stage/repair-only fields that do not apply to the raw baseline remain explicit null/not-applicable values rather than fabricated equivalents.",
+    "aggregation": "Report per-trial raw values plus method median and arithmetic mean for token/tool/iteration/revision/changed-pixel/wall-time fields where numeric. Preserve stage coverage and repair evidence separately. Do not omit failed trials; unavailable provider metrics remain explicit nulls rather than guessed values."
+  },
+  "perceptual_evaluation": {
+    "vlm_judge": "disabled; owner gate G4 remains unresolved and no VLM score enters B1-v1",
+    "human_evaluator_count": 1,
+    "human_evaluator_role": "repository owner",
+    "blind_order": "For each task, review artifacts are displayed without method names and ordered by ascending SHA-256 of '<task_id>|<trial_index>|<method_id>'.",
+    "dimensions": [
+      "recognizability",
+      "readability_at_native_1x",
+      "style_coherence"
+    ],
+    "scale": "integer 1-5 per dimension, where 1 is poor and 5 is strong",
+    "rejection": "The evaluator may mark human_rejection, but human scores never override deterministic structural facts.",
+    "edits_during_review": "forbidden"
+  },
+  "human_intervention_policy": {
+    "during_generation": "No prompt edits, manual pixel edits, method-specific hints, selective reruns or early stopping based on appearance.",
+    "after_generation": "The owner may perform the frozen blind perceptual rating only; review does not mutate outputs. Any later P7-style interactive repair study requires a separately frozen protocol and is not silently folded into B1-v1."
+  },
+  "artifact_retention": {
+    "retain_every_scheduled_attempt": true,
+    "required_files_per_attempt": [
+      "attempt-manifest.json",
+      "provider-request.json",
+      "provider-response.json",
+      "proposal-or-failure.json",
+      "deterministic-qa.json",
+      "telemetry.json",
+      "stage-evidence.json when applicable",
+      "repair-evidence.json when applicable",
+      "final.rgba when produced",
+      "final.png when produced",
+      "preview-8x.png when produced"
+    ],
+    "storage": "Commit the complete sanitized scored evidence under evidence/b1/results/<freeze-commit>/<method>/<task>/<trial>/ or an equivalently immutable path. Authentication material and secrets are never retained.",
+    "hashing": "Attempt manifests record SHA-256 for retained byte artifacts and cite the B1-F0 freeze commit plus repository_commit_under_test.",
+    "unsuccessful_attempts": "Retained with the same identity and failure category; never replaced by a later successful attempt.",
+    "b0_separation": "No retained B1 attempt file may be sourced by copying a B0 scored output into the B1 result tree."
+  },
+  "execution_environment": {
+    "mode": "owner-triggered local/headless execution",
+    "github_self_hosted_runner": false,
+    "g6_status": "unresolved and not crossed",
+    "portable_ci_role": "CI may validate the B1 freeze, harness/schema/replay and provider-free fixtures without provider/network access; scored provider runs are not portable-CI correctness gates."
+  },
+  "immutability": {
+    "scoring_start_condition": "No B1 scored attempt may begin until the commit on main that first contains this exact file is recorded as the B1-F0 freeze commit.",
+    "after_first_scored_attempt": "This B1 cohort, task text, constraints, methods, provider settings, budgets, retry/exclusion rules, scoring and trial count are immutable. Any improvement belongs after B1-P0 and may not be used to rerun or relabel this cohort.",
+    "b0_boundary": "B0 remains frozen at its recorded commits and is never mutated, rerun, rescored or substituted into B1.",
+    "p8_boundary": "Only after B1-P0 may the benchmark postmortem recommend explicit P8 promotions. B1-F0 does not silently add humanoid, animation, Trace2D, VLM, Aseprite/MCP, or self-hosted-runner scope."
+  }
+}
