@@ -1,0 +1,65 @@
+name: Temporary P6 Handoff Update
+
+on:
+  push:
+    branches:
+      - agent/p6-v0-handoff
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/p6-v0-handoff
+          fetch-depth: 0
+      - name: Update current handoff prose
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('PROJECT_STATUS.md')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              'Last explanatory handoff update: **2026-08-15**',
+              'Last explanatory handoff update: **2026-08-16**',
+              1,
+          )
+          start = text.index('## Current core lane')
+          end = text.index('## Early engineering checkpoints', start)
+          replacement = '''## Current core lane
+
+P6 — Preview evidence and mobile static gallery / issue #47 is the active phase.
+
+Exact current child:
+
+```text
+P6-V0 preview bundle
+```
+
+P5 / issue #32 is complete. The first owner-triggered real-provider reference is frozen under `evidence/p5_a5/reference-run/`: Codex CLI 0.147.0, `gpt-5.6-sol`, reasoning `low`, existing ChatGPT authentication, vision off, one provider call / one iteration / one operation / 96 changed pixels, zero deterministic findings. Portable CI replays the committed proposal and requires exact RGBA/native-PNG/preview-PNG bytes without any provider/network call.
+
+P6-V0 should package existing native/enlarged imagery, available stage evidence, deterministic QA, intent and complexity evidence into a stable provider-free review bundle. Do not introduce a VLM/perceptual judge without G4 owner approval. Do not extend the home Windows runner into P6 preview execution before reaching P6-V6 and resolving G6 for that exact use.
+
+`config/tracepixel.core-lane.json` and live issue/PR state remain operational authority.
+
+'''
+          text = text[:start] + replacement + text[end:]
+          text = text.replace(
+              'P5-A5 -> first opt-in AI-authored raster preview\n',
+              'P5-A5 -> first opt-in AI-authored raster preview — complete\n',
+              1,
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit handoff update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PROJECT_STATUS.md
+          git commit -m 'Update handoff for P6-V0'
+          git push origin HEAD:agent/p6-v0-handoff
