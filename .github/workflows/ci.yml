@@ -60,3 +60,5 @@ jobs:
         run: python -m evidence.b0_s0.review --validate-package-only
       - name: B0-S0 offline mobile owner review package checkpoint
         run: python -m evidence.b0_s0.mobile_review --output out/b0-mobile-review --source-sha 1111111111111111111111111111111111111111
+      - name: B0-P0 immutable postmortem checkpoint
+        run: python -m evidence.b0_p0.checkpoint
