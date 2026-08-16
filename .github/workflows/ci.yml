@@ -72,3 +72,5 @@ jobs:
         run: python -m evidence.p7_f3.checkpoint
       - name: P7-F4 before/after repair evidence checkpoint
         run: python -m evidence.p7_f4.checkpoint
+      - name: P7-F5 human feedback contract checkpoint
+        run: python -m evidence.p7_f5.checkpoint
