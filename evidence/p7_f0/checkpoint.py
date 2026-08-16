@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from evidence.p7_lane import validate_p7_completion_lane
 from tracepixel.repair import FEEDBACK_INTAKE_SCHEMA_V1, validate_feedback_intake
 
 
@@ -72,12 +73,7 @@ def main() -> int:
         raise SystemExit("P7-F0 crossed into later repair/localization authority")
 
     lane = json.loads(CORE_LANE_PATH.read_text(encoding="utf-8"))
-    if lane.get("current") != "P7":
-        raise SystemExit("P7-F0 checkpoint requires P7 as current core phase")
-    if lane.get("current_child") not in {"P7-F0", "P7-F1", "P7-F2", "P7-F3", "P7-F4", "P7-F5"}:
-        raise SystemExit("P7-F0 checkpoint only supports the P7 feedback implementation/handoff range")
-    if lane.get("active_issue") != 71:
-        raise SystemExit("P7-F0 checkpoint requires active issue #71")
+    validate_p7_completion_lane(lane, checkpoint_child="P7-F0")
 
     print("P7-F0 feedback intake checkpoint: PASS")
     return 0
