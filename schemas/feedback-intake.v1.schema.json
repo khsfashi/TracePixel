@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracepixel:schema:feedback-intake:v1",
+  "title": "TracePixel P7-F0 Feedback Intake v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "target", "items"],
+  "properties": {
+    "schema": {"const": "tracepixel.feedback-intake.v1"},
+    "target": {"$ref": "#/$defs/target"},
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/item"}
+    }
+  },
+  "$defs": {
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1, "maximum": 4096},
+        "height": {"type": "integer", "minimum": 1, "maximum": 4096}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_id", "task_id", "canvas", "artifact_sha256"],
+      "properties": {
+        "asset_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "task_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "canvas": {"$ref": "#/$defs/canvas"},
+        "artifact_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "integer", "minimum": 0},
+        "y": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      }
+    },
+    "deterministicQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "category", "severity"],
+      "properties": {
+        "rule": {
+          "enum": [
+            "structural.non_empty",
+            "structural.no_translucency",
+            "structural.no_edge_contact",
+            "color.palette_membership",
+            "color.maximum_colors",
+            "color.transparent_rgb_policy",
+            "connectivity.single_component",
+            "connectivity.no_isolated_pixels",
+            "shape.required_symmetry",
+            "tile.contract"
+          ]
+        },
+        "category": {"enum": ["structural", "color", "connectivity", "shape", "tile"]},
+        "severity": {"enum": ["info", "warning", "error"]}
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "value"],
+      "properties": {
+        "dimension": {
+          "enum": ["recognizability", "native_1x_readability", "style_coherence"]
+        },
+        "value": {"type": "integer", "minimum": 1, "maximum": 5}
+      }
+    },
+    "human": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["human_rejection", "scores"],
+      "properties": {
+        "human_rejection": {"type": ["boolean", "null"]},
+        "scores": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/score"}
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "authority",
+        "source_ref",
+        "summary",
+        "stage_hint",
+        "region_hint",
+        "deterministic_qa",
+        "human"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 64},
+        "authority": {"enum": ["deterministic_qa", "owner_human"]},
+        "source_ref": {"type": "string", "minLength": 1, "maxLength": 128},
+        "summary": {"type": "string", "minLength": 1, "maxLength": 512},
+        "stage_hint": {
+          "type": ["string", "null"],
+          "enum": [
+            "silhouette",
+            "major_forms",
+            "palette_light_ramp",
+            "shading",
+            "semantic_details",
+            "outline_cleanup",
+            null
+          ]
+        },
+        "region_hint": {
+          "anyOf": [{"$ref": "#/$defs/region"}, {"type": "null"}]
+        },
+        "deterministic_qa": {
+          "anyOf": [{"$ref": "#/$defs/deterministicQa"}, {"type": "null"}]
+        },
+        "human": {
+          "anyOf": [{"$ref": "#/$defs/human"}, {"type": "null"}]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"authority": {"const": "deterministic_qa"}}},
+          "then": {
+            "properties": {
+              "deterministic_qa": {"$ref": "#/$defs/deterministicQa"},
+              "human": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"authority": {"const": "owner_human"}}},
+          "then": {
+            "properties": {
+              "deterministic_qa": {"type": "null"},
+              "human": {"$ref": "#/$defs/human"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}
