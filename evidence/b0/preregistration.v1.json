@@ -1,0 +1,282 @@
+{
+  "schema": "tracepixel.b0-preregistration.v1",
+  "benchmark_id": "B0",
+  "freeze_status": "frozen",
+  "frozen_at_utc_date": "2026-08-16",
+  "repository_commit_under_test": "7fd1a3a0f952203d1875e802c89c3ab6e3750611",
+  "purpose": "Development-visible matched architecture diagnostic for constrained small pixel assets; not a final marketing claim.",
+  "scored_methods": [
+    {
+      "id": "tracepixel-staged-v1",
+      "family": "tracepixel-staged-agent",
+      "description": "TracePixel staged Agent surface with ArtIntent, stage-aware compact observation, bounded PixelProgram proposals, deterministic execution and deterministic QA feedback.",
+      "provider_surface": "openai-codex-cli",
+      "provider_auth_mode": "chatgpt",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "low",
+      "vision_input": false,
+      "codex_cli_version": "codex-cli 0.147.0",
+      "sandbox": "read-only",
+      "ephemeral": true
+    },
+    {
+      "id": "raw-pixel-program-v1",
+      "family": "raw-primitive-agent",
+      "description": "Matched low-level baseline using the same provider/model and the same visible task information, but without TracePixel stage guidance. The model receives only the v1 PixelProgram set_pixels surface plus deterministic QA feedback between bounded revisions.",
+      "provider_surface": "openai-codex-cli",
+      "provider_auth_mode": "chatgpt",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "low",
+      "vision_input": false,
+      "codex_cli_version": "codex-cli 0.147.0",
+      "sandbox": "read-only",
+      "ephemeral": true
+    }
+  ],
+  "non_scored_baselines": [
+    {
+      "family": "raw-llm-python-pillow",
+      "status": "deferred",
+      "reason": "No equally pinned dependency/runtime adapter is frozen for B0-F0; do not manufacture a scored result from an unmatched environment."
+    },
+    {
+      "family": "texel-studio-like-agent",
+      "status": "qualitative-reference-only",
+      "reason": "No direct matched harness is frozen for the initial B0 cohort."
+    },
+    {
+      "family": "aseprite-mcp-agent",
+      "status": "not-scored",
+      "reason": "Owner gate G5 is unresolved; inclusion as a scored baseline is forbidden in this frozen cohort."
+    },
+    {
+      "family": "image-generation-postprocess",
+      "status": "deferred",
+      "reason": "A matched image-generation provider/settings/postprocess recipe is not frozen for the initial B0 cohort."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "B0-T0-01",
+      "tier": "T0",
+      "visible_text": "Create a centered four-point cyan diamond emblem on a 16x16 transparent canvas. Keep at least 3 transparent pixels of margin on every side, use at most 3 visible colors, make the complete visible shape exactly symmetric horizontally and vertically, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 3,
+        "maximum_visible_colors": 3,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "horizontal_symmetry": true,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T1-01",
+      "tier": "T1",
+      "visible_text": "Create a small red health-potion bottle with a cork on a 16x16 transparent canvas. Center it, keep at least 2 transparent pixels of margin on every side, use at most 6 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 2,
+        "maximum_visible_colors": 6,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T1-02",
+      "tier": "T1",
+      "visible_text": "Create a gold key facing right on a 16x16 transparent canvas. Keep at least 1 transparent pixel of margin on every side, use at most 5 visible colors, keep the key as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 5,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T2-01",
+      "tier": "T2",
+      "visible_text": "Create a front-facing blue shield on a 16x16 transparent canvas. Center it, keep at least 2 transparent pixels of margin on every side, use at most 6 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 2,
+        "maximum_visible_colors": 6,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T2-02",
+      "tier": "T2",
+      "visible_text": "Create a small lantern with a warm yellow light and dark frame on a 16x16 transparent canvas. Keep at least 1 transparent pixel of margin on every side, use at most 7 visible colors, keep the lantern as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 7,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T3-01",
+      "tier": "T3",
+      "visible_text": "Create a front-facing wooden barrel with visible metal bands on a 16x16 transparent canvas. Center it, keep at least 1 transparent pixel of margin on every side, use at most 8 visible colors, make the complete visible shape vertically symmetric, keep it as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 8,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "vertical_symmetry": true,
+        "edge_contact_allowed": false
+      }
+    },
+    {
+      "id": "B0-T3-02",
+      "tier": "T3",
+      "visible_text": "Create a small pine tree with a brown trunk and green canopy on a 16x16 transparent canvas. Keep at least 1 transparent pixel of margin on every side, use at most 7 visible colors, keep the tree as one connected visible component, and leave no isolated visible pixels.",
+      "hidden_structural_constraints": {
+        "width": 16,
+        "height": 16,
+        "transparent_background": true,
+        "minimum_margin_each_side": 1,
+        "maximum_visible_colors": 7,
+        "connected_components": 1,
+        "maximum_isolated_visible_pixels": 0,
+        "edge_contact_allowed": false
+      }
+    }
+  ],
+  "information_matching": {
+    "rule": "Every scored method receives the exact same task visible_text and no method receives hidden_structural_constraints as prompt text. Method-specific instructions may only describe that method's frozen authoring surface and output schema.",
+    "deterministic_feedback": "After an accepted revision, both scored methods may receive the same task-applicable deterministic QA facts. TracePixel-specific stage identity is exposed only to tracepixel-staged-v1 because it is the architecture under test.",
+    "external_reference_images": false
+  },
+  "budgets": {
+    "trials_per_task_per_scored_method": 2,
+    "max_provider_calls_per_trial": 4,
+    "max_iterations_per_trial": 4,
+    "max_tool_calls_per_trial": 4,
+    "max_operations_per_trial": 16,
+    "max_pixel_edits_per_trial": 256,
+    "max_visual_observation_calls_per_trial": 0,
+    "max_reported_input_tokens_per_provider_call": 24000,
+    "max_reported_output_tokens_per_provider_call": 4000,
+    "provider_call_timeout_seconds": 180,
+    "trial_wall_timeout_seconds": 600,
+    "api_cost_policy": "No separately metered API-key billing is permitted. The frozen provider boundary is the existing ChatGPT-authenticated Codex CLI plan; api_cost_usd_micros remains null when the provider exposes no per-call price.",
+    "human_interventions_during_generation": 0
+  },
+  "retry_policy": {
+    "semantic_retry_after_valid_provider_response": 0,
+    "transport_retry": "At most one identical-request retry is allowed only when a provider/transport failure returns no usable proposal bytes. Both call records are retained and the retry consumes the same trial's provider-call budget.",
+    "budget_exhaustion_retry": 0,
+    "manual_repair_retry": 0
+  },
+  "exclusion_policy": {
+    "after_provider_invocation": "No scored attempt is excluded after provider invocation; provider, validation, verifier, semantic, timeout and budget failures remain failures in the result set.",
+    "pre_invocation_harness_failure": "A demonstrable harness/setup failure before provider invocation may be marked void_infrastructure and rerun once with the same attempt ID plus a rerun suffix. The original record must remain retained and the reason/fix commit must be recorded.",
+    "task_relabeling": "Forbidden after this freeze."
+  },
+  "failure_taxonomy": [
+    "budget_exhaustion",
+    "timeout",
+    "transport_provider_failure",
+    "invalid_operation_or_ir",
+    "deterministic_verifier_rejection",
+    "semantic_visual_failure",
+    "human_rejection",
+    "void_infrastructure"
+  ],
+  "deterministic_scoring": {
+    "per_rule": "Each frozen task-applicable structural rule is binary pass/fail from deterministic QA only.",
+    "per_trial_structural_fraction": "passed_applicable_rules / applicable_rules; missing or unusable final output scores 0.",
+    "per_trial_structural_pass": "true only when every applicable structural rule passes.",
+    "completion": "true only when the method returns a harness-valid final artifact within all frozen budgets, regardless of whether every structural rule passes.",
+    "aggregation": "For each method report scheduled trial count, completion rate, structural-pass rate, and arithmetic mean structural fraction across all scheduled non-void trials. Failed/non-completing trials remain in denominators and contribute zero structural fraction. void_infrastructure records are reported separately and never silently removed.",
+    "tie_breaking": "No single winner is declared from a composite score; completion, deterministic structure, complexity and human perception remain separate result layers."
+  },
+  "complexity_reporting": {
+    "required_when_available": [
+      "input_tokens",
+      "output_tokens",
+      "tool_calls",
+      "operation_calls",
+      "visual_observation_calls",
+      "iterations",
+      "revisions",
+      "changed_pixels",
+      "wall_time",
+      "api_cost_usd_micros",
+      "human_interventions",
+      "failure_category"
+    ],
+    "aggregation": "Report per-trial raw values plus method median and arithmetic mean for token/tool/iteration/wall-time fields. Do not omit failed trials; unavailable provider metrics remain explicit nulls rather than guessed values."
+  },
+  "perceptual_evaluation": {
+    "vlm_judge": "disabled; owner gate G4 remains unresolved and no VLM score enters B0-v1",
+    "human_evaluator_count": 1,
+    "human_evaluator_role": "repository owner",
+    "blind_order": "For each task, review artifacts are displayed without method names and ordered by ascending SHA-256 of '<task_id>|<trial_index>|<method_id>'.",
+    "dimensions": [
+      "recognizability",
+      "readability_at_native_1x",
+      "style_coherence"
+    ],
+    "scale": "integer 1-5 per dimension, where 1 is poor and 5 is strong",
+    "rejection": "The evaluator may mark human_rejection, but human scores never override deterministic structural facts.",
+    "edits_during_review": "forbidden"
+  },
+  "human_intervention_policy": {
+    "during_generation": "No prompt edits, manual pixel edits, method-specific hints, selective reruns or early stopping based on appearance.",
+    "after_generation": "The owner may perform the frozen blind perceptual rating only; review does not mutate outputs."
+  },
+  "artifact_retention": {
+    "retain_every_scheduled_attempt": true,
+    "required_files_per_attempt": [
+      "attempt-manifest.json",
+      "provider-request.json",
+      "provider-response.json",
+      "proposal-or-failure.json",
+      "deterministic-qa.json",
+      "telemetry.json",
+      "final.rgba when produced",
+      "final.png when produced",
+      "preview-8x.png when produced"
+    ],
+    "storage": "Commit the complete sanitized scored evidence under evidence/b0/results/<freeze-commit>/<method>/<task>/<trial>/ or an equivalently immutable path. Authentication material and secrets are never retained.",
+    "hashing": "Attempt manifests record SHA-256 for retained byte artifacts and cite this preregistration freeze commit.",
+    "unsuccessful_attempts": "Retained with the same identity and failure category; never replaced by a later successful attempt."
+  },
+  "execution_environment": {
+    "mode": "owner-triggered local/headless execution",
+    "github_self_hosted_runner": false,
+    "g6_status": "unresolved and not crossed",
+    "portable_ci_role": "CI may validate harness/schema/replay without provider/network access; scored provider runs are not portable-CI correctness gates."
+  },
+  "immutability": {
+    "scoring_start_condition": "No B0 scored attempt may begin until the commit that first adds this exact file is merged to main and its commit SHA is recorded as the B0-F0 freeze commit.",
+    "after_first_scored_attempt": "This cohort, task text, constraints, methods, settings, budgets, retry/exclusion rules, scoring and trial count are immutable. Any architecture improvement belongs after B0-P0 and may not be used to rerun or relabel this cohort.",
+    "held_out_boundary": "B1 must use separately frozen held-out variants; B0 task outputs are development-visible evidence only."
+  }
+}
