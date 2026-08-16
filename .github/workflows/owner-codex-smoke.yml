@@ -2,6 +2,9 @@ name: Owner Codex Smoke
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - owner/codex-smoke-trigger
 
 permissions:
   contents: read
@@ -12,7 +15,10 @@ concurrency:
 
 jobs:
   p5-a5-real-provider:
-    if: github.repository == 'khsfashi/TracePixel' && github.ref == 'refs/heads/main'
+    if: >-
+      github.repository == 'khsfashi/TracePixel' &&
+      ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+       (github.event_name == 'push' && github.ref == 'refs/heads/owner/codex-smoke-trigger'))
     runs-on: [self-hosted, windows, x64, tracepixel-owner]
     timeout-minutes: 20
 
@@ -20,6 +26,7 @@ jobs:
       - name: Checkout trusted main
         uses: actions/checkout@v4
         with:
+          ref: main
           clean: true
           fetch-depth: 1
           persist-credentials: false
@@ -56,7 +63,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: p5-a5-codex-smoke-${{ github.sha }}
+          name: p5-a5-codex-smoke-${{ github.run_id }}
           path: artifacts/p5-a5-reference-run
           if-no-files-found: warn
           retention-days: 30
