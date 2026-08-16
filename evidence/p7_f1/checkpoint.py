@@ -91,8 +91,8 @@ def main() -> int:
     lane = json.loads(CORE_LANE_PATH.read_text(encoding="utf-8"))
     if lane.get("current") != "P7":
         raise SystemExit("P7-F1 checkpoint requires P7 as current core phase")
-    if lane.get("current_child") not in {"P7-F1", "P7-F2", "P7-F3", "P7-F4"}:
-        raise SystemExit("P7-F1 checkpoint only supports the F1-F3 implementation handoff range")
+    if lane.get("current_child") not in {"P7-F1", "P7-F2", "P7-F3", "P7-F4", "P7-F5"}:
+        raise SystemExit("P7-F1 checkpoint only supports the P7 feedback implementation/handoff range")
     if lane.get("active_issue") != 71:
         raise SystemExit("P7-F1 checkpoint requires active issue #71")
 
