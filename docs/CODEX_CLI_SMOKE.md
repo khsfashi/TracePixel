@@ -29,7 +29,8 @@ For the first reference smoke the owner pins:
 provider surface: OpenAI Codex CLI
 model: gpt-5.6-sol
 reasoning effort: low
-minimum CLI: 0.144.0
+minimum adapter-compatible CLI: 0.144.0
+automated reference-run CLI: 0.147.0
 auth: existing ChatGPT login only
 vision: off
 session: ephemeral
@@ -39,6 +40,8 @@ direct API billing: not authorized for the P5-A5 reference run
 ```
 
 The adapter checks `codex login status` and refuses API-key authentication. This keeps the cost envelope at the existing ChatGPT/Codex plan allowance and prevents TracePixel from silently introducing a separately billed API credential.
+
+The owner-runner workflow installs Codex CLI `0.147.0` into a runner-temporary directory and prepends only that directory to `PATH` for the job. It does **not** update, remove, or replace the owner's global Codex installation. The pinned CLI reuses the ChatGPT credentials stored for the same Windows user, so the reference evidence records an exact CLI version without making the workstation's normal Codex version part of the TracePixel contract.
 
 G4 remains unresolved because no image/VLM input or perceptual score is used.
 
@@ -60,6 +63,7 @@ Portable CI tests the adapter with a fake subprocess runner. It does not require
 - remote-agent trigger: push to the dedicated `owner/codex-smoke-trigger` branch,
 - actual tested checkout: always `main`, even when the trigger branch causes the run,
 - runner labels: `self-hosted`, `windows`, `x64`, `tracepixel-owner`,
+- exact job-local Codex CLI: `0.147.0`, installed under `RUNNER_TEMP` without mutating the global install,
 - repository token permission: read-only contents,
 - checkout credentials are not persisted,
 - no pull-request trigger and no general `main`/feature-branch push trigger,
@@ -77,6 +81,6 @@ One-time setup:
 2. Choose **Windows / x64** and install it into a dedicated TracePixel runner directory.
 3. Configure the generated registration command with the additional label `tracepixel-owner`.
 4. Start the runner under the Windows account that already owns the Codex CLI login.
-5. Verify `codex --version` and `codex login status` from that same account.
+5. Verify `codex login status` from that same account. The global Codex CLI version does not need to match the reference version because the workflow supplies its own isolated pinned CLI.
 
-After that, normal P5-A5 execution requires no manual TracePixel shell command and need not require an Actions UI click. Dispatch **Owner Codex Smoke** manually when desired, or let a trusted GitHub automation advance `owner/codex-smoke-trigger`; either path checks out `main`, verifies Codex, runs the real smoke, and uploads `p5-a5-codex-smoke-<run-id>` for review.
+After that, normal P5-A5 execution requires no manual TracePixel shell command and need not require an Actions UI click. Dispatch **Owner Codex Smoke** manually when desired, or let a trusted GitHub automation advance `owner/codex-smoke-trigger`; either path checks out `main`, prepares the pinned CLI, verifies ChatGPT auth, runs the real smoke, and uploads `p5-a5-codex-smoke-<run-id>` for review.
