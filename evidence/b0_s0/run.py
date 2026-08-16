@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import json
+import os
 from pathlib import Path
 import shutil
 import statistics
@@ -28,6 +29,7 @@ DEFAULT_RESULTS_ROOT = Path("evidence/b0/results")
 DEFAULT_REVIEW_ROOT = Path("evidence/b0/review")
 SUMMARY_SCHEMA_V1 = "tracepixel.b0-scored-cohort-summary.v1"
 BLIND_REVIEW_SCHEMA_V1 = "tracepixel.b0-blind-review-package.v1"
+ATTEMPT_CLAIM_SCHEMA_V1 = "tracepixel.b0-attempt-claim.v1"
 _PRODUCTION_PATHS = (
     "src/tracepixel/agent",
     "src/tracepixel/model",
@@ -83,6 +85,68 @@ def _load_manifest(path: Path) -> dict[str, object]:
     if type(value) is not dict:
         raise SystemExit(f"attempt manifest is not an object: {path}")
     return cast(dict[str, object], value)
+
+
+def _claim_path(results_root: Path, identity: Mapping[str, object]) -> Path:
+    attempt_id = identity.get("attempt_id")
+    if type(attempt_id) is not str or not attempt_id:
+        raise SystemExit("cannot build B0-S0 claim path for an invalid attempt identity")
+    return results_root / B0_FREEZE_COMMIT / ".claims" / f"{attempt_id}.json"
+
+
+def _claim_attempt(results_root: Path, identity: Mapping[str, object], runner_commit: str) -> Path:
+    path = _claim_path(results_root, identity)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema": ATTEMPT_CLAIM_SCHEMA_V1,
+        "runner_commit": runner_commit,
+        "identity": dict(identity),
+    }
+    try:
+        with path.open("x", encoding="utf-8", newline="\n") as handle:
+            handle.write(json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+    except FileExistsError as exc:
+        raise SystemExit(
+            f"existing B0-S0 invocation claim blocks automatic provider rerun: {path}"
+        ) from exc
+    return path
+
+
+def _reconcile_claims(results_root: Path, schedule: Mapping[str, object]) -> None:
+    attempts = schedule.get("attempts")
+    assert type(attempts) is list
+    scheduled = {
+        cast(str, cast(dict[str, object], item)["attempt_id"]): cast(dict[str, object], item)
+        for item in attempts
+    }
+    claims_dir = results_root / B0_FREEZE_COMMIT / ".claims"
+    if not claims_dir.exists():
+        return
+    for path in sorted(claims_dir.glob("*.json")):
+        claim = _load_manifest(path)
+        if claim.get("schema") != ATTEMPT_CLAIM_SCHEMA_V1:
+            raise SystemExit(f"unknown B0-S0 invocation claim blocks automatic resume: {path}")
+        identity = claim.get("identity")
+        if type(identity) is not dict:
+            raise SystemExit(f"invalid B0-S0 invocation claim blocks automatic resume: {path}")
+        typed_identity = cast(dict[str, object], identity)
+        attempt_id = typed_identity.get("attempt_id")
+        if type(attempt_id) is not str or scheduled.get(attempt_id) != typed_identity:
+            raise SystemExit(f"B0-S0 invocation claim does not match the frozen schedule: {path}")
+        attempt_dir = results_root / attempt_relative_path(cast(object, typed_identity))
+        manifest_path = attempt_dir / "attempt-manifest.json"
+        if manifest_path.is_file():
+            manifest = _load_manifest(manifest_path)
+            if manifest.get("identity") != typed_identity:
+                raise SystemExit(f"retained attempt identity mismatch while reconciling claim: {manifest_path}")
+            path.unlink()
+            continue
+        raise SystemExit(
+            "B0-S0 found a durable invocation claim without a completed attempt manifest. "
+            f"Automatic rerun is forbidden because the provider may already have been invoked: {path}"
+        )
 
 
 def _retained_manifests(results_root: Path, schedule: Mapping[str, object]) -> list[dict[str, object]]:
@@ -253,6 +317,7 @@ def run_cohort(preregistration_path: Path, results_root: Path, review_root: Path
     _verify_source_boundary(preregistration)
     runner_commit = _runner_commit()
     schedule = build_b0_schedule(preregistration, preregistration_sha256=preregistration_sha256)
+    _reconcile_claims(results_root, schedule)
     retained = _retained_manifests(results_root, schedule)
     _assert_runner_commit_stable(retained, runner_commit)
 
@@ -262,6 +327,7 @@ def run_cohort(preregistration_path: Path, results_root: Path, review_root: Path
     else:
         retained_ids = set()
 
+    # Freeze all buildable request identities and exact Codex environment before the first new provider call.
     for raw_identity in attempts:
         identity = cast(dict[str, object], raw_identity)
         build_b0_provider_request(preregistration, identity=cast(object, identity))
@@ -274,6 +340,7 @@ def run_cohort(preregistration_path: Path, results_root: Path, review_root: Path
         identity = cast(dict[str, object], raw_identity)
         if identity["attempt_id"] in retained_ids:
             continue
+        claim_path = _claim_attempt(results_root, identity, runner_commit)
         execution = run_b0_attempt(
             preregistration,
             identity=cast(object, identity),
@@ -281,6 +348,7 @@ def run_cohort(preregistration_path: Path, results_root: Path, review_root: Path
             runner_commit=runner_commit,
         )
         write_attempt_record(results_root, preregistration, execution.result, execution.payloads)
+        claim_path.unlink()
 
     retained = _retained_manifests(results_root, schedule)
     summary = _summary(preregistration, schedule, retained, runner_commit)
