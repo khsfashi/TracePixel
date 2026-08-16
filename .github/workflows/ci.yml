@@ -44,3 +44,5 @@ jobs:
         run: python -m evidence.p6_v1.checkpoint
       - name: P6-V2 deterministic QA/metrics composition checkpoint
         run: python -m evidence.p6_v2.checkpoint
+      - name: P6-V3 deterministic static HTML gallery checkpoint
+        run: python -m evidence.p6_v3.checkpoint
