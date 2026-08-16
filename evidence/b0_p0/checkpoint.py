@@ -101,6 +101,31 @@ def _expect(condition: bool, message: str) -> None:
         raise CheckpointError(message)
 
 
+def _validate_post_b0_lane(lane: Mapping[str, object]) -> None:
+    sequence = lane.get("sequence")
+    current = lane.get("current")
+    _expect(type(sequence) is list and type(current) is str, "core lane sequence/current malformed")
+    phases = cast(list[object], sequence)
+    _expect(all(type(item) is str for item in phases), "core lane sequence must contain strings")
+    phase_names = cast(list[str], phases)
+    _expect("P7" in phase_names and current in phase_names, "core lane must retain P7 and a known current phase")
+    _expect(
+        phase_names.index(cast(str, current)) >= phase_names.index("P7"),
+        "core lane must remain at or beyond the P7 handoff after frozen B0-P0",
+    )
+
+    if current == "P7":
+        child_sequences = lane.get("child_sequences")
+        _expect(type(child_sequences) is dict, "core lane child_sequences malformed")
+        p7_children = cast(dict[str, object], child_sequences).get("P7")
+        current_child = lane.get("current_child")
+        _expect(
+            type(p7_children) is list and current_child in cast(list[object], p7_children),
+            "active P7 child must be one of the declared P7 children",
+        )
+        _expect(lane.get("active_issue") == 71, "active P7 work must remain on issue #71")
+
+
 def run() -> dict[str, object]:
     cohort = _load(RESULTS)
     manifest = _load(REVIEW_MANIFEST)
@@ -172,7 +197,7 @@ def run() -> dict[str, object]:
     _expect(post.get("owner_gates_crossed") == [], "B0-P0 must not silently cross an owner gate")
     _expect("no composite winner" in cast(str, post.get("claim_boundary", "")), "claim boundary must forbid a composite winner")
 
-    _expect(lane.get("current") == "P7" and lane.get("current_child") == "P7-F0" and lane.get("active_issue") == 71, "core lane must advance exactly to P7-F0 / issue #71")
+    _validate_post_b0_lane(lane)
 
     return {
         "schema": "tracepixel.b0-p0-checkpoint.v1",
