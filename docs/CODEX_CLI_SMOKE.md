@@ -54,15 +54,18 @@ Portable CI tests the adapter with a fake subprocess runner. It does not require
 
 ## Owner Windows runner automation
 
-`.github/workflows/owner-codex-smoke.yml` provides the same home-PC pattern used by Trace2D's real-GPU gate, but it is deliberately stricter:
+`.github/workflows/owner-codex-smoke.yml` provides the same home-PC pattern used by Trace2D's real-GPU gate while keeping public-repository execution narrowly trusted:
 
-- trigger: `workflow_dispatch` only,
-- accepted ref: `main` only,
+- manual trigger: `workflow_dispatch` on `main`,
+- remote-agent trigger: push to the dedicated `owner/codex-smoke-trigger` branch,
+- actual tested checkout: always `main`, even when the trigger branch causes the run,
 - runner labels: `self-hosted`, `windows`, `x64`, `tracepixel-owner`,
 - repository token permission: read-only contents,
 - checkout credentials are not persisted,
-- no automatic public pull-request or push trigger,
+- no pull-request trigger and no general `main`/feature-branch push trigger,
 - evidence is uploaded as a 30-day GitHub Actions artifact even though portable CI remains provider-free.
+
+The `owner/codex-smoke-trigger` branch is control-plane only: its contents are never tested. A trusted automation may create or advance that branch to request a run, while the workflow explicitly checks out the current trusted `main` tree before installing or executing TracePixel. Public fork pushes cannot target this repository branch.
 
 The Trace2D repository runner is repository-scoped, so the same physical Windows machine should register a second TracePixel runner instance rather than sharing the Trace2D registration. Use a separate runner directory such as `C:\actions-runner-tracepixel` and add the custom label `tracepixel-owner` during registration.
 
@@ -76,4 +79,4 @@ One-time setup:
 4. Start the runner under the Windows account that already owns the Codex CLI login.
 5. Verify `codex --version` and `codex login status` from that same account.
 
-After that, normal P5-A5 execution no longer requires manual TracePixel shell commands. Dispatch **Owner Codex Smoke** on `main`; the workflow checks out the repository, installs the package, verifies Codex, runs the real smoke, and uploads `p5-a5-codex-smoke-<sha>` for review.
+After that, normal P5-A5 execution requires no manual TracePixel shell command and need not require an Actions UI click. Dispatch **Owner Codex Smoke** manually when desired, or let a trusted GitHub automation advance `owner/codex-smoke-trigger`; either path checks out `main`, verifies Codex, runs the real smoke, and uploads `p5-a5-codex-smoke-<run-id>` for review.
