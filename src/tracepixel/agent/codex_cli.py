@@ -149,11 +149,13 @@ class CodexCliProvider:
     @staticmethod
     def _command(executable: str, arguments: list[str]) -> list[str]:
         # npm installs command shims as .cmd on Windows. Launch those explicitly through
-        # COMSPEC while retaining shell=False for all other executable forms.
+        # COMSPEC while retaining shell=False for all other executable forms. list2cmdline
+        # already quotes an executable path containing spaces; wrapping the complete command
+        # again makes cmd.exe treat the entire quoted text as a literal command name.
         if Path(executable).suffix.lower() in (".cmd", ".bat"):
             comspec = os.environ.get("COMSPEC", "cmd.exe")
             command_line = subprocess.list2cmdline([executable, *arguments])
-            return [comspec, "/d", "/s", "/c", f'"{command_line}"']
+            return [comspec, "/d", "/s", "/c", command_line]
         return [executable, *arguments]
 
     def _run_metadata(self, arguments: list[str]) -> subprocess.CompletedProcess[str]:

@@ -105,12 +105,17 @@ class _FakeRunner:
 
 
 class CodexCliProviderTests(unittest.TestCase):
-    def test_windows_npm_cmd_shim_uses_comspec_wrapper(self) -> None:
-        command = CodexCliProvider._command(r"C:\\tools\\codex.cmd", ["exec", "--json"])
+    def test_windows_npm_cmd_shim_uses_comspec_wrapper_without_double_quoting(self) -> None:
+        executable = r"C:\Program Files\OpenAI\codex.cmd"
+        arguments = ["exec", "--json"]
+
+        command = CodexCliProvider._command(executable, arguments)
 
         self.assertEqual(command[1:4], ["/d", "/s", "/c"])
-        self.assertIn("codex.cmd", command[4])
-        self.assertIn("--json", command[4])
+        self.assertEqual(command[4], subprocess.list2cmdline([executable, *arguments]))
+        self.assertEqual(command[4], '"C:\\Program Files\\OpenAI\\codex.cmd" exec --json')
+        self.assertFalse(command[4].startswith('""'))
+        self.assertFalse(command[4].endswith('""'))
 
     def test_environment_requires_pinned_version_and_chatgpt_auth(self) -> None:
         runner = _FakeRunner()
