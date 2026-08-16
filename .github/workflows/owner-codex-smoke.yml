@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: tracepixel-owner-codex-smoke
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   TRACEPIXEL_CODEX_CLI_VERSION: '0.147.0'
