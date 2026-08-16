@@ -28,14 +28,14 @@ _CODEX_OUTPUT_SCHEMA = {
     "additionalProperties": False,
     "required": ["schema", "kind", "payload"],
     "properties": {
-        "schema": {"const": AGENT_PROVIDER_PROPOSAL_SCHEMA_V1},
-        "kind": {"const": "pixel_program"},
+        "schema": {"type": "string", "const": AGENT_PROVIDER_PROPOSAL_SCHEMA_V1},
+        "kind": {"type": "string", "const": "pixel_program"},
         "payload": {
             "type": "object",
             "additionalProperties": False,
             "required": ["schema", "canvas", "operations"],
             "properties": {
-                "schema": {"const": "tracepixel.pixel-program.v1"},
+                "schema": {"type": "string", "const": "tracepixel.pixel-program.v1"},
                 "canvas": {
                     "type": "object",
                     "additionalProperties": False,
@@ -52,7 +52,7 @@ _CODEX_OUTPUT_SCHEMA = {
                         "additionalProperties": False,
                         "required": ["op", "pixels"],
                         "properties": {
-                            "op": {"const": "set_pixels"},
+                            "op": {"type": "string", "const": "set_pixels"},
                             "pixels": {
                                 "type": "array",
                                 "items": {
