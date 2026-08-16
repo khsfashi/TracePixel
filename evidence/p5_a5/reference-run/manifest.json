@@ -1,0 +1,63 @@
+{
+  "authoritative_rgba_sha256": "a89b68d2176446166e69a47b3e6cd426b466ddbf23c030de777d4d077aa404d5",
+  "budget": {
+    "max_iterations": 4,
+    "max_operations": 16,
+    "max_pixel_edits": 256,
+    "max_tool_calls": 4,
+    "schema": "tracepixel.agent-loop-budget.v1"
+  },
+  "final_revision": 1,
+  "loop_status": "finished",
+  "native_png": {
+    "alpha_mode": "straight",
+    "authoritative_rgba_sha256": "a89b68d2176446166e69a47b3e6cd426b466ddbf23c030de777d4d077aa404d5",
+    "compression": "deflate-stored",
+    "encoder": "tracepixel.png.rgba8.store.v1",
+    "filter": "none",
+    "height": 16,
+    "kind": "native",
+    "pixel_format": "RGBA8",
+    "png_sha256": "d9a9674604b121803c365a1939776fe10c2cc24e89b5c8ac9af5f21c0a3e4553",
+    "resampling": "none",
+    "scale": 1,
+    "schema": "tracepixel.png-export.v1",
+    "source_height": 16,
+    "source_width": 16,
+    "width": 16
+  },
+  "owner_gate_g3": {
+    "auth_mode": "chatgpt",
+    "billing_boundary": "existing-chatgpt-codex-plan; api-key billing refused",
+    "codex_cli_version": "codex-cli 0.147.0",
+    "ephemeral": true,
+    "model": "gpt-5.6-sol",
+    "provider_surface": "openai-codex-cli",
+    "reasoning_effort": "low",
+    "sandbox": "read-only",
+    "vision_input": false
+  },
+  "preview_png": {
+    "alpha_mode": "straight",
+    "authoritative_rgba_sha256": "a89b68d2176446166e69a47b3e6cd426b466ddbf23c030de777d4d077aa404d5",
+    "compression": "deflate-stored",
+    "encoder": "tracepixel.png.rgba8.store.v1",
+    "filter": "none",
+    "height": 128,
+    "kind": "nearest-preview",
+    "pixel_format": "RGBA8",
+    "png_sha256": "d90b943e8a37c52c8a15b3f080764f582cfafdfe2b3d2f2dfcc1088da728552f",
+    "resampling": "nearest-neighbor",
+    "scale": 8,
+    "schema": "tracepixel.png-export.v1",
+    "source_height": 16,
+    "source_width": 16,
+    "width": 128
+  },
+  "provider_calls_file": "provider-calls.json",
+  "recorded_at_utc": "2026-08-16T02:03:48.748626+00:00",
+  "remaining_findings": [],
+  "schema": "tracepixel.p5-a5-codex-smoke.v1",
+  "source_commit": "c53d934cb6296c27e29455734c747363d9c8254b",
+  "telemetry_file": "telemetry.json"
+}
