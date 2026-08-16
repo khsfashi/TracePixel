@@ -1,5 +1,20 @@
 """Bounded targeted-repair contracts."""
 
+from tracepixel.repair.evidence import (
+    REPAIR_EVIDENCE_SCHEMA_V1,
+    RepairEvidenceArtifactV1,
+    RepairEvidenceAuthorityV1,
+    RepairEvidenceBundle,
+    RepairEvidenceFile,
+    RepairEvidenceMediaTypeV1,
+    RepairEvidenceV1,
+)
+from tracepixel.repair.evidence_validation import (
+    RepairEvidenceValidationError,
+    build_repair_evidence,
+    validate_repair_evidence,
+    write_repair_evidence_bundle,
+)
 from tracepixel.repair.execution import (
     REPAIR_EXECUTION_SCHEMA_V1,
     RepairExecutionItemV1,
@@ -57,6 +72,17 @@ from tracepixel.repair.plan_validation import (
 )
 
 __all__ = [
+    "REPAIR_EVIDENCE_SCHEMA_V1",
+    "RepairEvidenceArtifactV1",
+    "RepairEvidenceAuthorityV1",
+    "RepairEvidenceBundle",
+    "RepairEvidenceFile",
+    "RepairEvidenceMediaTypeV1",
+    "RepairEvidenceV1",
+    "RepairEvidenceValidationError",
+    "build_repair_evidence",
+    "validate_repair_evidence",
+    "write_repair_evidence_bundle",
     "REPAIR_EXECUTION_SCHEMA_V1",
     "RepairExecutionItemV1",
     "RepairExecutionStatusV1",
