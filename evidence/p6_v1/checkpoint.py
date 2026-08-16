@@ -22,7 +22,7 @@ def build_reference_sheet() -> StageContactSheet:
         PreviewStageArtifact(
             stage=snapshot.stage,
             kind="stage-image",
-            name=f"{index:02d}-{snapshot.stage.replace('_', '-')}@{PREVIEW_SCALE}x.png",
+            name=f"{index:02d}-{snapshot.stage.replace('_', '-')}-{PREVIEW_SCALE}x.png",
             media_type="image/png",
             data=snapshot.png,
         )
