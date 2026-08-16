@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from evidence.p7_lane import validate_p7_completion_lane
 from tracepixel.qa import QA_POLICY_SCHEMA_V1, analyze_structural, evaluate_qa_policy
 from tracepixel.raster import Canvas
 from tracepixel.repair import (
@@ -180,12 +181,7 @@ def main() -> int:
         raise SystemExit("P7-F4 authority declaration crossed the F5/VLM boundary")
 
     lane = json.loads(CORE_LANE_PATH.read_text(encoding="utf-8"))
-    if lane.get("current") != "P7":
-        raise SystemExit("P7-F4 checkpoint requires P7 as current core phase")
-    if lane.get("current_child") not in {"P7-F4", "P7-F5"}:
-        raise SystemExit("P7-F4 checkpoint only supports the F4 implementation/handoff boundary")
-    if lane.get("active_issue") != 71:
-        raise SystemExit("P7-F4 checkpoint requires active issue #71")
+    validate_p7_completion_lane(lane, checkpoint_child="P7-F4")
 
     print("P7-F4 before/after repair evidence checkpoint: PASS")
     return 0
