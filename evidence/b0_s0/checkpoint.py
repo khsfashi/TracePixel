@@ -48,7 +48,7 @@ class _RecordedExecutor:
 
     def invoke(self, request, *, call_index: int) -> B0CodexCall:
         self.requests.append(request)
-        if request["method_id"] == B0_TRACEPIXEL_METHOD_ID:
+        if request["attempt"]["method_id"] == B0_TRACEPIXEL_METHOD_ID:
             output: object = {
                 "schema": "tracepixel.agent-provider-proposal.v1",
                 "kind": "pixel_program",
