@@ -84,7 +84,7 @@ class _SmokeQa:
                 transparent_rgb_policy="require_zero",
             ),
             connectivity=analyze_connectivity(canvas),
-            shape=analyze_shape_outline(canvas, required_symmetry="vertical"),
+            shape_outline=analyze_shape_outline(canvas, required_symmetry="vertical"),
         )
 
 
