@@ -1,0 +1,51 @@
+name: Trusted Static Gallery Artifact
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tracepixel-p6-v4-gallery
+  cancel-in-progress: true
+
+jobs:
+  publish-gallery:
+    if: >-
+      github.repository == 'khsfashi/TracePixel' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout triggering main commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          clean: true
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install TracePixel
+        run: python -m pip install -e .
+
+      - name: Build deterministic P6-V3 gallery
+        run: python -m evidence.p6_v3.checkpoint --output artifacts/p6-v4-static-gallery
+
+      - name: Upload public review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tracepixel-static-gallery-${{ github.sha }}
+          path: artifacts/p6-v4-static-gallery
+          if-no-files-found: error
+          retention-days: 14
