@@ -56,3 +56,5 @@ jobs:
         run: python -m evidence.b0_b0.checkpoint
       - name: B0-S0 provider-free scored cohort checkpoint
         run: python -m evidence.b0_s0.checkpoint
+      - name: B0-S0 retained evidence and blind review package checkpoint
+        run: python -m evidence.b0_s0.review --validate-package-only
