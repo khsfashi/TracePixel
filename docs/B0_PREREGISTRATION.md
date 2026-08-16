@@ -7,7 +7,7 @@ The machine-readable authority for the initial B0 cohort is:
 - `evidence/b0/preregistration.v1.json`
 - schema: `tracepixel.b0-preregistration.v1`
 
-The first branch commit that introduced the frozen manifest is `78ae5c457f9323736d89623c3da871993734df1a`. The authoritative freeze commit used by scored results is the commit on `main` that first contains this exact manifest after the B0-F0 PR is merged. The active B0 issue must record that `main` commit before any scored attempt starts.
+The authoritative freeze commit used by scored results is the commit on `main` that first contains this exact manifest after the B0-F0 PR is merged. The active B0 issue must record that `main` commit before any scored attempt starts.
 
 ## What is frozen
 
@@ -86,7 +86,7 @@ The frozen cohort contains:
 - 2 trials per task/method,
 - 28 scheduled scored attempts total.
 
-All tasks are 16x16 so the comparison stays inside the already-proven small-asset and finite 256-pixel edit boundary rather than mixing architecture evaluation with a new canvas-scale promotion.
+All tasks stay at 16x16. The cumulative pixel-edit budget is 1024 per trial, which permits at most four full-canvas-equivalent edit passes and therefore gives both methods bounded revision headroom without introducing a larger canvas-scale promotion.
 
 ## Result layers
 
