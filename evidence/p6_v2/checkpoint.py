@@ -47,6 +47,16 @@ def build_reference_composition() -> QaMetricsComposition:
         if telemetry[field] != value:
             raise AssertionError(f"P6-V2 complexity field drifted: {field}")
 
+    composition = cast(dict[str, object], first.manifest["composition"])
+    if composition.get("layout") != "vertical-stack-v1":
+        raise AssertionError("P6-V2 reference must use the mobile-safe vertical stack")
+    width = composition.get("width")
+    content_width = composition.get("content_width")
+    if type(width) is not int or width > 400:
+        raise AssertionError("P6-V2 reference composition width must remain phone review friendly")
+    if type(content_width) is not int or content_width != width - 32:
+        raise AssertionError("P6-V2 content width must preserve the fixed 16px side padding")
+
     authority = cast(dict[str, object], first.manifest["authority"])
     if authority["deterministic_qa"] != "source-evidence":
         raise AssertionError("P6-V2 presentation must not become deterministic QA authority")
@@ -91,9 +101,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     qa = cast(dict[str, object], composition.manifest["deterministic_qa"])
     telemetry = cast(dict[str, object], cast(dict[str, object], composition.manifest["agent_complexity"])["telemetry"])
+    layout = cast(dict[str, object], composition.manifest["composition"])
     print(
         "P6-V2 QA/metrics composition checkpoint passed: "
-        f"qa={qa['status']} tool_calls={telemetry['tool_calls']} changed_pixels={telemetry['changed_pixels']}"
+        f"qa={qa['status']} tool_calls={telemetry['tool_calls']} "
+        f"changed_pixels={telemetry['changed_pixels']} layout={layout['layout']}"
     )
     return 0
 
