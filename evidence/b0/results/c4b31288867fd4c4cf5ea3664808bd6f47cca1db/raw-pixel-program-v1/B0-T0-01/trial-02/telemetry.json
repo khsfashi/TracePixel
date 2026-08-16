@@ -1,0 +1,1 @@
+{"api_cost_usd_micros":null,"changed_pixels":60,"failure_category":null,"human_interventions":0,"input_tokens":15583,"iterations":1,"operation_calls":1,"output_tokens":887,"provider_calls":1,"revisions":0,"runner_commit":"75aeb62b5e852751d80e4d26ae98841366a3ea5c","schema":"tracepixel.b0-telemetry.v1","tool_calls":0,"visual_observation_calls":0,"wall_time_ms":21114}
