@@ -30,7 +30,7 @@ For each attempt:
 4. validate the method-specific response and cumulative PixelProgram budgets;
 5. execute the accepted PixelProgram deterministically into a fresh authoritative canvas;
 6. run the frozen deterministic structural checks;
-7. stop immediately if all deterministic rules pass, otherwise feed only task-applicable deterministic failed checks into the next bounded revision;
+7. stop immediately if all deterministic rules pass, otherwise feed only task-applicable deterministic failed facts into the next bounded revision without copying hidden expected values into provider-visible feedback;
 8. stop at any frozen provider/iteration/operation/pixel-edit/tool/wall-time boundary without an appearance-based decision.
 
 The TracePixel method advances `current_stage` deterministically through the canonical stage sequence for successive logical iterations. The full canonical stage sequence is present in every staged authoring surface; the four-call budget is not widened to manufacture six separate stage calls.
@@ -54,9 +54,9 @@ Required files are:
 
 Completed attempts additionally retain `final.rgba`, `final.png`, and `preview-8x.png`.
 
-Provider response retention contains schema output, token usage, known tool-call counts, return status and stable error codes. Raw stderr is deliberately not published so local paths or incidental machine details are not leaked into the public repository. API cost remains `null` under the frozen ChatGPT-auth boundary instead of being guessed.
+Provider response retention contains schema output, token usage, known tool-call counts, return status and stable error codes. Raw stderr is deliberately not published so local paths or incidental machine details are not leaked into the public repository. API cost remains `null` under the frozen ChatGPT-auth boundary instead of being guessed. If two accepted revisions use different canvas dimensions, changed-pixel telemetry becomes explicit `null` instead of failing the attempt or inventing a cross-size count.
 
-A partial run may be resumed only when every existing attempt directory already contains a valid immutable manifest and the runner commit is unchanged. An incomplete attempt directory blocks automatic resume because overwriting or rerunning a possibly invoked provider call would violate the preregistered exclusion policy.
+A partial run may be resumed only when every existing attempt directory already contains a valid immutable manifest and the runner commit is unchanged. Immediately before each scheduled attempt, the runner durably creates a per-attempt invocation claim under the cohort results root. The claim is removed only after the immutable attempt manifest is written. If a process or machine dies after the claim but before the manifest, the next launch stops instead of silently invoking that attempt again; the owner must preserve and classify the interruption under the frozen failure/void protocol. A stale claim paired with a valid matching manifest is safely reconciled.
 
 ## Blind owner review package
 
