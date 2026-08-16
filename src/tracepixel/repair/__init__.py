@@ -18,6 +18,18 @@ from tracepixel.repair.feedback_validation import (
     FeedbackIntakeValidationError,
     validate_feedback_intake,
 )
+from tracepixel.repair.localization import (
+    FEEDBACK_LOCALIZATION_SCHEMA_V1,
+    FeedbackLocalizationItemV1,
+    FeedbackLocalizationV1,
+    RegionLocalizationBasisV1,
+    StageLocalizationBasisV1,
+)
+from tracepixel.repair.localization_validation import (
+    FeedbackLocalizationValidationError,
+    localize_feedback_intake,
+    validate_feedback_localization,
+)
 
 __all__ = [
     "FEEDBACK_INTAKE_SCHEMA_V1",
@@ -34,4 +46,12 @@ __all__ = [
     "HumanScoreV1",
     "FeedbackIntakeValidationError",
     "validate_feedback_intake",
+    "FEEDBACK_LOCALIZATION_SCHEMA_V1",
+    "FeedbackLocalizationItemV1",
+    "FeedbackLocalizationV1",
+    "RegionLocalizationBasisV1",
+    "StageLocalizationBasisV1",
+    "FeedbackLocalizationValidationError",
+    "localize_feedback_intake",
+    "validate_feedback_localization",
 ]
