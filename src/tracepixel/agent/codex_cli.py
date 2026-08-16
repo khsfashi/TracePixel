@@ -302,7 +302,7 @@ class CodexCliProvider:
                     "--model",
                     self.model,
                     "--config",
-                    f'model_reasoning_effort="{self.reasoning_effort}"',
+                    f"model_reasoning_effort={self.reasoning_effort}",
                     "--output-schema",
                     str(schema_path),
                     "--output-last-message",
