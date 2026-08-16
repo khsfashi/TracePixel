@@ -1,0 +1,4 @@
+# Retained B0 evidence is byte-addressed by SHA-256 in attempt manifests.
+# Never let checkout EOL conversion rewrite those committed bytes on Windows.
+evidence/b0/results/** -text
+evidence/b0/review/** -text
