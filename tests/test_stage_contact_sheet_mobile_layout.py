@@ -21,7 +21,7 @@ class StageContactSheetMobileLayoutTests(unittest.TestCase):
         for label in (
             "silhouette",
             "major forms",
-            "palette light",
+            "palette light ramp",
             "shading",
             "semantic details",
             "outline cleanup",
