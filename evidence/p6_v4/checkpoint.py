@@ -11,11 +11,13 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ROOT / ".github" / "workflows" / "trusted-gallery-artifact.yml"
 
 _REQUIRED_TOKENS = (
+    "push:\n    branches:\n      - main",
     "workflow_dispatch:",
     "permissions:\n  contents: read",
     "github.repository == 'khsfashi/TracePixel'",
-    "github.event_name == 'workflow_dispatch'",
     "github.ref == 'refs/heads/main'",
+    "github.event_name == 'push'",
+    "github.event_name == 'workflow_dispatch'",
     "runs-on: ubuntu-latest",
     "timeout-minutes: 10",
     "ref: ${{ github.sha }}",
@@ -35,7 +37,6 @@ _FORBIDDEN_TOKENS = (
     "contents: write",
     "id-token: write",
     "attestations: write",
-    "\n  push:",
     "\n  schedule:",
 )
 
@@ -73,6 +74,8 @@ def validate_workflow_policy(text: str) -> None:
 
     if text.count("workflow_dispatch:") != 1:
         raise ArtifactWorkflowPolicyError("P6-V4 must expose exactly one owner dispatch trigger")
+    if text.count("\n  push:\n") != 1:
+        raise ArtifactWorkflowPolicyError("P6-V4 must expose exactly one trusted main push trigger")
     if text.count("runs-on:") != 1:
         raise ArtifactWorkflowPolicyError("P6-V4 must contain exactly one GitHub-hosted job")
     if text.count("retention-days: 14") != 1:
@@ -98,7 +101,7 @@ def main() -> int:
     html_bytes, manifest_bytes = _verify_gallery_payload()
     print(
         "P6-V4 trusted artifact publishing checkpoint passed: "
-        f"trigger=workflow_dispatch ref=main runner=ubuntu-latest retention_days=14 "
+        f"triggers=main-push,owner-dispatch ref=main runner=ubuntu-latest retention_days=14 "
         f"html_bytes={html_bytes} manifest_bytes={manifest_bytes}"
     )
     return 0
