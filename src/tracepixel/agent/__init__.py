@@ -47,8 +47,26 @@ from .telemetry import (
     run_bounded_edit_loop_with_telemetry,
     validate_agent_complexity_telemetry,
 )
+from .codex_cli import (
+    CODEX_CLI_MIN_VERSION_V1,
+    CODEX_CLI_MODEL_V1,
+    CODEX_CLI_REASONING_EFFORT_V1,
+    CODEX_CLI_TIMEOUT_SECONDS_V1,
+    CodexCliCallRecord,
+    CodexCliEnvironment,
+    CodexCliProvider,
+    CodexCliProviderError,
+)
 
 __all__ = [
+    "CODEX_CLI_MIN_VERSION_V1",
+    "CODEX_CLI_MODEL_V1",
+    "CODEX_CLI_REASONING_EFFORT_V1",
+    "CODEX_CLI_TIMEOUT_SECONDS_V1",
+    "CodexCliCallRecord",
+    "CodexCliEnvironment",
+    "CodexCliProvider",
+    "CodexCliProviderError",
     "AGENT_LOOP_BUDGET_SCHEMA_V1",
     "AgentLoopBudgetV1",
     "AgentLoopContractError",
