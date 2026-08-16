@@ -68,3 +68,5 @@ jobs:
         run: python -m evidence.p7_f1.checkpoint
       - name: P7-F2 minimal repair plan checkpoint
         run: python -m evidence.p7_f2.checkpoint
+      - name: P7-F3 repair execution and deterministic re-QA checkpoint
+        run: python -m evidence.p7_f3.checkpoint

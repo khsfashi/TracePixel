@@ -1,5 +1,17 @@
 """Bounded targeted-repair contracts."""
 
+from tracepixel.repair.execution import (
+    REPAIR_EXECUTION_SCHEMA_V1,
+    RepairExecutionItemV1,
+    RepairExecutionStatusV1,
+    RepairExecutionV1,
+    RepairQaEvaluator,
+)
+from tracepixel.repair.execution_validation import (
+    RepairExecutionValidationError,
+    execute_repair_plan,
+    validate_repair_execution,
+)
 from tracepixel.repair.feedback import (
     FEEDBACK_INTAKE_SCHEMA_V1,
     MAX_FEEDBACK_ITEMS_V1,
@@ -45,6 +57,14 @@ from tracepixel.repair.plan_validation import (
 )
 
 __all__ = [
+    "REPAIR_EXECUTION_SCHEMA_V1",
+    "RepairExecutionItemV1",
+    "RepairExecutionStatusV1",
+    "RepairExecutionV1",
+    "RepairQaEvaluator",
+    "RepairExecutionValidationError",
+    "execute_repair_plan",
+    "validate_repair_execution",
     "FEEDBACK_INTAKE_SCHEMA_V1",
     "MAX_FEEDBACK_ITEMS_V1",
     "MAX_FEEDBACK_TEXT_CHARS_V1",
