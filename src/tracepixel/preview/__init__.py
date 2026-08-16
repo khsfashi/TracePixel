@@ -18,20 +18,32 @@ from tracepixel.preview.contact_sheet import (
     build_stage_contact_sheet,
     write_stage_contact_sheet,
 )
+from tracepixel.preview.qa_metrics import (
+    QA_METRICS_COMPOSITION_SCHEMA_V1,
+    QaMetricsComposition,
+    QaMetricsCompositionContractError,
+    build_qa_metrics_composition,
+    write_qa_metrics_composition,
+)
 
 __all__ = [
     "PREVIEW_BUNDLE_SCHEMA_V1",
+    "QA_METRICS_COMPOSITION_SCHEMA_V1",
     "STAGE_CONTACT_SHEET_SCHEMA_V1",
     "PreviewBundle",
     "PreviewBundleContractError",
     "PreviewBundleFile",
     "PreviewStageArtifact",
+    "QaMetricsComposition",
+    "QaMetricsCompositionContractError",
     "StageArtifactKindV1",
     "StageArtifactMediaTypeV1",
     "StageContactSheet",
     "StageContactSheetContractError",
     "build_preview_bundle",
+    "build_qa_metrics_composition",
     "build_stage_contact_sheet",
     "write_preview_bundle",
+    "write_qa_metrics_composition",
     "write_stage_contact_sheet",
 ]

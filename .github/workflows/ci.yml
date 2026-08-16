@@ -42,3 +42,5 @@ jobs:
         run: python -m evidence.p6_v0.checkpoint
       - name: P6-V1 deterministic stage contact sheet checkpoint
         run: python -m evidence.p6_v1.checkpoint
+      - name: P6-V2 deterministic QA/metrics composition checkpoint
+        run: python -m evidence.p6_v2.checkpoint
