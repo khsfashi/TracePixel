@@ -6,9 +6,9 @@ P6-V4 publishes the existing deterministic P6-V3 static gallery through a delibe
 
 The publication workflow is `.github/workflows/trusted-gallery-artifact.yml`.
 
-It is intentionally owner-triggered only:
+It accepts only trusted `main` execution:
 
-- trigger: `workflow_dispatch` only,
+- triggers: push to `main` or explicit `workflow_dispatch`,
 - accepted repository: `khsfashi/TracePixel`,
 - accepted ref: `refs/heads/main`,
 - runner: GitHub-hosted `ubuntu-latest`,
@@ -21,7 +21,7 @@ It is intentionally owner-triggered only:
 
 A public pull request cannot invoke this publication workflow. Normal pull-request CI remains the separate provider-free `.github/workflows/ci.yml` path.
 
-The job-level repository/ref check is deliberate defense in depth. `workflow_dispatch` is already a trusted manual entry point on the default branch, but the job still refuses any ref other than `main`.
+The job-level repository/ref/event check is deliberate defense in depth. A merge/push to trusted `main` publishes automatically, while the owner can also request an explicit repeat from `main`; both paths execute the exact triggering `github.sha`.
 
 ## Published payload
 
@@ -62,7 +62,7 @@ Portable CI runs:
 python -m evidence.p6_v4.checkpoint
 ```
 
-The checkpoint verifies the committed workflow still requires the frozen V4 policy and rebuilds the deterministic P6-V3 payload. It fails if the publication workflow gains a public-PR trigger, self-hosted runner, secret reference, write permission, unapproved action surface, non-main dispatch path, or longer/different artifact retention without an explicit policy change.
+The checkpoint verifies the committed workflow still requires the frozen V4 policy and rebuilds the deterministic P6-V3 payload. It fails if the publication workflow gains a public-PR trigger, non-main push/dispatch path, self-hosted runner, secret reference, write permission, unapproved action surface, or different artifact retention without an explicit policy change.
 
 This is a repository regression guard, not a cryptographic attestation mechanism.
 
@@ -72,6 +72,6 @@ GitHub artifact attestations are intentionally deferred. Adding attestation woul
 
 ## Completion boundary
 
-The code/config portion of P6-V4 is complete only after portable CI is green. The child itself should advance to P6-V5 only after the trusted workflow has also been executed from `main` and GitHub confirms that the expected static-gallery artifact was uploaded successfully.
+The code/config portion of P6-V4 is complete only after portable CI is green. The child itself should advance to P6-V5 only after the trusted workflow has also executed from `main` and GitHub confirms that the expected static-gallery artifact was uploaded successfully.
 
 P6-V5 will document and prove the actual phone review path. P6-V6 remains separately gated by G6 and does not inherit authorization from this GitHub-hosted workflow.
