@@ -64,3 +64,5 @@ jobs:
         run: python -m evidence.b0_p0.checkpoint
       - name: P7-F0 feedback intake checkpoint
         run: python -m evidence.p7_f0.checkpoint
+      - name: P7-F1 feedback localization checkpoint
+        run: python -m evidence.p7_f1.checkpoint
