@@ -22,6 +22,14 @@ py -3.13 -m evidence.b0_s0.review
 
 The command first validates the retained 28-attempt cohort, every artifact byte count/SHA-256 recorded by the attempt manifests, the 28-entry blind package, exact preview-byte copies, the frozen dimensions, and blind order. It then starts a **loopback-only** HTTP server on `127.0.0.1` and opens the browser.
 
+Retained B0 result/review files are marked `-text` in `.gitattributes` because their exact committed bytes are SHA-256-addressed. This prevents Windows `core.autocrlf` from rewriting JSON line endings on new checkouts. A Windows checkout created before that attribute existed should update `main` and explicitly refresh only the retained evidence paths once before review:
+
+```powershell
+git checkout -- evidence/b0/results evidence/b0/review
+```
+
+This refreshes the working-tree copies from the unchanged committed evidence; it does not rerun or mutate the frozen cohort.
+
 For each blind artifact the page shows:
 
 - the exact visible task text,
