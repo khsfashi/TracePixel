@@ -4,6 +4,7 @@ import base64
 import html
 import json
 import struct
+import textwrap
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -18,11 +19,19 @@ QA_METRICS_COMPOSITION_SCHEMA_V1 = "tracepixel.qa-metrics-composition.v1"
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 _PADDING = 16
-_GAP = 16
-_PANEL_WIDTH = 420
+_MIN_COMPOSITION_WIDTH = 368
 _LINE_HEIGHT = 20
+_TITLE_LINE_HEIGHT = 20
 _TITLE_HEIGHT = 28
 _SECTION_GAP = 18
+_CAPTION_LINE_HEIGHT = 16
+_BODY_WRAP_CHARS = 38
+_AUTHORITY_WRAP_CHARS = 46
+_PREVIEW_CAPTION_LINES = (
+    "preview PNG",
+    "exact source bytes",
+    "scaling: none",
+)
 
 
 class QaMetricsCompositionContractError(ValueError):
@@ -139,6 +148,20 @@ def _svg_text(x: int, y: int, value: str, *, size: int = 14, weight: int = 400) 
     )
 
 
+def _wrap_lines(value: str, *, width: int) -> list[str]:
+    wrapped = textwrap.wrap(
+        value,
+        width=width,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+    return wrapped if wrapped else [""]
+
+
+def _wrapped_block(values: list[str] | tuple[str, ...], *, width: int) -> list[str]:
+    return [line for value in values for line in _wrap_lines(value, width=width)]
+
+
 def build_qa_metrics_composition(bundle: PreviewBundle) -> QaMetricsComposition:
     """Compose P6-V0 image, deterministic QA, and observational Agent metrics into one SVG."""
 
@@ -214,52 +237,68 @@ def build_qa_metrics_composition(bundle: PreviewBundle) -> QaMetricsComposition:
         else [f"{field}: {_text(complexity[field])}" for field in metric_fields]
     )
 
-    image_x = _PADDING
-    image_y = _PADDING + _TITLE_HEIGHT
-    panel_x = image_x + preview_width + _GAP
-    content_line_count = len(qa_lines) + len(metric_lines) + 8
-    content_height = _PADDING + _TITLE_HEIGHT + content_line_count * _LINE_HEIGHT + 3 * _SECTION_GAP
-    height = max(image_y + preview_height + _PADDING, content_height)
-    width = panel_x + _PANEL_WIDTH + _PADDING
-
-    lines: list[str] = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
-        f'<rect width="{width}" height="{height}" fill="#fff"/>',
-        _svg_text(_PADDING, _PADDING + 18, "TracePixel P6-V2 QA / metrics composition", size=16, weight=700),
-        f'<image x="{image_x}" y="{image_y}" width="{preview_width}" height="{preview_height}" '
-        f'href="data:image/png;base64,{base64.b64encode(preview_png).decode("ascii")}"/>',
-        _svg_text(image_x, image_y + preview_height + 18, "preview PNG · exact source bytes · scaling none", size=11),
-    ]
-
-    y = image_y
-    lines.append(_svg_text(panel_x, y + 16, "Deterministic QA", size=15, weight=700))
-    y += _TITLE_HEIGHT
-    for item in qa_lines:
-        lines.append(_svg_text(panel_x, y + 14, item))
-        y += _LINE_HEIGHT
-
-    y += _SECTION_GAP
-    lines.append(_svg_text(panel_x, y + 16, "Agent complexity · observational", size=15, weight=700))
-    y += _TITLE_HEIGHT
-    for item in metric_lines:
-        lines.append(_svg_text(panel_x, y + 14, item))
-        y += _LINE_HEIGHT
-
-    y += _SECTION_GAP
-    lines.append(_svg_text(panel_x, y + 16, "Authority boundary", size=15, weight=700))
-    y += _TITLE_HEIGHT
-    for item in (
+    authority_source = (
         "raster: unchanged authoritative RGBA-derived evidence",
         "deterministic QA: source evidence; not presentation-derived",
         "complexity: observational only",
         "perceptual/VLM: not included",
         "human judgment: not included",
-    ):
-        lines.append(_svg_text(panel_x, y + 14, item, size=12))
-        y += _LINE_HEIGHT
+    )
+    qa_display_lines = _wrapped_block(qa_lines, width=_BODY_WRAP_CHARS)
+    metric_display_lines = _wrapped_block(metric_lines, width=_BODY_WRAP_CHARS)
+    authority_lines = _wrapped_block(authority_source, width=_AUTHORITY_WRAP_CHARS)
 
-    lines.append("</svg>")
+    width = max(_MIN_COMPOSITION_WIDTH, preview_width + _PADDING * 2)
+    content_width = width - _PADDING * 2
+    image_x = (width - preview_width) // 2
+
+    content: list[str] = []
+    cursor = _PADDING
+    for title_line in ("TracePixel P6-V2", "QA / metrics composition"):
+        content.append(_svg_text(_PADDING, cursor + 18, title_line, size=16, weight=700))
+        cursor += _TITLE_LINE_HEIGHT
+
+    cursor += 8
+    image_y = cursor
+    content.append(
+        f'<image x="{image_x}" y="{image_y}" width="{preview_width}" height="{preview_height}" '
+        f'preserveAspectRatio="none" image-rendering="pixelated" '
+        f'href="data:image/png;base64,{base64.b64encode(preview_png).decode("ascii")}"/>'
+    )
+    cursor += preview_height + 8
+    for caption_line in _PREVIEW_CAPTION_LINES:
+        content.append(_svg_text(_PADDING, cursor + 12, caption_line, size=11))
+        cursor += _CAPTION_LINE_HEIGHT
+
+    cursor += _SECTION_GAP
+    content.append(_svg_text(_PADDING, cursor + 16, "Deterministic QA", size=15, weight=700))
+    cursor += _TITLE_HEIGHT
+    for item in qa_display_lines:
+        content.append(_svg_text(_PADDING, cursor + 14, item))
+        cursor += _LINE_HEIGHT
+
+    cursor += _SECTION_GAP
+    content.append(_svg_text(_PADDING, cursor + 16, "Agent complexity · observational", size=15, weight=700))
+    cursor += _TITLE_HEIGHT
+    for item in metric_display_lines:
+        content.append(_svg_text(_PADDING, cursor + 14, item))
+        cursor += _LINE_HEIGHT
+
+    cursor += _SECTION_GAP
+    content.append(_svg_text(_PADDING, cursor + 16, "Authority boundary", size=15, weight=700))
+    cursor += _TITLE_HEIGHT
+    for item in authority_lines:
+        content.append(_svg_text(_PADDING, cursor + 14, item, size=12))
+        cursor += _LINE_HEIGHT
+
+    height = cursor + _PADDING
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        f'<rect width="{width}" height="{height}" fill="#fff"/>',
+        *content,
+        "</svg>",
+    ]
     svg = "\n".join(lines).encode("utf-8")
 
     composition_manifest: dict[str, object] = {
@@ -293,6 +332,10 @@ def build_qa_metrics_composition(bundle: PreviewBundle) -> QaMetricsComposition:
             "media_type": "image/svg+xml",
             "width": width,
             "height": height,
+            "content_width": content_width,
+            "layout": "vertical-stack-v1",
+            "body_wrap_chars": _BODY_WRAP_CHARS,
+            "authority_wrap_chars": _AUTHORITY_WRAP_CHARS,
             "size_bytes": len(svg),
             "sha256": sha256(svg).hexdigest(),
         },
