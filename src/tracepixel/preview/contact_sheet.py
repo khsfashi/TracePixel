@@ -23,7 +23,10 @@ _SAFE_FILENAME_CHARS = frozenset(
 
 _GAP = 8
 _PADDING = 8
-_LABEL_HEIGHT = 16
+_LABEL_HEIGHT = 30
+_MIN_CELL_WIDTH = 112
+_LABEL_FONT_SIZE = 10
+_INDEX_FONT_SIZE = 9
 
 
 class StageContactSheetContractError(ValueError):
@@ -121,7 +124,8 @@ def build_stage_contact_sheet(
     """Compose authored stage PNGs into one deterministic SVG review sheet.
 
     PNG bytes are embedded byte-for-byte as data URIs. The sheet never decodes,
-    resamples, or re-encodes source pixels.
+    resamples, or re-encodes source pixels. Presentation cells keep a minimum
+    width so fixed P3 stage labels remain readable on phone-sized review pages.
     """
 
     if type(columns) is not int or columns < 1 or columns > _MAX_COLUMNS:
@@ -171,7 +175,7 @@ def build_stage_contact_sheet(
     rows = (frame_count + columns_used - 1) // columns_used
     max_width = max(item[3] for item in normalized)
     max_height = max(item[4] for item in normalized)
-    cell_width = max_width + _PADDING * 2
+    cell_width = max(_MIN_CELL_WIDTH, max_width + _PADDING * 2)
     cell_height = _LABEL_HEIGHT + max_height + _PADDING * 2
     sheet_width = _GAP + columns_used * (cell_width + _GAP)
     sheet_height = _GAP + rows * (cell_height + _GAP)
@@ -191,7 +195,7 @@ def build_stage_contact_sheet(
         row = zero_index // columns_used
         cell_x = _GAP + column * (cell_width + _GAP)
         cell_y = _GAP + row * (cell_height + _GAP)
-        image_x = cell_x + _PADDING + (max_width - width) // 2
+        image_x = cell_x + (cell_width - width) // 2
         image_y = cell_y + _PADDING + _LABEL_HEIGHT
         label = artifact.stage.replace("_", " ")
         encoded = base64.b64encode(artifact.data).decode("ascii")
@@ -203,9 +207,15 @@ def build_stage_contact_sheet(
                 f'<g id="{index:02d}-{artifact.stage}" transform="translate({cell_x} {cell_y})">',
                 f'<rect width="{cell_width}" height="{cell_height}" fill="#ffffff" stroke="#c8c8c8"/>',
                 (
-                    f'<text x="{_PADDING}" y="{_PADDING + 10}" '
-                    'font-family="monospace" font-size="10" fill="#202020">'
-                    f"{index:02d} {label}</text>"
+                    f'<text x="{_PADDING}" y="{_PADDING + 8}" '
+                    f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" '
+                    f'font-size="{_INDEX_FONT_SIZE}" fill="#666666">{index:02d}</text>'
+                ),
+                (
+                    f'<text x="{_PADDING}" y="{_PADDING + 21}" '
+                    f'font-family="ui-sans-serif, system-ui, sans-serif" '
+                    f'font-size="{_LABEL_FONT_SIZE}" font-weight="600" fill="#202020">'
+                    f"{label}</text>"
                 ),
                 (
                     f'<image x="{image_x - cell_x}" y="{image_y - cell_y}" '
@@ -244,9 +254,12 @@ def build_stage_contact_sheet(
             "rows": rows,
             "width": sheet_width,
             "height": sheet_height,
+            "cell_width": cell_width,
             "gap": _GAP,
             "padding": _PADDING,
             "label_height": _LABEL_HEIGHT,
+            "label_font_size": _LABEL_FONT_SIZE,
+            "minimum_cell_width": _MIN_CELL_WIDTH,
             "source_image_scaling": "none",
         },
         "frames": frames,
