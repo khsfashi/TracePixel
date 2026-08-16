@@ -80,6 +80,22 @@ class B0S0ScoredTests(unittest.TestCase):
         self.assertTrue(feedback["available"])
         self.assertEqual([], feedback["findings"])
 
+    def test_feedback_exposes_actual_facts_without_hidden_expected_values(self) -> None:
+        empty = {
+            "schema": "tracepixel.pixel-program.v1",
+            "canvas": {"width": 16, "height": 16},
+            "operations": [],
+        }
+        qa = score_b0_canvas(self.preregistration, "B0-T0-01", execute_pixel_program(empty))
+        feedback = b0_feedback_from_qa(qa)
+        self.assertTrue(feedback["findings"])
+        self.assertNotIn("expected", json.dumps(feedback, sort_keys=True))
+
+    def test_changed_pixel_metric_becomes_unavailable_across_dimension_change(self) -> None:
+        from tracepixel.benchmark import changed_pixel_count
+
+        self.assertIsNone(changed_pixel_count(bytes(4), bytes(8)))
+
     def test_both_methods_accept_same_raster_and_keep_hidden_constraints_out_of_request(self) -> None:
         for method_id in (B0_TRACEPIXEL_METHOD_ID, B0_RAW_METHOD_ID):
             identity = self.identity(method_id)
