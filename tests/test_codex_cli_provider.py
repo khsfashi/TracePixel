@@ -163,7 +163,10 @@ class CodexCliProviderTests(unittest.TestCase):
         self.assertIn("--json", command)
         self.assertEqual(command[command.index("--sandbox") + 1], "read-only")
         self.assertEqual(command[command.index("--model") + 1], CODEX_CLI_MODEL_V1)
-        self.assertIn('model_reasoning_effort="low"', command)
+        self.assertEqual(
+            command[command.index("--config") + 1],
+            "model_reasoning_effort=low",
+        )
         self.assertIn("--output-schema", command)
         self.assertTrue(runner.prompt and "TRACEPIXEL_REQUEST=" in runner.prompt)
         self.assertTrue(
@@ -179,6 +182,15 @@ class CodexCliProviderTests(unittest.TestCase):
         records = provider.call_records()
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0].proposal, proposal)
+
+    def test_windows_command_keeps_reasoning_override_unquoted(self) -> None:
+        executable = r"C:\Program Files\OpenAI\codex.cmd"
+        arguments = ["exec", "--config", "model_reasoning_effort=low"]
+
+        command = CodexCliProvider._command(executable, arguments)
+
+        self.assertIn("model_reasoning_effort=low", command[4])
+        self.assertNotIn('model_reasoning_effort=\\"low\\"', command[4])
 
     def test_missing_codex_is_a_stable_adapter_error(self) -> None:
         provider = CodexCliProvider(_which=lambda _: None)
