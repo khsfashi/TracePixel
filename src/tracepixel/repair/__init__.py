@@ -45,6 +45,23 @@ from tracepixel.repair.feedback_validation import (
     FeedbackIntakeValidationError,
     validate_feedback_intake,
 )
+from tracepixel.repair.human_feedback import (
+    HUMAN_FEEDBACK_SCHEMA_V1,
+    MAX_HUMAN_REVIEW_SOURCE_CHARS_V1,
+    MAX_HUMAN_REVIEW_SUMMARY_CHARS_V1,
+    DeterministicQaReviewStatusV1,
+    HumanAuthoringStatusV1,
+    HumanFeedbackAuthorityV1,
+    HumanFeedbackCompletionV1,
+    HumanFeedbackReviewV1,
+    HumanFeedbackV1,
+    HumanReviewDecisionV1,
+)
+from tracepixel.repair.human_feedback_validation import (
+    HumanFeedbackValidationError,
+    create_human_feedback,
+    validate_human_feedback,
+)
 from tracepixel.repair.localization import (
     FEEDBACK_LOCALIZATION_SCHEMA_V1,
     FeedbackLocalizationItemV1,
@@ -105,6 +122,19 @@ __all__ = [
     "HumanScoreV1",
     "FeedbackIntakeValidationError",
     "validate_feedback_intake",
+    "HUMAN_FEEDBACK_SCHEMA_V1",
+    "MAX_HUMAN_REVIEW_SOURCE_CHARS_V1",
+    "MAX_HUMAN_REVIEW_SUMMARY_CHARS_V1",
+    "DeterministicQaReviewStatusV1",
+    "HumanAuthoringStatusV1",
+    "HumanFeedbackAuthorityV1",
+    "HumanFeedbackCompletionV1",
+    "HumanFeedbackReviewV1",
+    "HumanFeedbackV1",
+    "HumanReviewDecisionV1",
+    "HumanFeedbackValidationError",
+    "create_human_feedback",
+    "validate_human_feedback",
     "FEEDBACK_LOCALIZATION_SCHEMA_V1",
     "FeedbackLocalizationItemV1",
     "FeedbackLocalizationV1",
