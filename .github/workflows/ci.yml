@@ -58,3 +58,5 @@ jobs:
         run: python -m evidence.b0_s0.checkpoint
       - name: B0-S0 retained evidence and blind review package checkpoint
         run: python -m evidence.b0_s0.review --validate-package-only
+      - name: B0-S0 offline mobile owner review package checkpoint
+        run: python -m evidence.b0_s0.mobile_review --output out/b0-mobile-review --source-sha 1111111111111111111111111111111111111111
