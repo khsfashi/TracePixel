@@ -29,7 +29,7 @@
     "B0": "Matched development-visible architecture benchmark",
     "P7": "Targeted repair and human feedback loop",
     "B1": "Held-out generalization benchmark",
-    "P8": "Production breadth for icons, props and tiles",
+    "P8": "Production breadth for batch asset sets, icons, props and tiles",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
@@ -103,6 +103,7 @@
       "B1-P0"
     ],
     "P8": [
+      "P8-X0",
       "P8-B0",
       "P8-B1",
       "P8-B2",
@@ -150,6 +151,7 @@
     "Run preregistered engineering checkpoints before the scored B0 cohort where specified.",
     "Do not mutate or rerun a frozen scored benchmark cohort to improve its score.",
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
+    "P8-X0 AssetSet/batch authoring must reuse the proven single-asset pipeline, isolate member failures, and keep execution concurrency explicit and bounded.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
