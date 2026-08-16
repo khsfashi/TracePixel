@@ -48,3 +48,5 @@ jobs:
         run: python -m evidence.p6_v3.checkpoint
       - name: P6-V4 trusted GitHub artifact publishing checkpoint
         run: python -m evidence.p6_v4.checkpoint
+      - name: P6-V5 mobile review surface checkpoint
+        run: python -m evidence.p6_v5.checkpoint
