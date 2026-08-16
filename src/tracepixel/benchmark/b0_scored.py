@@ -246,7 +246,19 @@ def b0_feedback_from_qa(qa: Mapping[str, object]) -> B0DeterministicFeedbackV1:
     checks = qa.get("checks")
     if type(checks) is not list:
         _fail("invalid_qa", "deterministic QA checks must be an array")
-    findings = [deepcopy(cast(dict[str, object], item)) for item in cast(list[object], checks) if type(item) is dict and cast(dict[str, object], item).get("passed") is False]
+    findings: list[dict[str, object]] = []
+    for item in cast(list[object], checks):
+        if type(item) is not dict:
+            continue
+        check = cast(dict[str, object], item)
+        if check.get("passed") is False:
+            findings.append(
+                {
+                    "rule": deepcopy(check.get("rule")),
+                    "passed": False,
+                    "actual": deepcopy(check.get("actual")),
+                }
+            )
     return {
         "schema": "tracepixel.b0-deterministic-feedback.v1",
         "available": True,
@@ -276,11 +288,13 @@ def b0_program_cost(program: Mapping[str, object]) -> tuple[int, int]:
     return operation_count, pixel_edits
 
 
-def changed_pixel_count(previous: bytes | None, current: bytes) -> int:
+def changed_pixel_count(previous: bytes | None, current: bytes) -> int | None:
+    if len(current) % 4:
+        _fail("invalid_raster", "RGBA snapshots must use a 4-byte pixel stride")
     if previous is None:
         previous = bytes(len(current))
-    if len(previous) != len(current) or len(current) % 4:
-        _fail("raster_size_mismatch", "RGBA snapshots must have equal 4-byte pixel length")
+    if len(previous) != len(current):
+        return None
     return sum(previous[offset : offset + 4] != current[offset : offset + 4] for offset in range(0, len(current), 4))
 
 
@@ -425,7 +439,7 @@ class B0CodexExecutor:
         return count
 
     def invoke(self, request: B0ProviderRequestV1, *, call_index: int) -> B0CodexCall:
-        del call_index
+        del call_index  # identity is retained by the caller; the provider prompt remains request-only.
         plan = build_b0_codex_exec_plan(request)
         executable = self._resolve()
         with tempfile.TemporaryDirectory(prefix="tracepixel-b0-") as temporary:
@@ -489,7 +503,7 @@ def _telemetry(
     iterations: int,
     accepted: int,
     operation_calls: int,
-    changed_pixels: int,
+    changed_pixels: int | None,
     wall_time_ms: int,
     failure_category: str | None,
     runner_commit: str | None,
@@ -560,7 +574,7 @@ def run_b0_attempt(
     accepted = 0
     operation_calls = 0
     pixel_edits = 0
-    changed_pixels = 0
+    changed_pixels: int | None = 0
     total_tools = 0
 
     failure: tuple[str, str, str] | None = None
@@ -640,7 +654,9 @@ def run_b0_attempt(
             break
 
         rgba = canvas.rgba_bytes()
-        changed_pixels += changed_pixel_count(previous_rgba, rgba)
+        delta_changed = changed_pixel_count(previous_rgba, rgba)
+        if changed_pixels is not None:
+            changed_pixels = None if delta_changed is None else changed_pixels + delta_changed
         previous_rgba = rgba
         operation_calls += proposed_operations
         pixel_edits += proposed_edits
