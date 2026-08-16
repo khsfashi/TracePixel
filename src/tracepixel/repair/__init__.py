@@ -30,6 +30,19 @@ from tracepixel.repair.localization_validation import (
     localize_feedback_intake,
     validate_feedback_localization,
 )
+from tracepixel.repair.plan import (
+    MAX_DEFER_REASON_CHARS_V1,
+    REPAIR_PLAN_SCHEMA_V1,
+    RepairDispositionV1,
+    RepairPlanItemV1,
+    RepairPlanV1,
+    RepairProposalV1,
+)
+from tracepixel.repair.plan_validation import (
+    RepairPlanValidationError,
+    create_repair_plan,
+    validate_repair_plan,
+)
 
 __all__ = [
     "FEEDBACK_INTAKE_SCHEMA_V1",
@@ -54,4 +67,13 @@ __all__ = [
     "FeedbackLocalizationValidationError",
     "localize_feedback_intake",
     "validate_feedback_localization",
+    "MAX_DEFER_REASON_CHARS_V1",
+    "REPAIR_PLAN_SCHEMA_V1",
+    "RepairDispositionV1",
+    "RepairPlanItemV1",
+    "RepairPlanV1",
+    "RepairProposalV1",
+    "RepairPlanValidationError",
+    "create_repair_plan",
+    "validate_repair_plan",
 ]
