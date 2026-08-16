@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import subprocess
+import tempfile
 import unittest
 from typing import cast
 
@@ -19,6 +20,7 @@ from tracepixel.benchmark import (
     score_b0_canvas,
 )
 from tracepixel.model import execute_pixel_program
+from evidence.b0_s0.run import _claim_attempt, _reconcile_claims
 
 
 ROOT = Path(__file__).parents[1]
@@ -95,6 +97,16 @@ class B0S0ScoredTests(unittest.TestCase):
         from tracepixel.benchmark import changed_pixel_count
 
         self.assertIsNone(changed_pixel_count(bytes(4), bytes(8)))
+
+    def test_durable_invocation_claim_blocks_automatic_rerun_without_manifest(self) -> None:
+        identity = self.identity(B0_RAW_METHOD_ID)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            claim = _claim_attempt(root, identity, "4" * 40)
+            self.assertTrue(claim.is_file())
+            with self.assertRaises(SystemExit):
+                _reconcile_claims(root, self.schedule)
+            self.assertTrue(claim.is_file())
 
     def test_both_methods_accept_same_raster_and_keep_hidden_constraints_out_of_request(self) -> None:
         for method_id in (B0_TRACEPIXEL_METHOD_ID, B0_RAW_METHOD_ID):
