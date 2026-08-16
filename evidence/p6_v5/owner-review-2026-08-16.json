@@ -1,0 +1,21 @@
+{
+  "schema": "tracepixel.mobile-review-proof.v2",
+  "repository": "khsfashi/TracePixel",
+  "source_sha": "076ec87bafdf683c01c852fbb881ebe52eb78df9",
+  "workflow_run_id": 31927474889,
+  "artifact_id": 9258267334,
+  "artifact_name": "tracepixel-static-gallery-076ec87bafdf683c01c852fbb881ebe52eb78df9",
+  "language": "ko",
+  "review_page": "index.ko.html",
+  "device_class": "phone",
+  "access_path": "github-actions-artifact-download",
+  "observations": {
+    "task_intent": true,
+    "final_output": true,
+    "stage_progression": true,
+    "deterministic_qa": true,
+    "agent_complexity": true
+  },
+  "perceptual_vlm_used": false,
+  "self_hosted_runner_used": false
+}
