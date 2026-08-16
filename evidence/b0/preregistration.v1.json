@@ -178,7 +178,8 @@
     "max_iterations_per_trial": 4,
     "max_tool_calls_per_trial": 4,
     "max_operations_per_trial": 16,
-    "max_pixel_edits_per_trial": 256,
+    "max_pixel_edits_per_trial": 1024,
+    "pixel_edit_budget_semantics": "Cumulative across accepted proposals; 1024 permits at most four full 16x16 canvas-equivalent edit passes while preserving a finite matched revision budget.",
     "max_visual_observation_calls_per_trial": 0,
     "max_reported_input_tokens_per_provider_call": 24000,
     "max_reported_output_tokens_per_provider_call": 4000,
@@ -275,7 +276,7 @@
     "portable_ci_role": "CI may validate harness/schema/replay without provider/network access; scored provider runs are not portable-CI correctness gates."
   },
   "immutability": {
-    "scoring_start_condition": "No B0 scored attempt may begin until the commit that first adds this exact file is merged to main and its commit SHA is recorded as the B0-F0 freeze commit.",
+    "scoring_start_condition": "No B0 scored attempt may begin until the commit on main that first contains this exact file is recorded as the B0-F0 freeze commit.",
     "after_first_scored_attempt": "This cohort, task text, constraints, methods, settings, budgets, retry/exclusion rules, scoring and trial count are immutable. Any architecture improvement belongs after B0-P0 and may not be used to rerun or relabel this cohort.",
     "held_out_boundary": "B1 must use separately frozen held-out variants; B0 task outputs are development-visible evidence only."
   }
