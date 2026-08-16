@@ -15,51 +15,43 @@ stage-contact-sheet.svg
 
 The SVG uses each stage PNG at its natural width and height and embeds the exact PNG bytes as a base64 data URI. Only layout/card/label markup is added around those images. No PNG decoder is required and there is no raster recomposition step.
 
-The manifest records:
+## Mobile-readable presentation cells
 
-- fixed stage order,
-- exact source path, byte count and SHA-256 for every stage image,
-- source PNG dimensions read only from IHDR,
-- deterministic sheet layout,
-- exact SVG byte count and SHA-256,
-- explicit authority separation.
+A P6-V5 phone review exposed that the original cell width was derived only from the tiny source PNG width, so long labels such as `semantic details` and `outline cleanup` could visually overflow their cards after the whole SVG was fit to a phone viewport.
+
+The presentation layout now:
+
+- reserves a deterministic minimum cell width of 112 SVG units,
+- separates the numeric stage index from the stage label,
+- reserves 30 SVG units for the label area,
+- uses a fixed 10-unit stage-label font size,
+- keeps the normal six-stage / three-column reference sheet within a 400-unit natural width,
+- continues to place every source stage PNG at its exact natural dimensions.
+
+This is a presentation-only geometry change. Source PNG bytes, stage order and raster authority are unchanged.
+
+The manifest records fixed stage order; exact source path, byte count and SHA-256; source PNG dimensions read from IHDR; deterministic layout including the minimum cell width and label sizing; exact SVG digest; and explicit authority separation.
 
 ## Determinism and bounds
 
 - Caller order does not affect the sheet; P3 stage order is canonical.
 - One contact-sheet image is allowed per authored stage, so the sheet is bounded by the six P3 stages.
 - Column count is an exact integer from 1 through the number of P3 stages.
-- Stage PNGs must be baseline non-interlaced RGBA8 PNGs with dimensions in the existing TracePixel 4096-per-axis bound.
+- Stage PNGs must be baseline non-interlaced RGBA8 PNGs within the existing 4096-per-axis bound.
 - The writer refuses a non-empty output directory so stale review files cannot leak into a new sheet.
 
 ## Pixel and authority boundary
 
-The contact sheet is presentation state only.
-
 - Source stage PNG bytes are embedded byte-for-byte.
-- Images are placed at their natural pixel dimensions; `source_image_scaling` is recorded as `none`.
+- Images are placed at natural pixel dimensions; `source_image_scaling` remains `none`.
 - The authoritative `Canvas`/RGBA state and P3 stage replay evidence remain unchanged.
-- The contact sheet does not become deterministic QA authority.
+- The contact sheet is presentation state, not deterministic QA authority.
 - No perceptual or VLM judgment is introduced; G4 remains unresolved.
 
 ## Portable checkpoint
-
-P6-V1 reuses committed/provider-free P3-S7 staged evidence:
 
 ```bash
 python -m evidence.p6_v1.checkpoint
 ```
 
-The checkpoint rebuilds the six stage previews from the deterministic P3 fixture, constructs the sheet twice, requires byte-identical output, verifies fixed stage order and each embedded PNG SHA-256 against the P3 export metadata, and materializes the result to a temporary directory.
-
-To keep a generated copy:
-
-```bash
-python -m evidence.p6_v1.checkpoint --output out/p6-v1-reference
-```
-
-No provider call, network access, secret, GPU, VLM, or self-hosted runner is required.
-
-## Scope boundary
-
-P6-V1 stops at stage progression composition. Presenting deterministic QA and Agent-complexity evidence beside imagery is P6-V2; static HTML is P6-V3; GitHub artifact publishing is P6-V4; the proven mobile review flow is P6-V5; optional home-PC preview execution remains behind G6 at P6-V6.
+The checkpoint rebuilds the six provider-free P3 stage previews, constructs the sheet deterministically, verifies stage order and exact PNG SHA-256 values, and materializes the result to a temporary directory. Unit coverage additionally freezes the phone-readable cell geometry so the label-overflow regression cannot silently return.

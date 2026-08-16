@@ -39,8 +39,8 @@ jobs:
       - name: Install TracePixel
         run: python -m pip install -e .
 
-      - name: Build deterministic P6-V3 gallery
-        run: python -m evidence.p6_v3.checkpoint --output artifacts/p6-v4-static-gallery
+      - name: Build deterministic bilingual mobile review package
+        run: python -m evidence.p6_v5.checkpoint --output artifacts/p6-v4-static-gallery
 
       - name: Upload public review artifact
         uses: actions/upload-artifact@v4
