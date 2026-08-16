@@ -1,0 +1,16 @@
+{
+  "api_cost_usd_micros": null,
+  "changed_pixels": 96,
+  "exposed_concept_count": 29,
+  "failure_category": null,
+  "human_interventions": 0,
+  "input_tokens": 16000,
+  "iterations": 1,
+  "operation_calls": 1,
+  "output_tokens": 1417,
+  "revisions": 1,
+  "schema": "tracepixel.agent-complexity-telemetry.v1",
+  "tool_calls": 1,
+  "visual_observation_calls": 0,
+  "wall_time_ns": 38113607100
+}
