@@ -46,3 +46,5 @@ jobs:
         run: python -m evidence.p6_v2.checkpoint
       - name: P6-V3 deterministic static HTML gallery checkpoint
         run: python -m evidence.p6_v3.checkpoint
+      - name: P6-V4 trusted GitHub artifact publishing checkpoint
+        run: python -m evidence.p6_v4.checkpoint
