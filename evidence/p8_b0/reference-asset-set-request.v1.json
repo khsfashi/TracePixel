@@ -1,0 +1,22 @@
+{
+  "schema": "tracepixel.asset-set-request.v1",
+  "asset_set_id": "p8-x0-reference",
+  "asset_set_sha256": "18f2ad6f36f1b6d53d81ef59963db763ee5f8870393f19bcdeb9c56627629f66",
+  "members": [
+    {
+      "member_id": "potion-red",
+      "request_ref": "requests/potion-red.json",
+      "request_sha256": "d296b0285d22d416dee96158198cc6548507e00b8f49e7401bea9f5ba33330a1"
+    },
+    {
+      "member_id": "potion-blue",
+      "request_ref": "requests/potion-blue.json",
+      "request_sha256": "730c01e449bab68f1e54cebeb0a66cdb0cdde2573368e8b67f4fe0f6dab4aa43"
+    },
+    {
+      "member_id": "leaf-green",
+      "request_ref": "requests/leaf-green.json",
+      "request_sha256": "d7627f72ba76716e8bdedce3adcac5be9f845478600062529586ae6f2ece0cd9"
+    }
+  ]
+}
