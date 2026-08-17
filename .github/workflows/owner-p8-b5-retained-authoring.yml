@@ -1,0 +1,81 @@
+name: Owner P8-B5 retained authoring review
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p8-b5-owner-retained-authoring
+  cancel-in-progress: false
+
+jobs:
+  retained-authoring:
+    if: github.ref == 'refs/heads/main' && github.actor == github.repository_owner
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout dispatched main commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install TracePixel
+        shell: pwsh
+        run: python -m pip install -e .
+
+      - name: Verify trusted Codex CLI boundary
+        shell: pwsh
+        run: |
+          codex --version
+          $status = codex login status 2>&1 | Out-String
+          $status
+          if ($status -notmatch "Logged in using ChatGPT") {
+            throw "P8-B5 requires Codex CLI authenticated through the existing ChatGPT plan boundary."
+          }
+          if ($status -match "Logged in using an API key") {
+            throw "API-key billed Codex execution is not authorized for this owner gate."
+          }
+
+      - name: Run reduced-parallel retained authoring
+        shell: pwsh
+        run: python evidence/p8_b5/retained_authoring.py --output artifacts/p8-b5-retained
+
+      - name: Verify review package remains an owner gate
+        shell: pwsh
+        run: |
+          $summary = Get-Content artifacts/p8-b5-retained/summary.json -Raw | ConvertFrom-Json
+          if ($summary.review_scope -ne "retained-output") {
+            throw "Expected retained-output review scope."
+          }
+          if ($summary.member_count -ne 8) {
+            throw "Expected all eight representative P8-B5 members."
+          }
+          if ($summary.declared_max_concurrency -ne 2) {
+            throw "Reduced-parallel lane must remain max_concurrency=2."
+          }
+          if ($summary.owner_verdict -ne "pending") {
+            throw "Automation must never self-approve the P8-B5 owner verdict."
+          }
+          if (-not (Test-Path artifacts/p8-b5-retained/review-package/index.html)) {
+            throw "English mobile review page is missing."
+          }
+          if (-not (Test-Path artifacts/p8-b5-retained/review-package/index.ko.html)) {
+            throw "Korean mobile review page is missing."
+          }
+
+      - name: Upload retained authoring review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p8-b5-retained-authoring-${{ github.run_id }}
+          path: artifacts/p8-b5-retained
+          if-no-files-found: error
+          retention-days: 7
