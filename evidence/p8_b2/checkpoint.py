@@ -73,8 +73,16 @@ def main() -> None:
         raise SystemExit("tampered visual-style authority must fail closed")
 
     core_lane = _json(CORE_LANE)
-    if core_lane.get("current_child") != "P8-B3":
-        raise SystemExit("P8-B2 checkpoint expects the merge handoff to P8-B3")
+    children = core_lane.get("child_sequences")
+    if type(children) is not dict:
+        raise SystemExit("core lane child_sequences malformed")
+    p8 = cast(dict[str, object], children).get("P8")
+    child = core_lane.get("current_child")
+    if type(p8) is not list or child not in cast(list[object], p8):
+        raise SystemExit("active P8 child is not declared")
+    names = cast(list[str], p8)
+    if names.index(cast(str, child)) < names.index("P8-B3"):
+        raise SystemExit("P8-B2 checkpoint expects the merge handoff to P8-B3 or later")
 
     print(
         json.dumps(
