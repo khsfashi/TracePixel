@@ -86,3 +86,5 @@ jobs:
         run: python -m evidence.p8_b0.checkpoint
       - name: P8-B1 isolated execution and cost telemetry checkpoint
         run: python -m evidence.p8_b1.checkpoint
+      - name: P8-C0 batch cost-scaling gate
+        run: python -m evidence.p8_c0.checkpoint
