@@ -1,0 +1,90 @@
+{
+  "schema": "tracepixel.p8-b6-postmortem.v1",
+  "phase": "P8",
+  "child": "P8-B6",
+  "status": "frozen-complete",
+  "source_issue": 92,
+  "owner_approval_comment_id": 5321582257,
+  "source_evidence": "evidence/p8_b6/owner-approved-production-breadth.v1.json",
+  "scope": {
+    "member_count": 8,
+    "asset_classes": {
+      "item-icon": 2,
+      "scene-prop": 2,
+      "terrain-tile": 4
+    },
+    "unfamiliar_form_contract": "P8-R0 retained digest-pinned profile path",
+    "batch_contract": "P8-X0/P8-B0 bounded AssetSet path",
+    "single_asset_authority_reused": true,
+    "new_raster_authority_added": false
+  },
+  "quality": {
+    "initial_deterministic_qa_passed": 8,
+    "initial_owner_accepted": 7,
+    "initial_owner_rejected": 1,
+    "final_owner_accepted": 8,
+    "localized_repairs": 1,
+    "finding": "Deterministic QA and human perceptual review remained distinct: grass-center-b passed deterministic QA yet contained one owner-visible transparent hole. The defect was repaired locally and the repaired retained output was then owner-accepted.",
+    "claim_boundary": "P8 demonstrates representative icon/prop/tile production breadth and a working human-feedback repair loop. It does not establish general perceptual superiority over a baseline or make human judgment deterministic QA truth."
+  },
+  "cost": {
+    "b1_carried_forward": {
+      "tracepixel_vs_raw_input_tokens_mean_ratio": 5.06,
+      "tracepixel_vs_raw_output_tokens_mean_ratio": 4.67,
+      "tracepixel_vs_raw_provider_calls_iterations_mean_ratio": 4.94,
+      "tracepixel_vs_raw_wall_time_mean_ratio": 4.58,
+      "status": "material single-member staged overhead remains unresolved"
+    },
+    "p8_c0_result": {
+      "scheduler_provider_calls": 0,
+      "scheduler_input_tokens": 0,
+      "scheduler_output_tokens": 0,
+      "bounded_concurrency_and_budget_enforcement": true,
+      "successful_sibling_restart_cascade": false,
+      "interpretation": "AssetSet orchestration did not add a hidden provider/token multiplier in the frozen representative checkpoint; this does not solve B1 single-member overhead."
+    },
+    "real_retained_authoring": {
+      "initial_provider_calls": 8,
+      "initial_input_tokens": 124826,
+      "initial_output_tokens": 23171,
+      "localized_repair_provider_calls": 1,
+      "localized_repair_input_tokens": 17757,
+      "localized_repair_output_tokens": 3242,
+      "effective_provider_calls": 9,
+      "effective_input_tokens": 142583,
+      "effective_output_tokens": 26413,
+      "effective_pixel_edits": 1875,
+      "interpretation": "The accepted production-breadth set required one additional member-local provider call after owner review; accepted siblings did not incur regeneration cost."
+    },
+    "claim_boundary": "No synthetic quality-cost composite score or overall winner is computed. Quality, deterministic correctness, provider/token cost, wall time, and human review are separate evidence dimensions."
+  },
+  "failure_behavior": {
+    "member_local_perceptual_defects": 1,
+    "member_local_repair_successes": 1,
+    "accepted_siblings_regenerated": 0,
+    "successful_final_run_provider_failures": 0,
+    "successful_final_run_deterministic_failures": 0,
+    "bootstrap_infrastructure_failed_attempts": 3,
+    "bootstrap_failure_class": "github-codeload-http-429",
+    "bootstrap_failures_reached_provider_execution": false,
+    "mitigation": "Owner repair workflow removed checkout/setup-python/download-artifact marketplace-action bootstrap dependencies, retained one upload action, and added owner-only issue-comment dispatch plus a GitHub-hosted completion callback.",
+    "interpretation": "Infrastructure failure was kept separate from asset quality/provider failure and did not mutate retained production evidence."
+  },
+  "findings": [
+    {"id": "Q1", "kind": "quality", "text": "Representative icons, props, and tiles can share the bounded AssetSet/single-asset pipeline and receive owner acceptance after at most member-local repair in this retained cohort."},
+    {"id": "Q2", "kind": "quality-boundary", "text": "Deterministic QA is necessary but not sufficient for production visual acceptance; the transparent-hole incident is retained as a concrete perceptual-boundary example."},
+    {"id": "C1", "kind": "cost", "text": "P8-C0 prevents hidden scheduler provider/token work, but B1's roughly 4.6-5.1x staged single-member overhead remains an open efficiency problem."},
+    {"id": "C2", "kind": "repair-cost", "text": "Owner rejection added one provider call for one member rather than restarting seven accepted siblings, limiting repair amplification."},
+    {"id": "F1", "kind": "failure-isolation", "text": "Both asset repair and runner bootstrap incidents stayed isolated from accepted sibling raster evidence."},
+    {"id": "F2", "kind": "operations", "text": "Marketplace-action codeload rate limiting is a real self-hosted reliability risk; the hardened owner workflow materially reduces that dependency surface."}
+  ],
+  "no_composite_winner": true,
+  "post_p8": {
+    "g7_simple_creature_direction": "owner-approved",
+    "g7_issue": 109,
+    "next_contract_work": "Define morphology/species-profile, pose/constraint, perceptual-evidence, and complexity contracts before creature raster generation.",
+    "g8_humanoid": "blocked until G7 creature evidence is implemented and reviewed",
+    "g9_animation": "blocked until G8 static character evidence is implemented and reviewed",
+    "p9_trace2d": "still requires explicit G10 approval; P8 results do not auto-authorize integration"
+  }
+}
