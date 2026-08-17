@@ -1,0 +1,41 @@
+{
+  "schema": "tracepixel.asset-set.v1",
+  "asset_set_id": "p8-b3-icon-prop-breadth",
+  "shared_profiles": [
+    {
+      "kind": "style",
+      "profile_id": "small-rpg-objects",
+      "profile_schema": "tracepixel.style-profile.v1",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "members": [
+    {
+      "member_id": "health-potion-icon",
+      "request_ref": "requests/health-potion-icon.json"
+    },
+    {
+      "member_id": "iron-key-icon",
+      "request_ref": "requests/iron-key-icon.json"
+    },
+    {
+      "member_id": "wooden-crate-prop",
+      "request_ref": "requests/wooden-crate-prop.json"
+    },
+    {
+      "member_id": "lantern-prop",
+      "request_ref": "requests/lantern-prop.json"
+    }
+  ],
+  "execution": {
+    "member_authority": "single-asset-pipeline",
+    "ordering": "declared-member-order",
+    "failure_policy": "isolate-member",
+    "max_concurrency": 2,
+    "aggregate_budget": {
+      "max_provider_calls": 8,
+      "max_pixel_edits": 2048,
+      "max_wall_time_ms": 60000
+    }
+  }
+}

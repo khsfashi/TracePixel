@@ -1,0 +1,24 @@
+{
+  "schema": "tracepixel.asset-request.v1",
+  "instruction": "Create one small wooden supply-crate scene prop with readable planks, braces, and a grounded base.",
+  "art_intent": {
+    "schema": "tracepixel.art-intent.v1",
+    "asset_class": "scene-prop",
+    "canvas": {"width": 24, "height": 24},
+    "composition": {
+      "occupied_bounds": {"x": 3, "y": 5, "width": 18, "height": 16},
+      "facing": "front",
+      "symmetry": {"axis": "vertical", "strength": "hint"},
+      "light_direction": "top_left",
+      "palette_budget": 10
+    }
+  },
+  "profile_refs": [
+    {
+      "kind": "style",
+      "profile_id": "small-rpg-objects",
+      "profile_schema": "tracepixel.style-profile.v1",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ]
+}

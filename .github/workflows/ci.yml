@@ -90,3 +90,5 @@ jobs:
         run: python -m evidence.p8_c0.checkpoint
       - name: P8-B2 cross-asset consistency contract checkpoint
         run: python -m evidence.p8_b2.checkpoint
+      - name: P8-B3 icon/prop set breadth checkpoint
+        run: python -m evidence.p8_b3.checkpoint
