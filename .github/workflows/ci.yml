@@ -96,3 +96,5 @@ jobs:
         run: python -m evidence.p8_b4.checkpoint
       - name: P8-B5 batch mobile-review surface checkpoint
         run: python -m evidence.p8_b5.checkpoint
+      - name: P8-B6 production-breadth postmortem checkpoint
+        run: python -m evidence.p8_b6.checkpoint
