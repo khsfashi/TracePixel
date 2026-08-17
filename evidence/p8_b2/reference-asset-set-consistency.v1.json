@@ -1,0 +1,63 @@
+{
+  "schema": "tracepixel.asset-set-consistency.v1",
+  "asset_set_id": "p8-x0-reference",
+  "asset_set_sha256": "18f2ad6f36f1b6d53d81ef59963db763ee5f8870393f19bcdeb9c56627629f66",
+  "request_sha256": "63ca379357772a14f221996e1dc3cae73a5796fefa0282ebbc1c21712baf0faa",
+  "profile_binding_policy": "exact-digest-request-binding",
+  "style_profile": {
+    "kind": "style",
+    "profile_id": "small-rpg-icons",
+    "profile_schema": "tracepixel.style-profile.v1",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "palette_profile": null,
+  "visual_style_policy": "perceptual-evidence-required",
+  "visual_palette_policy": "perceptual-evidence-required",
+  "members": [
+    {
+      "ordinal": 0,
+      "member_id": "potion-red",
+      "request_sha256": "d296b0285d22d416dee96158198cc6548507e00b8f49e7401bea9f5ba33330a1",
+      "profile_refs": [
+        {
+          "kind": "style",
+          "profile_id": "small-rpg-icons",
+          "profile_schema": "tracepixel.style-profile.v1",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ]
+    },
+    {
+      "ordinal": 1,
+      "member_id": "potion-blue",
+      "request_sha256": "730c01e449bab68f1e54cebeb0a66cdb0cdde2573368e8b67f4fe0f6dab4aa43",
+      "profile_refs": [
+        {
+          "kind": "style",
+          "profile_id": "small-rpg-icons",
+          "profile_schema": "tracepixel.style-profile.v1",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ]
+    },
+    {
+      "ordinal": 2,
+      "member_id": "leaf-green",
+      "request_sha256": "d7627f72ba76716e8bdedce3adcac5be9f845478600062529586ae6f2ece0cd9",
+      "profile_refs": [
+        {
+          "kind": "style",
+          "profile_id": "small-rpg-icons",
+          "profile_schema": "tracepixel.style-profile.v1",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        {
+          "kind": "morphology",
+          "profile_id": "leaf-form",
+          "profile_schema": "tracepixel.morphology-profile.v1",
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ]
+    }
+  ]
+}
