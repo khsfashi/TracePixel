@@ -29,7 +29,7 @@
     "B0": "Matched development-visible architecture benchmark",
     "P7": "Targeted repair and human feedback loop",
     "B1": "Held-out generalization benchmark",
-    "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles",
+    "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles, gated by batch cost-scaling evidence",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
@@ -42,14 +42,15 @@
     "B0": ["B0-F0", "B0-H0", "B0-B0", "B0-S0", "B0-P0"],
     "P7": ["P7-F0", "P7-F1", "P7-F2", "P7-F3", "P7-F4", "P7-F5"],
     "B1": ["B1-F0", "B1-S0", "B1-P0"],
-    "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
+    "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-C0", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
     "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
     "P1-R4": "Raster memory/copy microbenchmark",
     "P2-IR4": "IR compactness/replay/invalidity microbenchmark",
     "P4-Q5": "Seeded deterministic QA coverage suite",
-    "P5-A5": "Non-scored Agent complexity pilot before B0"
+    "P5-A5": "Non-scored Agent complexity pilot before B0",
+    "P8-C0": "Mandatory batch cost-scaling checkpoint before P8 breadth expansion"
   },
   "preview_milestones": {
     "P1-R3": "Native PNG and nearest-neighbor enlarged preview",
@@ -80,7 +81,10 @@
     "P8-X0 AssetSet/batch authoring must reuse the proven single-asset pipeline, isolate member failures, and keep execution concurrency explicit and bounded.",
     "P8-R0 unfamiliar-form research must produce retained, versioned, digest-pinned reusable profile evidence before generation can rely on it; research/profile context never becomes raster authority.",
     "P8-B0 batch requests must digest-bind every declared member to a validated single-asset request and derive an immutable declared-order bounded-concurrency schedule before execution.",
-    "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but their anatomy/identity/temporal contracts must still be implemented and evidenced in lane order.",
+    "P8-B1 must retain per-member and aggregate provider-call, input-token, output-token, retry/repair, cache, and wall-time telemetry sufficient for the mandatory P8-C0 cost-scaling checkpoint; P8-B1 must hand off to P8-C0, never directly to P8-B2.",
+    "P8-C0 must prove batch orchestration adds no hidden provider/token multiplier: all provider calls and tokens are attributable to member executions, successful siblings are not restarted by another member failure, concurrency stays bounded, aggregate budgets are enforced, and any batch-specific wall-time overhead is retained and reported before P8-B2 or later breadth work may begin.",
+    "P8-C0 is not allowed to claim that B1's roughly 4.6-5.1x single-asset staged cost is solved merely because batching is bounded; it must separately show that AssetSet execution does not add another uncontrolled multiplier on top of that known per-member cost.",
+    "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but no creature, humanoid, or animation implementation belongs in P8; promotions occur only after P8-B6 through dedicated sequential post-P8 gates with creature evidence before humanoid and humanoid evidence before animation.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
