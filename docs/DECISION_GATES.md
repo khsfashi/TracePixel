@@ -9,6 +9,7 @@ When a gate is reached, stop the affected lane, summarize the evidence/trade-off
 - Prefer evidence from committed fixtures/benchmarks over preference guesses.
 - Separate reversible implementation detail from product-scope decisions.
 - Do not use a benchmark result to silently broaden project scope.
+- A recorded long-term product-scope approval does not override upstream engineering checkpoints or authorize pulling later implementation into an earlier lane.
 - Record resolved owner decisions in the relevant issue/contract/status document.
 - If an existing owner decision already resolves the exact question, do not ask again.
 
@@ -92,9 +93,9 @@ Before enabling the runner, present:
 
 ## G7 — Simple-creature promotion
 
-**Earliest lane:** P8-B4.
+**Earliest lane:** after P8-B6, in a dedicated post-P8 promotion lane whose exact child id is defined when that lane is opened.
 
-P8-B4 may begin when B1/P8 evidence supports wider semantic shapes, but creature identity introduces materially new morphology, perception and consistency requirements.
+P8 does not implement creature-specific authoring. P8 first has to prove bounded AssetSet execution, pass the mandatory P8-C0 cost-scaling checkpoint, complete icon/prop/tile breadth, and freeze the P8-B6 quality/cost/failure postmortem. Creature work must not be pulled into P8-B4 or any other P8 child merely because the long-term destination is already approved.
 
 **Owner decision recorded 2026-08-17:** simple creatures/animals are an approved long-term product destination. Do not ask again whether creature scope is desired. Before implementation crosses this gate, define and test the morphology/species-profile, pose/constraint and perceptual evidence contracts; the approval does not authorize silently inventing those technical contracts.
 
@@ -102,9 +103,9 @@ Preferred direction is constraint-driven morphology/anatomy rather than full phy
 
 ## G8 — Humanoid scope promotion
 
-**Earliest lane:** P8-B5.
+**Earliest lane:** only after G7 creature promotion has its own evidence-backed implementation/checkpoint; not during P8.
 
-Humanoids add anatomy, pose, identity and stronger perceptual constraints.
+Humanoids add anatomy, pose, identity and stronger perceptual constraints. They must not be promoted in parallel with or before the simpler creature constraints have been exercised and reviewed.
 
 **Owner decision recorded 2026-08-17:** humanoid/character authoring is an approved long-term product destination. Do not ask again whether humanoids belong in scope. Before implementation crosses this gate, present/commit the anatomy/proportion, pose, identity, equipment-anchor, QA/perceptual and complexity contracts so the promotion remains evidence-backed rather than roadmap creep.
 
@@ -112,9 +113,9 @@ The project still targets game-asset/sprite production rather than unconstrained
 
 ## G9 — Animation / multi-frame promotion
 
-**Earliest lane:** P8-B6.
+**Earliest lane:** only after G8 humanoid/character promotion has evidence-backed static identity/pose behavior; not during P8.
 
-Multi-frame consistency introduces temporal identity/motion constraints and may require new IR/QA/benchmark contracts.
+Multi-frame consistency introduces temporal identity/motion constraints and may require new IR/QA/benchmark contracts. Animation must not be used to broaden scope while static creature/character constraints or production cost remain unresolved.
 
 **Owner decision recorded 2026-08-17:** animation, multi-frame sprites and sprite-sheet output are approved long-term destinations. Do not ask again whether animation/sprite sheets are wanted. Before implementation crosses this gate, define frame/rig/identity/motion authority, contact/root/pivot stability, deterministic frame ordering/sheet packing, complexity budgets and relevant animation baselines.
 
