@@ -1,5 +1,15 @@
 """Deterministic preview and review-evidence surfaces."""
 
+from tracepixel.preview.batch_review import (
+    BATCH_REVIEW_PACKAGE_SCHEMA_V1,
+    BatchReviewMember,
+    BatchReviewPackage,
+    BatchReviewPackageContractError,
+    BatchReviewTilePlacement,
+    build_batch_review_package,
+    validate_batch_review_package,
+    write_batch_review_package,
+)
 from tracepixel.preview.bundle import (
     PREVIEW_BUNDLE_SCHEMA_V1,
     PreviewBundle,
@@ -41,6 +51,11 @@ from tracepixel.preview.qa_metrics import (
 )
 
 __all__ = [
+    "BATCH_REVIEW_PACKAGE_SCHEMA_V1",
+    "BatchReviewMember",
+    "BatchReviewPackage",
+    "BatchReviewPackageContractError",
+    "BatchReviewTilePlacement",
     "MOBILE_REVIEW_PACKAGE_SCHEMA_V1",
     "PREVIEW_BUNDLE_SCHEMA_V1",
     "QA_METRICS_COMPOSITION_SCHEMA_V1",
@@ -60,11 +75,14 @@ __all__ = [
     "StageContactSheetContractError",
     "StaticHtmlGallery",
     "StaticHtmlGalleryContractError",
+    "build_batch_review_package",
     "build_mobile_review_package",
     "build_preview_bundle",
     "build_qa_metrics_composition",
     "build_stage_contact_sheet",
     "build_static_html_gallery",
+    "validate_batch_review_package",
+    "write_batch_review_package",
     "write_mobile_review_package",
     "write_preview_bundle",
     "write_qa_metrics_composition",
