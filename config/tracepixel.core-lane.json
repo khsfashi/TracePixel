@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-17",
   "current": "P8",
-  "current_child": "P8-B0",
+  "current_child": "P8-B1",
   "active_issue": 92,
   "sequence": [
     "P0",
@@ -79,6 +79,7 @@
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
     "P8-X0 AssetSet/batch authoring must reuse the proven single-asset pipeline, isolate member failures, and keep execution concurrency explicit and bounded.",
     "P8-R0 unfamiliar-form research must produce retained, versioned, digest-pinned reusable profile evidence before generation can rely on it; research/profile context never becomes raster authority.",
+    "P8-B0 batch requests must digest-bind every declared member to a validated single-asset request and derive an immutable declared-order bounded-concurrency schedule before execution.",
     "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but their anatomy/identity/temporal contracts must still be implemented and evidenced in lane order.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
