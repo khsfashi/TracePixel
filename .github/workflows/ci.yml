@@ -76,3 +76,5 @@ jobs:
         run: python -m evidence.p7_f5.checkpoint
       - name: B1-S0 frozen held-out schedule checkpoint
         run: python -m evidence.b1_s0.checkpoint
+      - name: B1-P0 immutable generalization postmortem checkpoint
+        run: python -m evidence.b1_p0.checkpoint
