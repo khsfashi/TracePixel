@@ -158,7 +158,13 @@ def run() -> dict[str, object]:
     _expect(cast(str, gate.get("gate", "")).startswith("G6 "), "B1 owner gate record must be G6")
 
     _expect(lane.get("current") == "P8", "B1-P0 must hand off to P8")
-    _expect(lane.get("current_child") == "P8-X0", "B1-P0 must hand off only to P8-X0")
+    child_sequences = lane.get("child_sequences")
+    _expect(type(child_sequences) is dict, "P8 child sequence missing after B1 handoff")
+    p8_children = cast(dict[str, object], child_sequences).get("P8")
+    current_child = lane.get("current_child")
+    _expect(type(p8_children) is list and current_child in cast(list[object], p8_children), "active P8 child must be declared")
+    child_names = cast(list[str], p8_children)
+    _expect(child_names.index(cast(str, current_child)) >= child_names.index("P8-X0"), "core lane regressed before the frozen B1 -> P8-X0 handoff")
     _expect(lane.get("active_issue") == 92, "P8 handoff must target issue #92")
 
     return {
