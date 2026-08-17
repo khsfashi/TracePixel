@@ -1,0 +1,185 @@
+name: B1 Owner Scored Cohort
+
+on:
+  push:
+    branches:
+      - owner/b1-s0-preflight-trigger
+      - owner/b1-s0-scored-trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tracepixel-b1-s0-owner-scored
+  cancel-in-progress: false
+
+env:
+  TRACEPIXEL_CODEX_CLI_VERSION: '0.147.0'
+
+jobs:
+  b1-s0-owner-run:
+    if: >-
+      github.repository == 'khsfashi/TracePixel' &&
+      (github.ref == 'refs/heads/owner/b1-s0-preflight-trigger' ||
+       github.ref == 'refs/heads/owner/b1-s0-scored-trigger')
+    runs-on: [self-hosted, windows, x64, tracepixel-owner]
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout exact trigger commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          clean: true
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify one-shot trigger shape
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $parentCount = ((git rev-list --parents -n 1 HEAD) -split ' ').Count - 1
+          if ($parentCount -ne 1) {
+            throw "B1 owner trigger must be a single-parent commit."
+          }
+
+          $expected = if ($env:GITHUB_REF -eq 'refs/heads/owner/b1-s0-preflight-trigger') {
+            '.github/tracepixel/b1-s0-preflight-trigger.txt'
+          } else {
+            '.github/tracepixel/b1-s0-scored-trigger.txt'
+          }
+          $changed = @(git diff --name-only HEAD^ HEAD)
+          if ($changed.Count -ne 1 -or $changed[0] -ne $expected) {
+            throw "B1 owner trigger commit may change only $expected; got: $($changed -join ', ')"
+          }
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prepare pinned Codex CLI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $codexRoot = Join-Path $env:RUNNER_TEMP "tracepixel-codex-$env:TRACEPIXEL_CODEX_CLI_VERSION"
+          $binDir = Join-Path $codexRoot 'node_modules\.bin'
+          $codexCmd = Join-Path $binDir 'codex.cmd'
+
+          if (-not (Test-Path $codexCmd -PathType Leaf)) {
+            New-Item -ItemType Directory -Force -Path $codexRoot | Out-Null
+            npm install `
+              --prefix $codexRoot `
+              --no-save `
+              --package-lock=false `
+              "@openai/codex@$env:TRACEPIXEL_CODEX_CLI_VERSION"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Pinned Codex CLI install failed with exit code $LASTEXITCODE."
+            }
+          }
+
+          $actualVersion = (& $codexCmd --version | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0) {
+            throw "Pinned Codex CLI version probe failed with exit code $LASTEXITCODE."
+          }
+          if ($actualVersion -notmatch "(^|\s)$([regex]::Escape($env:TRACEPIXEL_CODEX_CLI_VERSION))($|\s)") {
+            throw "Expected Codex CLI $env:TRACEPIXEL_CODEX_CLI_VERSION, got '$actualVersion'."
+          }
+
+          $binDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Write-Host "Prepared $actualVersion at $codexCmd"
+
+      - name: Install TracePixel
+        shell: pwsh
+        run: python -m pip install -e .
+
+      - name: Verify owner Codex authentication
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          codex --version
+          if ($LASTEXITCODE -ne 0) { throw "codex --version failed with exit code $LASTEXITCODE" }
+          $login = (codex login status | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0) { throw "codex login status failed with exit code $LASTEXITCODE" }
+          if ($login -notmatch 'Logged in using ChatGPT') {
+            throw "B1 requires ChatGPT-authenticated Codex; got '$login'."
+          }
+
+      - name: Run B1-S0 preflight
+        shell: pwsh
+        run: python -m evidence.b1_s0.run --preflight-only
+
+      - name: Prepare persistent B1 evidence roots
+        if: github.ref == 'refs/heads/owner/b1-s0-scored-trigger'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $persistentRoot = Join-Path $env:USERPROFILE '.tracepixel\b1-s0'
+          $resultsRoot = Join-Path $persistentRoot 'results'
+          $reviewRoot = Join-Path $persistentRoot 'review'
+          New-Item -ItemType Directory -Force -Path $resultsRoot | Out-Null
+          New-Item -ItemType Directory -Force -Path $reviewRoot | Out-Null
+
+          "TRACEPIXEL_B1_PERSISTENT_ROOT=$persistentRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TRACEPIXEL_B1_RESULTS_ROOT=$resultsRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TRACEPIXEL_B1_REVIEW_ROOT=$reviewRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "Persistent B1 evidence root: $persistentRoot"
+
+      - name: Run exact frozen 28-attempt scored cohort
+        if: github.ref == 'refs/heads/owner/b1-s0-scored-trigger'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python -m evidence.b1_s0.run `
+            --run-scored-cohort `
+            --results-root "$env:TRACEPIXEL_B1_RESULTS_ROOT" `
+            --review-root "$env:TRACEPIXEL_B1_REVIEW_ROOT"
+
+      - name: Verify scored cohort completed without live claims
+        if: github.ref == 'refs/heads/owner/b1-s0-scored-trigger'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $claims = @(Get-ChildItem -LiteralPath $env:TRACEPIXEL_B1_RESULTS_ROOT -Recurse -Filter '*.json' -ErrorAction SilentlyContinue |
+            Where-Object { $_.DirectoryName -like '*\.claims' })
+          if ($claims.Count -ne 0) {
+            throw "B1 scored cohort completed with live invocation claims; refusing publication."
+          }
+
+      - name: Publish retained evidence branch
+        if: github.ref == 'refs/heads/owner/b1-s0-scored-trigger'
+        shell: pwsh
+        env:
+          EVIDENCE_BRANCH: evidence/b1-s0-${{ github.run_id }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $baseCommit = (git rev-parse HEAD^).Trim()
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch --detach $baseCommit
+          git switch -c $env:EVIDENCE_BRANCH
+
+          New-Item -ItemType Directory -Force -Path evidence/b1/results | Out-Null
+          New-Item -ItemType Directory -Force -Path evidence/b1/review | Out-Null
+          Copy-Item -Path (Join-Path $env:TRACEPIXEL_B1_RESULTS_ROOT '*') -Destination evidence/b1/results -Recurse -Force
+          Copy-Item -Path (Join-Path $env:TRACEPIXEL_B1_REVIEW_ROOT '*') -Destination evidence/b1/review -Recurse -Force
+
+          git add -- evidence/b1/results evidence/b1/review
+          $pending = git status --porcelain -- evidence/b1/results evidence/b1/review
+          if (-not $pending) {
+            throw 'B1 scored cohort produced no publishable evidence changes.'
+          }
+
+          git commit -m 'B1-S0: retain scored cohort evidence'
+          git push origin "HEAD:refs/heads/$env:EVIDENCE_BRANCH"
+          "Published scored evidence branch $env:EVIDENCE_BRANCH from frozen trigger runner $env:GITHUB_SHA" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
