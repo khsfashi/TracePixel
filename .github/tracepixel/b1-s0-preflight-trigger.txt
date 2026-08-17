@@ -1,0 +1,3 @@
+B1-S0 owner self-hosted preflight trigger.
+Parent main commit: 3308712b267f8be4b5eb9adae06b40792bafe62a
+No scored provider invocation is authorized by this trigger.
