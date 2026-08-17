@@ -53,6 +53,19 @@ The provider-free scored runner in `tracepixel.benchmark.b1_runner` now closes t
 - retention refuses to overwrite an already-claimed attempt directory and writes a SHA-256/byte-count index for the retained payloads,
 - post-stage repair-cycle telemetry does not fabricate P7 `tracepixel.repair-evidence.v1`; that distinct evidence layer remains unavailable unless an actually validated P7 repair-evidence bundle is produced.
 
-The adapter/executor and scored-runner tests use fake transports only; they do not create scored B1 attempts or call Codex. The next B1-S0 step after this guard is green is the owner-triggered local/headless preflight and the exact 28 frozen attempts, followed by B1-P0 generalization postmortem work.
+The owner-local cohort entrypoint is `python -m evidence.b1_s0.run`. It is deliberately fail-closed and requires one explicit mode:
 
-Scored provider execution remains owner-triggered local/headless work and is never a portable-CI correctness gate.
+```text
+python -m evidence.b1_s0.run --preflight-only
+python -m evidence.b1_s0.run --run-scored-cohort
+```
+
+`--preflight-only` validates the frozen/held-out boundaries, clean frozen production-source boundary, all 28 provider requests, exact Codex CLI version, ChatGPT authentication, model/settings, and runner commit without invoking a scored provider call or writing scored attempts.
+
+`--run-scored-cohort` is the explicit owner arm for real scoring. Before every new provider attempt it writes and fsyncs a durable claim under `evidence/b1/results/<freeze>/.claims/`. Automatic resume is allowed only for attempts whose final `retention-index.json` exists and whose indexed required payloads still match their retained SHA-256 and byte counts. A claim without complete validated retention blocks automatic rerun because the provider may already have been invoked. Fully retained attempts may be skipped only when their recorded runner commit exactly matches the current runner commit.
+
+After all 28 frozen attempts are retained, the entrypoint writes a method-separated cohort summary and a method-blind owner review package under `evidence/b1/review/<freeze>/`, ordered by the frozen SHA-256 rule and carrying the preregistered human dimensions/scale. No VLM judging, Aseprite/MCP baseline, self-hosted runner, prompt edit, manual pixel edit, or human hint is introduced.
+
+Run real scoring only from the merged guard commit on a clean owner-local/headless checkout. If a durable claim blocks resume, do not delete it merely to obtain another scored sample; adjudicate the pre-invocation infrastructure state under the frozen exclusion policy instead.
+
+All portable tests for this entrypoint use fake transports only. The real 28-attempt provider cohort remains owner-triggered local/headless work and is never a portable-CI correctness gate. After generation and the frozen owner review are complete, B1-S0 can hand off to B1-P0 generalization postmortem work.
