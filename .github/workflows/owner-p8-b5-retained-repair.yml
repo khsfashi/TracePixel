@@ -2,6 +2,8 @@ name: Owner P8-B5 localized retained repair
 
 on:
   workflow_dispatch:
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: read
@@ -13,7 +15,14 @@ concurrency:
 
 jobs:
   localized-repair:
-    if: github.ref == 'refs/heads/main' && github.actor == github.repository_owner
+    if: >-
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/main' &&
+       github.actor == github.repository_owner) ||
+      (github.event_name == 'issue_comment' &&
+       github.actor == github.repository_owner &&
+       github.event.issue.number == 92 &&
+       github.event.comment.body == '/tracepixel owner-p8-b5-repair')
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
 
