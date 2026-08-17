@@ -1,6 +1,6 @@
 # P8-C0 Batch Cost-Scaling Gate
 
-Status: **mandatory checkpoint after P8-B1 and before P8-B2.**
+Status: **provider-free structural checkpoint implemented; P8-C0 hands the core lane to P8-B2 only when CI is green.**
 
 P8-C0 exists because frozen B1 evidence showed that the full TracePixel staged path was already materially more expensive than the matched raw baseline. Mean TracePixel/raw ratios were approximately 5.06x input tokens, 4.67x output tokens, 4.94x provider calls/iterations and 4.58x wall time.
 
@@ -113,6 +113,17 @@ The checkpoint report must include:
 - cache/reuse outcome where exercised,
 - descriptive wall-time result,
 - explicit statement that P8-C0 does not claim the B1 single-asset ~5x cost is solved.
+
+## Implemented provider-free checkpoint
+
+`python -m evidence.p8_c0.checkpoint` exercises four separate structural cases without invoking a real provider:
+
+1. a three-member `max_concurrency=2` execution with exactly reconciled member/provider/token totals, zero scheduler provider/token work, one isolated member failure, and one immutable cache hit;
+2. a follow-up retry where the previously successful siblings preserve the same result identities through zero-cost immutable reuse and only the failed member incurs new provider/token/pixel work;
+3. a provider-call ceiling proving reservation happens before invocation and later work cannot advance past the finite aggregate limit;
+4. a wall-time admission case proving already-admitted evidence remains retained while later members are not admitted after the finite wall-time budget is exhausted.
+
+The checkpoint intentionally records wall-time presence only as descriptive evidence. It does not compare host timing against a performance threshold, and it explicitly emits `b1_single_asset_cost_solved=false` so a green batch gate cannot be misread as solving the known B1 single-asset staged overhead.
 
 ## Promotion rule
 
