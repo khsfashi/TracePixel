@@ -1,6 +1,6 @@
 # AssetSet / Batch Authoring
 
-Status: **P8-X0 and P8-R0 complete; P8-B0 defines the immutable multi-asset request/schedule boundary. P8-B1 execution/retention must hand off to the mandatory P8-C0 batch cost-scaling checkpoint before any P8-B2+ breadth expansion.**
+Status: **P8-X0, P8-R0, P8-B0 and P8-B1 are complete. P8-C0 is now the mandatory active batch cost-scaling checkpoint; P8-B2+ breadth remains blocked until P8-C0 is green.**
 
 TracePixel keeps one constrained pixel asset as the authoritative authoring unit:
 
@@ -43,16 +43,17 @@ Frozen B1 evidence showed that the full six-stage TracePixel path generalized st
 
 P8 does **not** assume batching fixes that single-member overhead. The immediate requirement is narrower and more important for production safety: an AssetSet must not add another hidden multiplier through batch-global provider calls, sibling restarts, retry cascades, unbounded fan-out or unaccounted orchestration work.
 
-Therefore P8-B1 must retain enough telemetry for P8-C0 to show, at minimum:
+P8-B1 therefore retains enough telemetry for P8-C0 to check, at minimum:
 
 - every provider call is attributable to one member execution; batch scheduling itself performs no hidden provider call,
-- aggregate input/output token totals equal the exact sum of retained member-attributed token totals,
+- aggregate input/output token totals equal the exact sum of retained member-attributed token totals when provider usage is complete,
+- incomplete provider usage is retained explicitly and forces token accounting to fail closed rather than inventing totals,
 - retry and repair work remains member-local and is retained explicitly,
 - one member failure/retry does not restart already-successful siblings,
 - cache/reuse decisions are member-addressed by immutable request identity and retained in evidence,
 - observed live execution never exceeds declared `max_concurrency`,
-- aggregate provider-call/token/wall-time budgets are enforced rather than reported after the fact,
-- batch wall time and any orchestration overhead are retained as descriptive cost evidence,
+- aggregate provider-call/pixel-edit/wall-time budgets are enforced at the member operation boundary rather than reported only after the fact,
+- batch wall time and scheduler-only overhead are retained as descriptive cost evidence,
 - no aggregate success metric may hide a pathological expensive member.
 
 P8-C0 must fail closed if these claims cannot be demonstrated from retained evidence. It must not claim the known B1 ~5x single-asset cost is solved simply because the batch is bounded; it only establishes that batching does not stack an additional uncontrolled multiplier on top.
@@ -108,7 +109,7 @@ The manifest also pins the canonical `asset_set_sha256`.
 
 Before scheduling, every referenced request payload is loaded and validated. Missing payloads, extra payloads, member reordering, request-ref substitution, changed request bytes/semantics, invalid ArtIntent, or profile-ref drift fail closed.
 
-This gives member-level content-addressed invalidation: changing one member request changes that member digest and the set-request manifest, but unchanged sibling request payloads remain independently identifiable and reusable by later execution/cache logic.
+This gives member-level content-addressed invalidation: changing one member request changes that member digest and the set-request manifest, but unchanged sibling request payloads remain independently identifiable and reusable by execution/cache logic.
 
 ## P8-B0 deterministic schedule
 
@@ -123,13 +124,41 @@ This gives member-level content-addressed invalidation: changing one member requ
 - exact `max_concurrency`,
 - zero-based member ordinals and request digests.
 
-The dispatch policy is a **declared-order admission queue with a bounded number of live workers**, not completion-order authority and not fixed barrier waves. A later P8-B1 executor may start the next declared member when a slot becomes free, but completion timing must never reorder member identity or change correctness.
+The dispatch policy is a **declared-order admission queue with a bounded number of live workers**, not completion-order authority and not fixed barrier waves. The P8-B1 executor starts the next declared member when a slot becomes free, while retained member identity/order remains the original schedule order and correctness does not depend on runtime completion timing.
 
 For `N` members and concurrency `C`:
 
 - schedule construction/bookkeeping is `O(N)`,
 - schedule memory is `O(N)` small metadata,
-- later live raster/provider working state should be bounded by `O(C)` members rather than retaining all `N` canvases by default.
+- live raster/provider working state is bounded by `O(C)` members rather than retaining all `N` live workspaces by default.
+
+## P8-B1 isolated execution and retention
+
+`execute_asset_set_schedule(...)` is an orchestration layer over a `SingleAssetExecutor` adapter. The adapter is the only authority that performs the existing single-asset work; the AssetSet executor never introduces a second PixelProgram/Canvas implementation or shared raster state.
+
+Each live member receives an `AssetSetMemberExecutionContext` backed by one thread-safe aggregate budget authority. Before a provider call or known pixel-edit batch, the member must reserve that cost through the context. The reservation is atomic across concurrent members, so two workers cannot race past the aggregate provider-call or pixel-edit ceiling. Wall time is checked before admission and before each declared member operation; unpredictable in-flight provider latency remains descriptive timing evidence rather than a fake deterministic pre-call guarantee.
+
+The retained `tracepixel.asset-set-member-execution.v1` record includes:
+
+- exact ordinal/member/request identity,
+- final `succeeded`, `failed` or `budget_exhausted` status,
+- immutable result identity for success,
+- provider calls and exact input/output tokens when fully reported,
+- explicit `token_accounting_complete`,
+- pixel edits,
+- retry and repair counts plus reasons,
+- executed vs reused cache decision and immutable reuse source identity,
+- member wall time,
+- deterministic QA/perceptual/complexity/provenance references,
+- failure category/reason where applicable.
+
+The retained `tracepixel.asset-set-execution-report.v1` preserves declared-order member rows and reconciles aggregate provider calls, tokens, pixel edits, retries and repairs. It also records declared vs observed concurrency, batch wall time, scheduler-only wall overhead, exhausted budget dimensions and failed member identities. Before P8-B2, scheduler provider calls/input tokens/output tokens are required to remain exactly zero.
+
+If a provider call starts but exact token usage is not reported, that member is retained with `token_accounting_complete=false` and null token totals; aggregate token totals also become null. This intentionally gives P8-C0 a fail-closed signal instead of allowing partially known usage to masquerade as exact cost evidence.
+
+Member failures are isolated. A failure, local retry or local repair does not invalidate or restart unchanged successful siblings. Cache hits similarly remain explicit: a reused member retains its source request/result identities and must have zero new provider/token/pixel cost.
+
+The provider-free P8-B1 checkpoint exercises a three-member schedule with `max_concurrency=2`, forces two simultaneously live members, retains one member-local failure without restarting its siblings, exercises one immutable cache reuse, and verifies exact scheduler-zero/member-sum accounting. Real-provider cost evidence, if used, belongs to the following P8-C0 checkpoint and must retain provider-reported usage rather than weakening these structural invariants.
 
 ## Runtime-state exclusion
 
@@ -144,7 +173,7 @@ P8-B0 schedules intentionally contain no:
 - completion timestamp/order,
 - retry/repair state.
 
-Those belong to P8-B1 isolated execution/retention. Keeping them out of the scheduling contract prevents P8-B0 from becoming a second runtime/result authority.
+P8-B1 retains only the execution/evidence metadata needed to explain member outcomes and costs; raster/PixelProgram authority stays inside the existing single-asset path. Keeping runtime state out of the immutable schedule prevents P8-B0 from becoming a second runtime/result authority.
 
 ## Breadth and promotion boundaries
 
@@ -165,4 +194,4 @@ Before the mandatory P8-C0 cost checkpoint passes, P8 must not:
 - broaden to creatures/humanoids/animation,
 - start Trace2D integration.
 
-P8-B0 itself also does not invoke a provider, execute a member schedule, create raster authority, implement parallel worker/runtime state, retain success/failure results or score visual consistency. Those runtime concerns begin at P8-B1 and are admitted to later breadth only through P8-C0.
+P8-B1 does not claim that bounded execution solves the known B1 per-member ~5x cost overhead. Its handoff is exclusively P8-C0, where retained structural and cost evidence must show that AssetSet orchestration itself adds no hidden uncontrolled multiplier before any later breadth work is admitted.
