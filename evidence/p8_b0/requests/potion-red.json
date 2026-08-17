@@ -1,0 +1,35 @@
+{
+  "schema": "tracepixel.asset-request.v1",
+  "instruction": "Create a small red healing potion icon with a corked bottle and readable red liquid.",
+  "art_intent": {
+    "schema": "tracepixel.art-intent.v1",
+    "asset_class": "item-icon",
+    "canvas": {
+      "width": 16,
+      "height": 16
+    },
+    "composition": {
+      "occupied_bounds": {
+        "x": 3,
+        "y": 2,
+        "width": 10,
+        "height": 12
+      },
+      "facing": "front",
+      "symmetry": {
+        "axis": "vertical",
+        "strength": "hint"
+      },
+      "light_direction": "top_left",
+      "palette_budget": 8
+    }
+  },
+  "profile_refs": [
+    {
+      "kind": "style",
+      "profile_id": "small-rpg-icons",
+      "profile_schema": "tracepixel.style-profile.v1",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ]
+}
