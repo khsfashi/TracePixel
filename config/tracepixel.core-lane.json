@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-17",
   "current": "P8",
-  "current_child": "P8-X0",
+  "current_child": "P8-R0",
   "active_issue": 92,
   "sequence": [
     "P0",
@@ -29,95 +29,21 @@
     "B0": "Matched development-visible architecture benchmark",
     "P7": "Targeted repair and human feedback loop",
     "B1": "Held-out generalization benchmark",
-    "P8": "Production breadth for batch asset sets, icons, props and tiles",
+    "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
-    "P1": [
-      "P1-R0",
-      "P1-R1",
-      "P1-R2",
-      "P1-R3",
-      "P1-R4"
-    ],
-    "P2": [
-      "P2-IR0",
-      "P2-IR1",
-      "P2-IR2",
-      "P2-IR3",
-      "P2-IR4"
-    ],
-    "P3": [
-      "P3-S0",
-      "P3-S1",
-      "P3-S2",
-      "P3-S3",
-      "P3-S4",
-      "P3-S5",
-      "P3-S6",
-      "P3-S7"
-    ],
-    "P4": [
-      "P4-Q0",
-      "P4-Q1",
-      "P4-Q2",
-      "P4-Q3",
-      "P4-Q4",
-      "P4-Q5"
-    ],
-    "P5": [
-      "P5-A0",
-      "P5-A1",
-      "P5-A2",
-      "P5-A3",
-      "P5-A4",
-      "P5-A5"
-    ],
-    "P6": [
-      "P6-V0",
-      "P6-V1",
-      "P6-V2",
-      "P6-V3",
-      "P6-V4",
-      "P6-V5",
-      "P6-V6"
-    ],
-    "B0": [
-      "B0-F0",
-      "B0-H0",
-      "B0-B0",
-      "B0-S0",
-      "B0-P0"
-    ],
-    "P7": [
-      "P7-F0",
-      "P7-F1",
-      "P7-F2",
-      "P7-F3",
-      "P7-F4",
-      "P7-F5"
-    ],
-    "B1": [
-      "B1-F0",
-      "B1-S0",
-      "B1-P0"
-    ],
-    "P8": [
-      "P8-X0",
-      "P8-B0",
-      "P8-B1",
-      "P8-B2",
-      "P8-B3",
-      "P8-B4",
-      "P8-B5",
-      "P8-B6"
-    ],
-    "P9": [
-      "P9-T0",
-      "P9-T1",
-      "P9-T2",
-      "P9-T3"
-    ]
+    "P1": ["P1-R0", "P1-R1", "P1-R2", "P1-R3", "P1-R4"],
+    "P2": ["P2-IR0", "P2-IR1", "P2-IR2", "P2-IR3", "P2-IR4"],
+    "P3": ["P3-S0", "P3-S1", "P3-S2", "P3-S3", "P3-S4", "P3-S5", "P3-S6", "P3-S7"],
+    "P4": ["P4-Q0", "P4-Q1", "P4-Q2", "P4-Q3", "P4-Q4", "P4-Q5"],
+    "P5": ["P5-A0", "P5-A1", "P5-A2", "P5-A3", "P5-A4", "P5-A5"],
+    "P6": ["P6-V0", "P6-V1", "P6-V2", "P6-V3", "P6-V4", "P6-V5", "P6-V6"],
+    "B0": ["B0-F0", "B0-H0", "B0-B0", "B0-S0", "B0-P0"],
+    "P7": ["P7-F0", "P7-F1", "P7-F2", "P7-F3", "P7-F4", "P7-F5"],
+    "B1": ["B1-F0", "B1-S0", "B1-P0"],
+    "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
+    "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
     "P1-R4": "Raster memory/copy microbenchmark",
@@ -152,6 +78,8 @@
     "Do not mutate or rerun a frozen scored benchmark cohort to improve its score.",
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
     "P8-X0 AssetSet/batch authoring must reuse the proven single-asset pipeline, isolate member failures, and keep execution concurrency explicit and bounded.",
+    "P8-R0 unfamiliar-form research must produce retained, versioned, digest-pinned reusable profile evidence before generation can rely on it; research/profile context never becomes raster authority.",
+    "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but their anatomy/identity/temporal contracts must still be implemented and evidenced in lane order.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
