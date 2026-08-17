@@ -1,0 +1,36 @@
+name: P8 batch review artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/tracepixel/preview/batch_review.py"
+      - "evidence/p8_b5/**"
+      - "evidence/p8_b3/**"
+      - "evidence/p8_b4/**"
+      - ".github/workflows/p8-batch-review-artifact.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Build and validate P8-B5 mobile review package
+        run: python -m evidence.p8_b5.checkpoint --output out/p8-b5-review
+      - name: Upload phone review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tracepixel-p8-batch-review-${{ github.sha }}
+          path: out/p8-b5-review
+          if-no-files-found: error
+          retention-days: 14
