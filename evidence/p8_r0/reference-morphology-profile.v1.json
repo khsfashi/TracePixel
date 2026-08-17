@@ -1,0 +1,60 @@
+{
+  "schema": "tracepixel.morphology-profile.v1",
+  "profile_id": "fixture-arthropod-form",
+  "subject_label": "Synthetic arthropod-like fixture form",
+  "source_evidence": [
+    {
+      "source_id": "fixture-source-a",
+      "kind": "academic",
+      "locator": "fixture://research/source-a",
+      "title": "Synthetic morphology reference A",
+      "retrieved_at_utc": "2026-08-17T06:00:00Z"
+    },
+    {
+      "source_id": "fixture-source-b",
+      "kind": "museum",
+      "locator": "fixture://research/source-b",
+      "title": "Synthetic morphology reference B",
+      "retrieved_at_utc": "2026-08-17T06:01:00Z"
+    }
+  ],
+  "observed_facts": [
+    {
+      "fact_id": "paired-appendages",
+      "text": "The synthetic references describe paired articulated appendages attached to the main body mass.",
+      "source_ids": [
+        "fixture-source-a",
+        "fixture-source-b"
+      ]
+    },
+    {
+      "fact_id": "segment-breaks",
+      "text": "The synthetic references distinguish multiple visible segment breaks along each appendage.",
+      "source_ids": [
+        "fixture-source-a"
+      ]
+    }
+  ],
+  "inferred_constraints": [
+    {
+      "constraint_id": "retain-paired-silhouette",
+      "text": "A recognizable simplified sprite should preserve a paired appendage silhouette before small surface detail.",
+      "basis_fact_ids": [
+        "paired-appendages"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "artistic_conventions": [
+    {
+      "convention_id": "low-res-segment-exaggeration",
+      "text": "At very low resolution, segment breaks may be exaggerated by one pixel when needed for readability."
+    }
+  ],
+  "unknowns": [
+    {
+      "unknown_id": "exact-pixel-ratio",
+      "text": "No universal pixel-space segment ratio is asserted by this fixture profile."
+    }
+  ]
+}

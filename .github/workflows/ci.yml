@@ -80,3 +80,5 @@ jobs:
         run: python -m evidence.b1_p0.checkpoint
       - name: P8-X0 bounded AssetSet contract checkpoint
         run: python -m evidence.p8_x0.checkpoint
+      - name: P8-R0 research-to-asset profile checkpoint
+        run: python -m evidence.p8_r0.checkpoint

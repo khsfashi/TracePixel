@@ -1,0 +1,11 @@
+{
+  "schema": "tracepixel.form-resolution.v1",
+  "form_id": "fixture-arthropod-form",
+  "resolution": "known_profile",
+  "profile_ref": {
+    "profile_id": "fixture-arthropod-form",
+    "profile_schema": "tracepixel.morphology-profile.v1",
+    "sha256": "39c6c991724a2e18530343f8a65943779d2773f26e7f437a32c9c0b24b289adc"
+  },
+  "research_request": null
+}
