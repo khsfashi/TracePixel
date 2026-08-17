@@ -58,7 +58,7 @@ jobs:
       - name: Re-author only owner-rejected grass-center-b
         shell: pwsh
         run: >-
-          python evidence/p8_b5/retained_repair.py
+          python -m evidence.p8_b5.retained_repair
           --source artifacts/p8-b5-reviewed-source
           --output artifacts/p8-b5-repair
 
