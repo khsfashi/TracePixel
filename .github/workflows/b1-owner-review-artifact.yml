@@ -1,0 +1,66 @@
+name: B1 Owner Blind Review Artifact
+
+on:
+  push:
+    branches:
+      - agent/b1-s0-mobile-review
+      - main
+    paths:
+      - '.github/workflows/b1-owner-review-artifact.yml'
+      - 'evidence/b1/**'
+      - 'evidence/b1_s0/mobile_review.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tracepixel-b1-owner-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish-review:
+    if: >-
+      github.repository == 'khsfashi/TracePixel' &&
+      (github.ref == 'refs/heads/agent/b1-s0-mobile-review' || github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact review source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          clean: true
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install TracePixel
+        run: python -m pip install -e .
+
+      - name: Build offline Korean-first B1 blind review package
+        run: python -m evidence.b1_s0.mobile_review --output artifacts/b1-owner-review --source-sha ${{ github.sha }}
+
+      - name: Assert package remains blind
+        shell: python
+        run: |
+          from pathlib import Path
+          root = Path('artifacts/b1-owner-review')
+          text = '\n'.join(p.read_text(encoding='utf-8') for p in root.glob('*') if p.suffix in {'.html', '.json'})
+          banned = ('tracepixel-post-p7-v1', 'raw-pixel-program-v1')
+          leaks = [token for token in banned if token in text]
+          if leaks:
+              raise SystemExit(f'method label leak in mobile review package: {leaks}')
+
+      - name: Upload public blind review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tracepixel-b1-owner-review-${{ github.sha }}
+          path: artifacts/b1-owner-review
+          if-no-files-found: error
+          retention-days: 14
