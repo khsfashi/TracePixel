@@ -95,4 +95,6 @@ jobs:
       - name: P8-B4 tile-set breadth checkpoint
         run: python -m evidence.p8_b4.checkpoint
       - name: P8-B5 batch mobile-review surface checkpoint
-        run: python -m evidence.p8_b5.checkpoint
+        run: python -m evidence.p8_b5.forward_checkpoint
+      - name: P8-B6 production-breadth postmortem checkpoint
+        run: python -m evidence.p8_b6.checkpoint
