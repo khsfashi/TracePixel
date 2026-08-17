@@ -27,7 +27,6 @@ ROOT = Path(__file__).resolve().parents[1]
 PREREG = ROOT / "evidence/b1/preregistration.v1.json"
 FREEZE = ROOT / "evidence/b1/freeze.v1.json"
 B0 = ROOT / "evidence/b0/preregistration.v1.json"
-LANE = ROOT / "config/tracepixel.core-lane.json"
 COMMIT = "a" * 40
 
 
@@ -38,6 +37,15 @@ def _program() -> dict[str, object]:
         "canvas": {"width": 16, "height": 16},
         "operations": [{"op": "set_pixels", "pixels": pixels}],
     }
+
+
+def _b1_s0_lane(root: Path) -> Path:
+    path = root / "lane.json"
+    path.write_text(
+        json.dumps({"current": "B1", "current_child": "B1-S0", "active_issue": 79}),
+        encoding="utf-8",
+    )
+    return path
 
 
 class FakeExecutor:
@@ -100,10 +108,12 @@ class B1S0CohortTests(unittest.TestCase):
 
     def test_preflight_only_does_not_invoke_scored_provider(self) -> None:
         executor = FakeExecutor()
-        with patch("evidence.b1_s0.run._source_guard"), patch(
-            "evidence.b1_s0.run._runner_commit", return_value=COMMIT
-        ):
-            result = preflight_cohort(PREREG, FREEZE, B0, LANE, executor=executor)
+        with tempfile.TemporaryDirectory() as temporary:
+            lane = _b1_s0_lane(Path(temporary))
+            with patch("evidence.b1_s0.run._source_guard"), patch(
+                "evidence.b1_s0.run._runner_commit", return_value=COMMIT
+            ):
+                result = preflight_cohort(PREREG, FREEZE, B0, lane, executor=executor)
         self.assertEqual(1, executor.preflights)
         self.assertEqual(0, executor.invocations)
         self.assertFalse(result["provider_invoked"])
@@ -133,10 +143,11 @@ class B1S0CohortTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             results, review = root / "results", root / "review"
+            lane = _b1_s0_lane(root)
             with patch("evidence.b1_s0.run._source_guard"), patch(
                 "evidence.b1_s0.run._runner_commit", return_value=COMMIT
             ):
-                summary = run_cohort(PREREG, FREEZE, B0, LANE, results, review, executor=executor)
+                summary = run_cohort(PREREG, FREEZE, B0, lane, results, review, executor=executor)
             self.assertEqual(B1_EXPECTED_ATTEMPTS, summary["retained_attempt_count"])
             self.assertEqual(B1_EXPECTED_ATTEMPTS, summary["blind_review_entry_count"])
             self.assertEqual(1, executor.preflights)
