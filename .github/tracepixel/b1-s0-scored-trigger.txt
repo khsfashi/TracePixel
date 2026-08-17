@@ -1,0 +1,4 @@
+B1-S0 owner self-hosted scored cohort trigger.
+Parent main commit: 3308712b267f8be4b5eb9adae06b40792bafe62a
+Authorized cohort: exact frozen 28 primary attempts only.
+Do not rerun an ambiguous claimed attempt.
