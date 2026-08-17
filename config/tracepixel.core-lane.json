@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-17",
   "current": "P8",
-  "current_child": "P8-B3",
+  "current_child": "P8-B4",
   "active_issue": 92,
   "sequence": [
     "P0",
@@ -85,6 +85,7 @@
     "P8-C0 must prove batch orchestration adds no hidden provider/token multiplier: all provider calls and tokens are attributable to member executions, successful siblings are not restarted by another member failure, concurrency stays bounded, aggregate budgets are enforced, and any batch-specific wall-time overhead is retained and reported before P8-B2 or later breadth work may begin.",
     "P8-C0 is not allowed to claim that B1's roughly 4.6-5.1x single-asset staged cost is solved merely because batching is bounded; it must separately show that AssetSet execution does not add another uncontrolled multiplier on top of that known per-member cost.",
     "P8-B2 must require one exact digest-pinned style profile across every AssetSet member; palette profiles, when used, must bind the whole set consistently. Profile identity is deterministic evidence, while visual style/palette similarity remains perceptual evidence unless a separately frozen measurable rule exists.",
+    "P8-B3 must prove representative item-icon and scene-prop members can coexist in one AssetSet through the existing validated request, schedule, consistency, and isolated-execution seams without a second authoring path, new provider work, or new raster authority; member-specific canvas/composition remains independent while exact shared-style binding is preserved.",
     "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but no creature, humanoid, or animation implementation belongs in P8; promotions occur only after P8-B6 through dedicated sequential post-P8 gates with creature evidence before humanoid and humanoid evidence before animation.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
