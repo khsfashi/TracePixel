@@ -1,0 +1,47 @@
+{
+  "schema": "tracepixel.asset-set.v1",
+  "asset_set_id": "p8-b4-tile-set-breadth",
+  "shared_profiles": [
+    {
+      "kind": "style",
+      "profile_id": "top-down-rpg-tiles",
+      "profile_schema": "tracepixel.style-profile.v1",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "kind": "palette",
+      "profile_id": "meadow-dirt-palette",
+      "profile_schema": "tracepixel.palette-profile.v1",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  ],
+  "members": [
+    {
+      "member_id": "grass-center-a",
+      "request_ref": "requests/grass-center-a.json"
+    },
+    {
+      "member_id": "grass-dirt-east-edge",
+      "request_ref": "requests/grass-dirt-east-edge.json"
+    },
+    {
+      "member_id": "grass-center-b",
+      "request_ref": "requests/grass-center-b.json"
+    },
+    {
+      "member_id": "grass-dirt-southeast-corner",
+      "request_ref": "requests/grass-dirt-southeast-corner.json"
+    }
+  ],
+  "execution": {
+    "member_authority": "single-asset-pipeline",
+    "ordering": "declared-member-order",
+    "failure_policy": "isolate-member",
+    "max_concurrency": 2,
+    "aggregate_budget": {
+      "max_provider_calls": 8,
+      "max_pixel_edits": 2048,
+      "max_wall_time_ms": 60000
+    }
+  }
+}
