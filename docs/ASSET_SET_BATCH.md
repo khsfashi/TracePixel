@@ -1,6 +1,6 @@
 # AssetSet / Batch Authoring
 
-Status: **P8-X0 and P8-R0 complete; P8-B0 defines the immutable multi-asset request/schedule boundary.** Runtime execution/retention remains P8-B1.
+Status: **P8-X0 and P8-R0 complete; P8-B0 defines the immutable multi-asset request/schedule boundary. P8-B1 execution/retention must hand off to the mandatory P8-C0 batch cost-scaling checkpoint before any P8-B2+ breadth expansion.**
 
 TracePixel keeps one constrained pixel asset as the authoritative authoring unit:
 
@@ -12,7 +12,7 @@ instruction + ArtIntent + digest-pinned profile context
  -> preview/evidence
 ```
 
-Batch production must scale that path without creating a second drawing engine, hidden shared raster state, or execution-order-dependent correctness.
+Batch production must scale that path without creating a second drawing engine, hidden shared raster state, execution-order-dependent correctness, or a second uncontrolled cost multiplier on top of the already-observed B1 single-asset overhead.
 
 ## P8 contract stack
 
@@ -21,7 +21,8 @@ AssetSet v1
  -> AssetRequest v1 per member
  -> AssetSetRequest v1 digest manifest
  -> AssetSetSchedule v1 deterministic dispatch queue
- -> P8-B1 isolated member execution + retention
+ -> P8-B1 isolated member execution + retention + cost telemetry
+ -> P8-C0 mandatory batch cost-scaling checkpoint
  -> P8-B2 cross-asset consistency
  -> P8-B3/B4 icon, prop and tile breadth
  -> P8-B5 batch preview/mobile review
@@ -31,8 +32,30 @@ AssetSet v1
 The active parent is issue #92. The fixed child order is:
 
 ```text
-P8-X0 -> P8-R0 -> P8-B0 -> P8-B1 -> P8-B2 -> P8-B3 -> P8-B4 -> P8-B5 -> P8-B6
+P8-X0 -> P8-R0 -> P8-B0 -> P8-B1 -> P8-C0 -> P8-B2 -> P8-B3 -> P8-B4 -> P8-B5 -> P8-B6
 ```
+
+P8-C0 is a hard promotion boundary. P8-B2 or later work must not begin merely because P8-B1 can execute members successfully.
+
+## Why cost is a first-class P8 gate
+
+Frozen B1 evidence showed that the full six-stage TracePixel path generalized structurally but cost materially more than the matched raw baseline: roughly 5.06x input tokens, 4.67x output tokens, 4.94x provider calls/iterations and 4.58x wall time on mean values.
+
+P8 does **not** assume batching fixes that single-member overhead. The immediate requirement is narrower and more important for production safety: an AssetSet must not add another hidden multiplier through batch-global provider calls, sibling restarts, retry cascades, unbounded fan-out or unaccounted orchestration work.
+
+Therefore P8-B1 must retain enough telemetry for P8-C0 to show, at minimum:
+
+- every provider call is attributable to one member execution; batch scheduling itself performs no hidden provider call,
+- aggregate input/output token totals equal the exact sum of retained member-attributed token totals,
+- retry and repair work remains member-local and is retained explicitly,
+- one member failure/retry does not restart already-successful siblings,
+- cache/reuse decisions are member-addressed by immutable request identity and retained in evidence,
+- observed live execution never exceeds declared `max_concurrency`,
+- aggregate provider-call/token/wall-time budgets are enforced rather than reported after the fact,
+- batch wall time and any orchestration overhead are retained as descriptive cost evidence,
+- no aggregate success metric may hide a pathological expensive member.
+
+P8-C0 must fail closed if these claims cannot be demonstrated from retained evidence. It must not claim the known B1 ~5x single-asset cost is solved simply because the batch is bounded; it only establishes that batching does not stack an additional uncontrolled multiplier on top.
 
 ## P8-X0 AssetSet authority
 
@@ -123,23 +146,23 @@ P8-B0 schedules intentionally contain no:
 
 Those belong to P8-B1 isolated execution/retention. Keeping them out of the scheduling contract prevents P8-B0 from becoming a second runtime/result authority.
 
-## Consistency and review boundaries
+## Breadth and promotion boundaries
 
 P8-B2 owns cross-asset style/palette/profile consistency contracts. Objective rules may later be deterministic when explicitly measurable; aesthetic/style judgment remains perceptual/human unless a separate frozen measurable rule is established.
 
-P8-B5 owns batch preview/mobile review. Aggregate views must never erase per-member evidence or convert human perception into deterministic QA truth.
+P8-B3/B4 remain bounded icon/prop/tile breadth. P8-B5 owns batch preview/mobile review. Aggregate views must never erase per-member evidence or convert human perception into deterministic QA truth.
 
-## Non-goals of P8-B0
+Creature, humanoid and animation work is **not a P8 implementation target**. Those are approved long-term destinations, but promotion begins only after P8-B6 in dedicated sequential post-P8 gates: creature evidence first, then humanoid evidence, then animation evidence. The current P8 breadth work must not be used as permission to pull those contracts forward.
 
-P8-B0 does not:
+## Non-goals before P8-C0 is green
 
-- invoke a provider,
-- execute a member schedule,
-- create raster authority,
-- implement parallel worker/runtime state,
-- retain success/failure results,
-- score visual consistency,
-- broaden to creatures/humanoids/animation early,
+Before the mandatory P8-C0 cost checkpoint passes, P8 must not:
+
+- broaden into P8-B2+ consistency or production-breadth work,
+- hide member cost behind aggregate completion/success numbers,
+- add batch-global provider calls for style or consistency,
+- retry/restart successful siblings because another member failed,
+- broaden to creatures/humanoids/animation,
 - start Trace2D integration.
 
-Those remain in their fixed later lanes and owner-gate boundaries.
+P8-B0 itself also does not invoke a provider, execute a member schedule, create raster authority, implement parallel worker/runtime state, retain success/failure results or score visual consistency. Those runtime concerns begin at P8-B1 and are admitted to later breadth only through P8-C0.
