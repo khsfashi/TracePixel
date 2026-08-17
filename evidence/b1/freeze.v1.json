@@ -1,0 +1,10 @@
+{
+  "schema": "tracepixel.b1-freeze-record.v1",
+  "benchmark_id": "B1",
+  "freeze_commit": "ca612a026ff5e74c397d9aa4ef8c0bdb25d1df6a",
+  "preregistration_path": "evidence/b1/preregistration.v1.json",
+  "repository_commit_under_test": "0ee45b1e466d4d1ec4e077b835ae31d47a1379a1",
+  "source_pr": 81,
+  "scoring_authority": "All B1-S0 scored attempt identities and retained result paths must cite this exact B1-F0 merge commit. No scored provider invocation may use a different freeze commit.",
+  "b0_boundary": "B0 scored outputs remain immutable and may not be copied, seeded, relabelled, rescored, rerun, or substituted into any B1 attempt."
+}

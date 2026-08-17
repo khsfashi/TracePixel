@@ -74,3 +74,5 @@ jobs:
         run: python -m evidence.p7_f4.checkpoint
       - name: P7-F5 human feedback contract checkpoint
         run: python -m evidence.p7_f5.checkpoint
+      - name: B1-S0 frozen held-out schedule checkpoint
+        run: python -m evidence.b1_s0.checkpoint
