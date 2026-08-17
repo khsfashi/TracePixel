@@ -1,0 +1,69 @@
+name: P8-B5 owner repair status callback
+
+on:
+  workflow_run:
+    workflows: ["Owner P8-B5 localized retained repair"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.event.workflow_run.actor.login == github.repository_owner &&
+      (github.event.workflow_run.event == 'workflow_dispatch' ||
+       github.event.workflow_run.event == 'issue_comment')
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Report owner repair completion to issue 92
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["REPOSITORY"]
+          run_id = os.environ["RUN_ID"]
+          attempt = os.environ["RUN_ATTEMPT"]
+          conclusion = os.environ["RUN_CONCLUSION"]
+          run_url = os.environ["RUN_URL"]
+          event = os.environ["RUN_EVENT"]
+          token = os.environ["GH_TOKEN"]
+
+          body = (
+              "### P8-B5 owner repair callback\n\n"
+              f"Run `{run_id}` attempt `{attempt}` completed with **{conclusion}** "
+              f"from `{event}`.\n\n"
+              f"Run: {run_url}\n\n"
+              "This callback reports execution state only; it does not approve the pending owner visual gate."
+          )
+          payload = json.dumps({"body": body}).encode("utf-8")
+          request = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/issues/92/comments",
+              data=payload,
+              method="POST",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "Content-Type": "application/json",
+                  "User-Agent": "TracePixel-P8-B5-owner-repair-status",
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              if response.status not in (200, 201):
+                  raise SystemExit(f"status callback failed with HTTP {response.status}")
+          PY
