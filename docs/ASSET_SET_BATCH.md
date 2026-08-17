@@ -1,165 +1,145 @@
-# AssetSet / Batch Authoring Plan
+# AssetSet / Batch Authoring
 
-Status: planned future production-breadth capability.
+Status: **P8-X0 and P8-R0 complete; P8-B0 defines the immutable multi-asset request/schedule boundary.** Runtime execution/retention remains P8-B1.
 
-TracePixel currently treats one constrained pixel asset as the primary authoring unit:
+TracePixel keeps one constrained pixel asset as the authoritative authoring unit:
 
 ```text
-ArtIntent
- -> StagePlan / PixelProgram
+instruction + ArtIntent + digest-pinned profile context
+ -> existing single-asset stage/provider path
  -> Canvas
  -> deterministic QA
  -> preview/evidence
 ```
 
-Production workflows also need a bounded way to request and review **multiple assets as one set** without replacing the proven single-asset pipeline or forcing every asset to regenerate when one member fails.
+Batch production must scale that path without creating a second drawing engine, hidden shared raster state, or execution-order-dependent correctness.
 
-This capability is preregistered as **P8-X0 AssetSet / batch authoring foundation**, executed before the existing P8-B0 production-breadth children.
-
-## Product goal
-
-Support requests such as:
+## P8 contract stack
 
 ```text
-RPG item set
- -> potion x3 variants
- -> sword x4 variants
- -> key x2 variants
- -> shield x3 variants
+AssetSet v1
+ -> AssetRequest v1 per member
+ -> AssetSetRequest v1 digest manifest
+ -> AssetSetSchedule v1 deterministic dispatch queue
+ -> P8-B1 isolated member execution + retention
+ -> P8-B2 cross-asset consistency
+ -> P8-B3/B4 icon, prop and tile breadth
+ -> P8-B5 batch preview/mobile review
+ -> P8-B6 checkpoint/postmortem
 ```
 
-while preserving per-asset deterministic authority, QA, replay evidence, failure isolation and mobile review.
-
-P8-X0 is **not** "launch N unconstrained model calls in parallel". The first contract should define the set and reuse the existing single-asset authoring path for each member. Provider concurrency is a separate bounded execution policy layered on top later.
-
-## Proposed authority shape
+The active parent is issue #92. The fixed child order is:
 
 ```text
-AssetSetIntent
-  -> ordered AssetRequest[]
-      -> existing single-asset pipeline
-      -> per-asset authoritative raster + QA + evidence
-  -> AssetSetManifest
-  -> optional set-level consistency facts/policy
-  -> batch gallery / review evidence
+P8-X0 -> P8-R0 -> P8-B0 -> P8-B1 -> P8-B2 -> P8-B3 -> P8-B4 -> P8-B5 -> P8-B6
 ```
 
-Each asset remains independently replayable and independently validatable. `AssetSet` metadata must not become a second raster authority.
+## P8-X0 AssetSet authority
 
-## P8-X0 minimum contract
+`tracepixel.asset-set.v1` freezes:
 
-1. **Versioned AssetSet intent**
-   - stable set ID,
-   - bounded ordered asset IDs,
-   - one validated ArtIntent-equivalent request per asset,
-   - explicit variant/group relationships when requested,
-   - closed maximum member count and total budget.
+- stable set identity,
+- explicit declared member order,
+- immutable shared style/palette/morphology profile references,
+- the existing `single-asset-pipeline` as member authority,
+- `isolate-member` failure policy,
+- explicit finite `max_concurrency`,
+- finite aggregate provider-call, pixel-edit and wall-time budgets.
 
-2. **Reuse, not duplication**
-   - invoke the existing single-asset authoring/QA/preview path per member,
-   - do not introduce a second Canvas, PixelProgram executor or deterministic QA implementation for batch mode.
+AssetSet metadata is context and scheduling policy. It is never pixel/raster authority.
 
-3. **Per-asset isolation**
-   - one member failure does not invalidate successful members unless an explicit all-or-nothing set policy requires it,
-   - successful member evidence can be cached/reused,
-   - retry/repair targets only failed or explicitly invalidated members.
+## P8-R0 research/profile boundary
 
-4. **Deterministic set manifest**
-   - canonical member order,
-   - asset ID -> intent/result/evidence digests,
-   - status and failure category per member,
-   - exact source commit/provider settings where applicable,
-   - no hidden replacement of one member by another.
+Unfamiliar forms resolve explicitly to either a retained known profile or a bounded research request. Reusable morphology/form knowledge is versioned and digest-pinned. Source-observed facts, inferred constraints, artistic conventions and unknowns remain separate.
 
-5. **Set-level consistency layer**
-   - keep objective checks deterministic when they are explicitly requested,
-   - examples: shared dimensions, palette membership/budget, alpha policy, naming/slot completeness, requested variant counts,
-   - style/identity/aesthetic consistency remains perceptual/human unless a later frozen measurable rule exists.
+Research/profile context informs member authoring but never copies source imagery into canonical generated assets or becomes competing raster authority.
 
-6. **Batch review surface**
-   - gallery shows all members with per-asset PASS/FINDINGS/failure state,
-   - failed members are visibly distinguishable from accepted cached members,
-   - mobile review can inspect one member without losing set context.
+## P8-B0 AssetRequest
 
-## Execution and performance direction
-
-The default implementation should favor bounded resource use over eager full-set residency.
-
-For `N` assets:
-
-- scheduling/bookkeeping: `O(N)`,
-- per-asset raster/QA cost: existing single-asset cost,
-- persistent evidence: proportional to emitted results,
-- live Canvas memory should be bounded by configured execution concurrency rather than `O(N)` full canvases by default.
-
-Example:
+`tracepixel.asset-request.v1` is the immutable effective input for one member:
 
 ```text
-10 requested assets
-├─ #1 PASS -> materialize evidence -> reusable
-├─ #2 PASS -> materialize evidence -> reusable
-├─ #3 FAIL -> targeted repair/retry
-├─ #4 PASS -> materialize evidence -> reusable
-...
-└─ #10 PASS -> materialize evidence -> reusable
+{
+  schema,
+  instruction,
+  art_intent,
+  profile_refs[]
+}
 ```
 
-A later concurrency policy may allow provider parallelism such as 1/2/4 workers, but it must be explicit and bounded. Correctness must not depend on execution order.
+The request deliberately contains both `instruction` and the existing `ArtIntent`.
 
-## Cache / invalidation direction
+`ArtIntent` describes structural authoring intent such as canvas, occupied bounds, facing, symmetry, light direction and palette budget. It does not encode every semantic variant. For example, a red healing potion and a blue mana potion may have identical structural ArtIntent while still requiring distinct semantic instructions and therefore distinct cache identities.
 
-Cache identity should be content-addressed from the effective member inputs and relevant authoring contract/version, not only from display names.
+Every member profile reference must exactly match one digest-pinned profile declared by the parent AssetSet. A member cannot silently introduce an unshared or differently digested profile.
 
-A member may be reused only when its effective intent, required shared-set constraints and relevant pipeline/provider configuration are unchanged. Changing a shared palette or another set-wide invariant must invalidate only the members whose effective contract changed.
+## P8-B0 AssetSetRequest manifest
 
-## Relationship to existing P8 breadth
+`tracepixel.asset-set-request.v1` binds every declared AssetSet member, in exact declared order, to:
 
-P8-X0 is a reusable production foundation, not a replacement for later breadth work:
+- `member_id`,
+- exact `request_ref`,
+- canonical `request_sha256`.
 
-```text
-P8-X0 AssetSet / batch foundation
- -> P8-B0 richer item icons
- -> P8-B1 props/furniture
- -> P8-B2 tileable blocks/terrain decoration
- -> P8-B3 autotile/variant consistency
- -> P8-B4 simple creatures
- -> owner promotion gate
- -> P8-B5 humanoids
- -> owner promotion gate
- -> P8-B6 animation/multi-frame consistency
-```
+The manifest also pins the canonical `asset_set_sha256`.
 
-Later children should reuse AssetSet where multiple related outputs are natural:
+Before scheduling, every referenced request payload is loaded and validated. Missing payloads, extra payloads, member reordering, request-ref substitution, changed request bytes/semantics, invalid ArtIntent, or profile-ref drift fail closed.
 
-- item/icon variants: multiple independently usable assets,
-- autotiles: fixed related tile members with set-level edge/slot constraints,
-- creature/humanoid variants: related identities with bounded shared constraints,
-- animation: ordered frames with temporal/multi-frame consistency requirements.
+This gives member-level content-addressed invalidation: changing one member request changes that member digest and the set-request manifest, but unchanged sibling request payloads remain independently identifiable and reusable by later execution/cache logic.
 
-Animation remains behind its existing owner promotion gate; adding generic AssetSet does not silently authorize animation or humanoid scope.
+## P8-B0 deterministic schedule
 
-## Acceptance direction for P8-X0
+`tracepixel.asset-set-schedule.v1` is an immutable projection of the validated AssetSet + request manifest. It records:
 
-Before P8-X0 can advance:
+- canonical AssetSet and request-manifest digests,
+- `single-asset-pipeline` member authority,
+- `declared-member-order`,
+- `declared-order-bounded-concurrency` dispatch policy,
+- `isolate-member` failure policy,
+- exact finite aggregate budget,
+- exact `max_concurrency`,
+- zero-based member ordinals and request digests.
 
-- one set with multiple assets is deterministically materialized,
-- each member can replay/QA independently,
-- one intentionally failed member can be retried without regenerating unchanged successful members,
-- manifest member ordering/digests are deterministic,
-- bounded execution concurrency is explicit,
-- batch gallery exposes per-member evidence,
-- complexity telemetry can report both per-member and aggregate set cost,
-- portable CI requires no live paid/network provider.
+The dispatch policy is a **declared-order admission queue with a bounded number of live workers**, not completion-order authority and not fixed barrier waves. A later P8-B1 executor may start the next declared member when a slot becomes free, but completion timing must never reorder member identity or change correctness.
 
-## Non-goals
+For `N` members and concurrency `C`:
 
-P8-X0 does not by itself add:
+- schedule construction/bookkeeping is `O(N)`,
+- schedule memory is `O(N)` small metadata,
+- later live raster/provider working state should be bounded by `O(C)` members rather than retaining all `N` canvases by default.
 
-- unbounded parallel model calls,
-- sprite-atlas packing/runtime import,
-- automatic perceptual style scoring,
-- humanoid promotion,
-- animation promotion,
-- Trace2D integration.
+## Runtime-state exclusion
 
-Those remain separate product/owner decisions where already defined.
+P8-B0 schedules intentionally contain no:
+
+- member `status`,
+- provider response,
+- PixelProgram,
+- Canvas/RGBA data,
+- QA result,
+- output artifact,
+- completion timestamp/order,
+- retry/repair state.
+
+Those belong to P8-B1 isolated execution/retention. Keeping them out of the scheduling contract prevents P8-B0 from becoming a second runtime/result authority.
+
+## Consistency and review boundaries
+
+P8-B2 owns cross-asset style/palette/profile consistency contracts. Objective rules may later be deterministic when explicitly measurable; aesthetic/style judgment remains perceptual/human unless a separate frozen measurable rule is established.
+
+P8-B5 owns batch preview/mobile review. Aggregate views must never erase per-member evidence or convert human perception into deterministic QA truth.
+
+## Non-goals of P8-B0
+
+P8-B0 does not:
+
+- invoke a provider,
+- execute a member schedule,
+- create raster authority,
+- implement parallel worker/runtime state,
+- retain success/failure results,
+- score visual consistency,
+- broaden to creatures/humanoids/animation early,
+- start Trace2D integration.
+
+Those remain in their fixed later lanes and owner-gate boundaries.
