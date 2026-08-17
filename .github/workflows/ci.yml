@@ -84,3 +84,5 @@ jobs:
         run: python -m evidence.p8_r0.checkpoint
       - name: P8-B0 multi-asset request and schedule checkpoint
         run: python -m evidence.p8_b0.checkpoint
+      - name: P8-B1 isolated execution and cost telemetry checkpoint
+        run: python -m evidence.p8_b1.checkpoint
