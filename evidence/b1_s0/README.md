@@ -33,6 +33,15 @@ The provider-free scored-result contract in `tracepixel.benchmark.b1_scored` add
 - deterministic QA, stage coverage, repair evidence, and complexity telemetry remain distinct result layers,
 - retained B1 result-layer payloads reject references into `evidence/b0/results/` so a B0 attempt cannot be used as a scored B1 seed or substitute.
 
-This checkpoint and completion contract do not invoke the scored provider cohort. The next B1-S0 implementation should bind the frozen Codex adapter/executor to these identities and result layers, then execute the 28 owner-triggered local/headless attempts without mutating the frozen cohort.
+The B1-specific Codex boundary in `tracepixel.benchmark.b1_adapters` now binds the frozen cohort to owner-local/headless execution without invoking the scored provider in portable CI:
+
+- both scored methods are pinned to the exact B1-F0 Codex/model/auth/sandbox settings,
+- every provider-visible request contains only the frozen visible task packet and rejects hidden constraints or `evidence/b0/results/` references,
+- TracePixel receives the six-stage post-P7 authoring/repair surface while the raw baseline cannot receive stage or repair guidance,
+- all 28 frozen attempt identities materialize unique retention roots under `evidence/b1/results/<B1-F0-freeze>/...`,
+- Codex preflight requires exactly `codex-cli 0.147.0`, ChatGPT authentication, no API-key authentication, read-only sandboxing, and ephemeral execution,
+- response schemas normalize both methods to the same PixelProgram v1 surface while retaining Codex call usage/tool telemetry separately.
+
+The adapter/executor tests use a fake subprocess transport only; they do not create scored B1 attempts. The next B1-S0 implementation should wire this executor into the bounded staged/revision/repair run loop, build the `b1_scored` result layers for each scheduled identity, and only then perform the 28 owner-triggered local/headless attempts.
 
 Scored provider execution remains owner-triggered local/headless work and is never a portable-CI correctness gate.
