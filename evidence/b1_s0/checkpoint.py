@@ -20,6 +20,7 @@ from tracepixel.benchmark.b1_harness import (
 ROOT = Path(__file__).resolve().parents[2]
 B1_PREREGISTRATION = ROOT / "evidence" / "b1" / "preregistration.v1.json"
 B1_FREEZE_RECORD = ROOT / "evidence" / "b1" / "freeze.v1.json"
+B1_POSTMORTEM = ROOT / "evidence" / "b1" / "postmortem.v1.json"
 B0_PREREGISTRATION = ROOT / "evidence" / "b0" / "preregistration.v1.json"
 CORE_LANE = ROOT / "config" / "tracepixel.core-lane.json"
 
@@ -31,14 +32,36 @@ def _json(path: Path) -> dict[str, object]:
     return cast(dict[str, object], value)
 
 
+def _validate_lane(lane: dict[str, object]) -> None:
+    current, child, issue = lane.get("current"), lane.get("current_child"), lane.get("active_issue")
+    if current == "B1":
+        if child not in {"B1-S0", "B1-P0"} or issue != 79:
+            raise SystemExit("active B1 checkpoint requires B1-S0/B1-P0 on issue #79")
+        return
+
+    sequence = lane.get("sequence")
+    if type(sequence) is not list or type(current) is not str or "P8" not in sequence or current not in sequence:
+        raise SystemExit("B1-S0 checkpoint requires the live core lane to remain at B1 or later")
+    phases = cast(list[object], sequence)
+    if phases.index(current) < phases.index("P8"):
+        raise SystemExit("B1-S0 checkpoint cannot move behind the B1-to-P8 handoff")
+
+    post = _json(B1_POSTMORTEM)
+    if post.get("schema") != "tracepixel.b1-postmortem.v1" or post.get("status") != "frozen-complete":
+        raise SystemExit("post-B1 lane requires the frozen B1-P0 postmortem")
+    if current == "P8":
+        children = cast(dict[str, object], lane.get("child_sequences", {})).get("P8")
+        if type(children) is not list or child not in children or issue != 92:
+            raise SystemExit("active P8 work must remain on issue #92 and a declared P8 child")
+
+
 def main() -> int:
     preregistration, preregistration_sha256 = load_b1_preregistration(B1_PREREGISTRATION)
     freeze = load_b1_freeze_record(B1_FREEZE_RECORD)
     b0 = _json(B0_PREREGISTRATION)
     lane = _json(CORE_LANE)
 
-    if lane.get("current") != "B1" or lane.get("current_child") != "B1-S0" or lane.get("active_issue") != 79:
-        raise SystemExit("B1-S0 checkpoint requires the live core lane to be B1 / B1-S0 / issue #79")
+    _validate_lane(lane)
     if freeze["freeze_commit"] != B1_FREEZE_COMMIT:
         raise SystemExit("B1 freeze record drifted")
     if preregistration["repository_commit_under_test"] != B1_REPOSITORY_COMMIT_UNDER_TEST:
