@@ -42,6 +42,17 @@ The B1-specific Codex boundary in `tracepixel.benchmark.b1_adapters` now binds t
 - Codex preflight requires exactly `codex-cli 0.147.0`, ChatGPT authentication, no API-key authentication, read-only sandboxing, and ephemeral execution,
 - response schemas normalize both methods to the same PixelProgram v1 surface while retaining Codex call usage/tool telemetry separately.
 
-The adapter/executor tests use a fake subprocess transport only; they do not create scored B1 attempts. The next B1-S0 implementation should wire this executor into the bounded staged/revision/repair run loop, build the `b1_scored` result layers for each scheduled identity, and only then perform the 28 owner-triggered local/headless attempts.
+The provider-free scored runner in `tracepixel.benchmark.b1_runner` now closes the remaining execution-loop boundary before real B1 scoring:
+
+- TracePixel consumes all six frozen authoring stages in order even if deterministic structural QA passes at an earlier stage, preventing the B0 early-stop/under-authoring confound from recurring,
+- each accepted provider response is evaluated as one complete PixelProgram candidate under the frozen 8-call / 2,048-pixel-edit ceiling rather than being silently accumulated as an unfrozen ninth authoring surface,
+- zero-edit TracePixel stage responses are retained as explicit `skipped` decisions without erasing the last valid artifact, while nonzero valid responses are retained as `applied`,
+- only after all six stage decisions are complete may TracePixel spend remaining frozen call/edit headroom on deterministic-feedback-driven post-stage revision/repair attempts,
+- the raw baseline receives no TracePixel stage or repair guidance and may stop on the first structurally passing harness-valid candidate,
+- provider requests, provider responses, final deterministic QA, complexity telemetry, final raster/PNG evidence, and the `b1_scored` attempt record are retained separately under the exact B1 freeze-root attempt identity,
+- retention refuses to overwrite an already-claimed attempt directory and writes a SHA-256/byte-count index for the retained payloads,
+- post-stage repair-cycle telemetry does not fabricate P7 `tracepixel.repair-evidence.v1`; that distinct evidence layer remains unavailable unless an actually validated P7 repair-evidence bundle is produced.
+
+The adapter/executor and scored-runner tests use fake transports only; they do not create scored B1 attempts or call Codex. The next B1-S0 step after this guard is green is the owner-triggered local/headless preflight and the exact 28 frozen attempts, followed by B1-P0 generalization postmortem work.
 
 Scored provider execution remains owner-triggered local/headless work and is never a portable-CI correctness gate.
