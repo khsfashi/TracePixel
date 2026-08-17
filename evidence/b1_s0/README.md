@@ -24,6 +24,15 @@ The production architecture under test remains the preregistered P7 -> B1 handof
 - the live core lane is `B1 / B1-S0 / #79`,
 - no provider is invoked by the checkpoint.
 
-This checkpoint does not implement or execute the scored provider cohort. The next B1-S0 implementation must preserve the post-P7 completion contract: TracePixel cannot claim authoring completion until all six required stages are explicitly applied or skipped, bounded deterministic repair remains separate evidence, and B0 outputs are never used as B1 attempt inputs or substitutes.
+The provider-free scored-result contract in `tracepixel.benchmark.b1_scored` additionally enforces:
+
+- unsuccessful TracePixel attempts may retain a fixed-order prefix of stage decisions,
+- `completion=true` for `tracepixel-post-p7-v1` is impossible until all six frozen stages are explicitly `applied` or `skipped`,
+- applied/skipped counts and authoring completion are retained as stage evidence rather than folded into deterministic structural QA,
+- bounded P7 repair evidence is retained in a distinct repair layer and is unavailable to the raw baseline,
+- deterministic QA, stage coverage, repair evidence, and complexity telemetry remain distinct result layers,
+- retained B1 result-layer payloads reject references into `evidence/b0/results/` so a B0 attempt cannot be used as a scored B1 seed or substitute.
+
+This checkpoint and completion contract do not invoke the scored provider cohort. The next B1-S0 implementation should bind the frozen Codex adapter/executor to these identities and result layers, then execute the 28 owner-triggered local/headless attempts without mutating the frozen cohort.
 
 Scored provider execution remains owner-triggered local/headless work and is never a portable-CI correctness gate.
