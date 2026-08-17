@@ -1,0 +1,109 @@
+name: Owner P8-B5 localized retained repair
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: p8-b5-owner-retained-repair
+  cancel-in-progress: false
+
+jobs:
+  localized-repair:
+    if: github.ref == 'refs/heads/main' && github.actor == github.repository_owner
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout dispatched main commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install TracePixel
+        shell: pwsh
+        run: python -m pip install -e .
+
+      - name: Verify trusted Codex CLI boundary
+        shell: pwsh
+        run: |
+          codex --version
+          $status = codex login status 2>&1 | Out-String
+          $status
+          if ($status -notmatch "Logged in using ChatGPT") {
+            throw "P8-B5 repair requires Codex CLI authenticated through the existing ChatGPT plan boundary."
+          }
+          if ($status -match "Logged in using an API key") {
+            throw "API-key billed Codex execution is not authorized for this owner gate."
+          }
+
+      - name: Download reviewed retained-authoring source
+        uses: actions/download-artifact@v4
+        with:
+          name: p8-b5-retained-authoring-32022902199
+          path: artifacts/p8-b5-reviewed-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 32022902199
+
+      - name: Re-author only owner-rejected grass-center-b
+        shell: pwsh
+        run: >-
+          python -m evidence.p8_b5.retained_repair
+          --source artifacts/p8-b5-reviewed-source
+          --output artifacts/p8-b5-repair
+
+      - name: Verify localized repair remains an owner gate
+        shell: pwsh
+        run: |
+          $summary = Get-Content artifacts/p8-b5-repair/summary.json -Raw | ConvertFrom-Json
+          if ($summary.review_scope -ne "retained-output") {
+            throw "Expected retained-output review scope."
+          }
+          if ($summary.source_run_id -ne 32022902199) {
+            throw "Repair source run drifted from the owner-reviewed artifact."
+          }
+          if ($summary.member_count -ne 8) {
+            throw "Expected the full eight-member review package after localized repair."
+          }
+          if ($summary.preserved_member_count -ne 7) {
+            throw "Exactly seven owner-accepted siblings must remain preserved."
+          }
+          if ($summary.repair_member_id -ne "grass-center-b") {
+            throw "Only grass-center-b is authorized for repair."
+          }
+          if ($summary.repair_declared_max_concurrency -ne 1) {
+            throw "Localized repair must run with max_concurrency=1."
+          }
+          if (-not $summary.replacement_changed) {
+            throw "Owner-rejected PNG was not replaced."
+          }
+          if (-not $summary.repair_constraint_satisfied) {
+            throw "Owner-repair full-coverage constraint did not pass."
+          }
+          if ($summary.owner_verdict -ne "pending") {
+            throw "Automation must never self-approve the repaired P8-B5 owner verdict."
+          }
+          if (-not (Test-Path artifacts/p8-b5-repair/review-package/index.html)) {
+            throw "English repair review page is missing."
+          }
+          if (-not (Test-Path artifacts/p8-b5-repair/review-package/index.ko.html)) {
+            throw "Korean repair review page is missing."
+          }
+
+      - name: Upload localized repair review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p8-b5-retained-repair-${{ github.run_id }}
+          path: artifacts/p8-b5-repair
+          if-no-files-found: error
+          retention-days: 7

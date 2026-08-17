@@ -1,0 +1,56 @@
+{
+  "schema": "tracepixel.p8-b5-owner-review.v1",
+  "recorded": "2026-08-17",
+  "source_issue": 92,
+  "source_run_id": 32022902199,
+  "source_artifact_name": "p8-b5-retained-authoring-32022902199",
+  "source_artifact_sha256": "ed618162e9bb1fb7a00cf9031dfe6ae13995e9b3e9b2c28503c311a0ff0860b2",
+  "review_scope": "retained-output",
+  "verdict": "partial-accept-repair-required",
+  "accepted_members": [
+    {
+      "member_id": "health-potion-icon",
+      "request_sha256": "202a9882e76955d2fb50d60097eeff484a7b6e28c0df20719a7130067fe172b8",
+      "final_png_sha256": "aa481a1d3820799464c354e4472eebe529f5c7426b251b06ae991ffdbf0f5870"
+    },
+    {
+      "member_id": "iron-key-icon",
+      "request_sha256": "3d3aefdb60f4a015fbd93e1070a74e1ed307b59f85902a05e6f0530133654e54",
+      "final_png_sha256": "512a6efed96e244c1b9070ca586101d033b9634b8453427241880672ee3fb914"
+    },
+    {
+      "member_id": "wooden-crate-prop",
+      "request_sha256": "46e960c682e1e975be974829d282ae2edc294951e27e5fe7d1915589847be2cf",
+      "final_png_sha256": "091157da7006747c08430f22e933a0e5d507954bbd0e504be6a7d50b2aa77d3c"
+    },
+    {
+      "member_id": "lantern-prop",
+      "request_sha256": "5b45bf064d87ce02c1c7069cf8d6d366adc680c5acc3231450e29d17013d3d2e",
+      "final_png_sha256": "d94a9b3078cd150b4db6477df5a5a98bb005dcf56a2ff0d1e312c42846f4e6d2"
+    },
+    {
+      "member_id": "grass-center-a",
+      "request_sha256": "5b79413307cebcbe105b2496df8e134744fde972e260e8d92933a3a91cdfe1ab",
+      "final_png_sha256": "97e11a32c141137e150d3ad027e593e5a10438363ab057191cb26c4e601d19b0"
+    },
+    {
+      "member_id": "grass-dirt-east-edge",
+      "request_sha256": "d3eb40adb1bc38de5d803ed649eba9b2a9179dc6a6ffc76ed404ce10ccf6defd",
+      "final_png_sha256": "7a712c73ff2fb40b30caf86550830ba27fc7be3a41566e99b503fb9d12aaae46"
+    },
+    {
+      "member_id": "grass-dirt-southeast-corner",
+      "request_sha256": "cf9a76800b50d51157a9d98c7ab38c039d07c5ee4e049fbe2028911c7dac7bfb",
+      "final_png_sha256": "eeba9bc0ec364b792f08b62fe48763eca9c4de446f208b7093f672aec2658a47"
+    }
+  ],
+  "rejected_members": [
+    {
+      "member_id": "grass-center-b",
+      "request_sha256": "25103fd473dda1214c34176cb99932f5a7b3520ae58e650756334b56f5b20f2d",
+      "final_png_sha256": "bc1cc73626693668ca801760a28b5bf0a929a20aab578c16d9009130108b9e2d",
+      "feedback": "visible hole / missing-pixel defect",
+      "action": "re-author-member-only"
+    }
+  ]
+}
