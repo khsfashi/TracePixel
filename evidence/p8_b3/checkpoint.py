@@ -226,8 +226,16 @@ def main() -> int:
     lane = _json(CORE_LANE)
     if lane.get("current") != "P8" or lane.get("active_issue") != 92:
         raise SystemExit("P8-B3 checkpoint requires live P8 / issue #92")
-    if lane.get("current_child") != "P8-B4":
-        raise SystemExit("P8-B3 checkpoint expects merge handoff to P8-B4")
+    children = lane.get("child_sequences")
+    if type(children) is not dict:
+        raise SystemExit("core lane child_sequences malformed")
+    p8 = cast(dict[str, object], children).get("P8")
+    child = lane.get("current_child")
+    if type(p8) is not list or child not in cast(list[object], p8):
+        raise SystemExit("active P8 child is not declared")
+    names = cast(list[str], p8)
+    if names.index(cast(str, child)) < names.index("P8-B4"):
+        raise SystemExit("P8-B3 completion must hand off to P8-B4 before this checkpoint is green")
 
     print(
         json.dumps(
