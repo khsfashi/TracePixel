@@ -94,33 +94,31 @@ Before enabling the runner, present:
 
 **Earliest lane:** P8-B4.
 
-P8-B4 may begin when B1 evidence supports wider semantic shapes, but if creature identity introduces materially new perception/consistency requirements, stop and review before broadening further.
+P8-B4 may begin when B1/P8 evidence supports wider semantic shapes, but creature identity introduces materially new morphology, perception and consistency requirements.
+
+**Owner decision recorded 2026-08-17:** simple creatures/animals are an approved long-term product destination. Do not ask again whether creature scope is desired. Before implementation crosses this gate, define and test the morphology/species-profile, pose/constraint and perceptual evidence contracts; the approval does not authorize silently inventing those technical contracts.
+
+Preferred direction is constraint-driven morphology/anatomy rather than full physical simulation, with realistic structure treated as ranges/hints where stylization requires deviation.
 
 ## G8 — Humanoid scope promotion
 
 **Earliest lane:** P8-B5.
 
-Always explicit. Humanoids add anatomy, pose, identity and stronger perceptual constraints. Positive icon/prop benchmark results do not authorize this automatically.
+Humanoids add anatomy, pose, identity and stronger perceptual constraints.
 
-Present:
+**Owner decision recorded 2026-08-17:** humanoid/character authoring is an approved long-term product destination. Do not ask again whether humanoids belong in scope. Before implementation crosses this gate, present/commit the anatomy/proportion, pose, identity, equipment-anchor, QA/perceptual and complexity contracts so the promotion remains evidence-backed rather than roadmap creep.
 
-- B1/P8 evidence,
-- expected new QA/perceptual requirements,
-- baseline changes,
-- whether the project still targets small game assets rather than general illustration.
+The project still targets game-asset/sprite production rather than unconstrained general illustration.
 
 ## G9 — Animation / multi-frame promotion
 
 **Earliest lane:** P8-B6.
 
-Always explicit. Multi-frame consistency introduces temporal identity/motion constraints and may require new IR/QA/benchmark contracts.
+Multi-frame consistency introduces temporal identity/motion constraints and may require new IR/QA/benchmark contracts.
 
-Present:
+**Owner decision recorded 2026-08-17:** animation, multi-frame sprites and sprite-sheet output are approved long-term destinations. Do not ask again whether animation/sprite sheets are wanted. Before implementation crosses this gate, define frame/rig/identity/motion authority, contact/root/pivot stability, deterministic frame ordering/sheet packing, complexity budgets and relevant animation baselines.
 
-- static-asset evidence,
-- required frame/identity/motion authority,
-- complexity-budget implications,
-- relevant animation baselines.
+The preferred path reuses per-frame single-asset authority and adds explicit temporal consistency rather than creating a separate unbounded animation drawing engine.
 
 ## G10 — Trace2D adapter experiment
 
