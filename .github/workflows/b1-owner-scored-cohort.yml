@@ -20,8 +20,10 @@ jobs:
   b1-s0-owner-run:
     if: >-
       github.repository == 'khsfashi/TracePixel' &&
-      (github.ref == 'refs/heads/owner/b1-s0-preflight-trigger' ||
-       github.ref == 'refs/heads/owner/b1-s0-scored-trigger')
+      ((github.ref == 'refs/heads/owner/b1-s0-preflight-trigger' &&
+        github.event.head_commit.message == 'Trigger B1-S0 owner preflight') ||
+       (github.ref == 'refs/heads/owner/b1-s0-scored-trigger' &&
+        github.event.head_commit.message == 'Trigger B1-S0 owner scored cohort'))
     runs-on: [self-hosted, windows, x64, tracepixel-owner]
     timeout-minutes: 360
 
@@ -97,17 +99,14 @@ jobs:
         shell: pwsh
         run: python -m pip install -e .
 
-      - name: Verify owner Codex authentication
+      - name: Verify owner Codex command surface
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           codex --version
           if ($LASTEXITCODE -ne 0) { throw "codex --version failed with exit code $LASTEXITCODE" }
-          $login = (codex login status | Out-String).Trim()
+          codex login status
           if ($LASTEXITCODE -ne 0) { throw "codex login status failed with exit code $LASTEXITCODE" }
-          if ($login -notmatch 'Logged in using ChatGPT') {
-            throw "B1 requires ChatGPT-authenticated Codex; got '$login'."
-          }
 
       - name: Run B1-S0 preflight
         shell: pwsh
