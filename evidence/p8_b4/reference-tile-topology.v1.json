@@ -1,0 +1,36 @@
+{
+  "schema": "tracepixel.p8-b4-tile-topology.v1",
+  "asset_set_id": "p8-b4-tile-set-breadth",
+  "tile_size": {"width": 16, "height": 16},
+  "layout": {"columns": 2, "rows": 2},
+  "members": [
+    {
+      "member_id": "grass-center-a",
+      "x": 0,
+      "y": 0,
+      "role": "center-variant",
+      "edges": {"top": "grass", "right": "grass", "bottom": "grass", "left": "grass"}
+    },
+    {
+      "member_id": "grass-dirt-east-edge",
+      "x": 1,
+      "y": 0,
+      "role": "edge",
+      "edges": {"top": "grass", "right": "dirt", "bottom": "grass", "left": "grass"}
+    },
+    {
+      "member_id": "grass-center-b",
+      "x": 0,
+      "y": 1,
+      "role": "center-variant",
+      "edges": {"top": "grass", "right": "grass", "bottom": "grass", "left": "grass"}
+    },
+    {
+      "member_id": "grass-dirt-southeast-corner",
+      "x": 1,
+      "y": 1,
+      "role": "corner",
+      "edges": {"top": "grass", "right": "dirt", "bottom": "dirt", "left": "grass"}
+    }
+  ]
+}

@@ -92,3 +92,5 @@ jobs:
         run: python -m evidence.p8_b2.checkpoint
       - name: P8-B3 icon/prop set breadth checkpoint
         run: python -m evidence.p8_b3.checkpoint
+      - name: P8-B4 tile-set breadth checkpoint
+        run: python -m evidence.p8_b4.checkpoint

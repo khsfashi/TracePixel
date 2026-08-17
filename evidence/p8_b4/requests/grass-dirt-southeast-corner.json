@@ -1,0 +1,30 @@
+{
+  "schema": "tracepixel.asset-request.v1",
+  "instruction": "Create a seamless top-down grass-to-dirt southeast corner tile with grass entering from the top and left, and dirt reaching the right and bottom edges.",
+  "art_intent": {
+    "schema": "tracepixel.art-intent.v1",
+    "asset_class": "terrain-tile",
+    "canvas": {"width": 16, "height": 16},
+    "composition": {
+      "occupied_bounds": {"x": 0, "y": 0, "width": 16, "height": 16},
+      "facing": null,
+      "symmetry": null,
+      "light_direction": "top_left",
+      "palette_budget": 12
+    }
+  },
+  "profile_refs": [
+    {
+      "kind": "style",
+      "profile_id": "top-down-rpg-tiles",
+      "profile_schema": "tracepixel.style-profile.v1",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "kind": "palette",
+      "profile_id": "meadow-dirt-palette",
+      "profile_schema": "tracepixel.palette-profile.v1",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  ]
+}
