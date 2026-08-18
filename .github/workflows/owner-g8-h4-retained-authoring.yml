@@ -1,0 +1,21 @@
+name: G8-H4 retained authoring historical evidence
+
+# Historical path retained because the frozen G8-H4 checkpoint binds this
+# filename as evidence that real authoring crossed the trusted-owner gate.
+# Live H4 authoring is complete through the retained H5 candidate; this
+# placeholder deliberately has no automatic trigger and performs no provider
+# or raster work.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  historical-evidence-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain inert historical workflow
+        run: |
+          echo "Historical G8-H4 trusted-owner workflow path retained for checkpoint evidence."
+          echo "No provider calls, raster work, H5 approval, G9 advancement, or Trace2D integration occur here."
