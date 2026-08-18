@@ -13,24 +13,25 @@ CORE_LANE = ROOT / "config" / "tracepixel.core-lane.json"
 
 def main() -> int:
     lane = json.loads(CORE_LANE.read_text(encoding="utf-8"))
-    if type(lane) is not dict or lane.get("current") != "P8" or lane.get("active_issue") != 92:
-        raise SystemExit("P8-B5 forward checkpoint requires live P8 / issue #92")
+    if type(lane) is not dict:
+        raise SystemExit("P8-B5 forward checkpoint core lane malformed")
     children = lane.get("child_sequences")
     if type(children) is not dict:
         raise SystemExit("P8-B5 forward checkpoint child sequence malformed")
     p8 = cast(dict[str, object], children).get("P8")
-    child = lane.get("current_child")
-    if type(p8) is not list or child not in cast(list[object], p8):
-        raise SystemExit("P8-B5 forward checkpoint active child is not declared")
+    if type(p8) is not list or "P8-B5" not in cast(list[object], p8):
+        raise SystemExit("P8-B5 forward checkpoint requires declared P8-B5 history")
     names = cast(list[str], p8)
-    if names.index(cast(str, child)) < names.index("P8-B5"):
-        raise SystemExit("P8-B5 forward checkpoint cannot run before P8-B5")
+    if "P8-B6" not in names or names.index("P8-B5") >= names.index("P8-B6"):
+        raise SystemExit("P8-B5/B6 declared ordering drifted")
 
-    # The legacy checkpoint's only forward-incompatible assertion is its exact
-    # live-current-child equality. Preserve every B5 package/authority check by
-    # feeding it an otherwise identical lane snapshot normalized to P8-B5.
+    # Preserve every legacy B5 package/authority check after the live lane has
+    # advanced beyond P8 by feeding it a compatibility snapshot of the exact
+    # historical P8-B5 position. Evidence files themselves are not rewritten.
     normalized = dict(lane)
+    normalized["current"] = "P8"
     normalized["current_child"] = "P8-B5"
+    normalized["active_issue"] = 92
     with TemporaryDirectory() as temporary:
         lane_path = Path(temporary) / "tracepixel.core-lane.json"
         lane_path.write_text(json.dumps(normalized), encoding="utf-8")
