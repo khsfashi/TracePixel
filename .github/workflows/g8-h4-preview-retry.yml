@@ -1,12 +1,17 @@
-name: G8-H4 retained authoring
+name: G8-H4 preview-guided retained authoring
 
 on:
   issue_comment:
     types: [created]
 
 permissions:
+  actions: read
   contents: read
   issues: write
+
+concurrency:
+  group: g8-h4-preview-guided-retained-authoring
+  cancel-in-progress: false
 
 jobs:
   gate:
@@ -20,9 +25,25 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           import json, os, urllib.request
-          body = f"### G8-H4 retained authoring accepted\n\nRun `{os.environ['GITHUB_RUN_ID']}` passed the GitHub-hosted owner gate and is proceeding to the trusted self-hosted runner."
-          headers = {"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json"}
-          req = urllib.request.Request(f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/119/comments", data=json.dumps({"body": body}).encode(), headers=headers, method="POST")
+          run_id = os.environ["GITHUB_RUN_ID"]
+          repo = os.environ["REPOSITORY"]
+          body = (
+              "### G8-H4 preview-guided retry accepted\n\n"
+              f"Run `{run_id}` passed the owner gate and is proceeding to the trusted self-hosted runner. "
+              "This retry preserves the first real failed attempt in cumulative raw usage."
+          )
+          headers = {
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Content-Type": "application/json",
+          }
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/issues/119/comments",
+              data=json.dumps({"body": body}).encode("utf-8"),
+              headers=headers,
+              method="POST",
+          )
           urllib.request.urlopen(req, timeout=30).read()
 
   author:
@@ -82,60 +103,39 @@ jobs:
           if ($status -notmatch "Logged in using ChatGPT") { throw "Codex CLI is not authenticated through ChatGPT." }
           if ($status -match "Logged in using an API key") { throw "API-key billed Codex execution is not authorized for H4." }
 
-      - name: Run retained static humanoid authoring
+      - name: Run preview-guided retained static humanoid authoring
         id: authoring
         continue-on-error: true
         shell: pwsh
         run: |
           $args = @()
           if ($env:TRACEPIXEL_PYTHON_PREFIX) { $args += $env:TRACEPIXEL_PYTHON_PREFIX }
-          & $env:TRACEPIXEL_PYTHON @args -m evidence.g8_h4.retained_authoring --output artifacts/g8-h4-retained --source-sha $env:GITHUB_SHA
-          if ($LASTEXITCODE -ne 0) { throw "Retained H4 authoring returned nonzero after preserving available evidence." }
+          & $env:TRACEPIXEL_PYTHON @args -m evidence.g8_h4.preview_repair_authoring --output artifacts/g8-h4-retained --source-sha $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw "Preview-guided H4 authoring returned nonzero after preserving retained evidence." }
 
-      - name: Preserve per-attempt raw complexity
-        id: preserve
-        if: always()
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          New-Item -ItemType Directory -Force artifacts/g8-h4-retained | Out-Null
-          $attempt = "artifacts/g8-h4-retained/attempt-complexity.json"
-          $legacy = "artifacts/g8-h4-retained/complexity.json"
-          if ((Test-Path $legacy) -and -not (Test-Path $attempt)) { Copy-Item $legacy $attempt }
-          if (-not (Test-Path $attempt)) {
-            @{ measurement_scope = "single-retained-authoring-attempt"; raw_usage_authoritative = $true; evidence_completeness = "incomplete-before-exact-usage" } | ConvertTo-Json | Set-Content $attempt -Encoding utf8
-          }
-
-      - name: Build cumulative complexity for retained attempts
-        id: aggregate
+      - name: Finalize cumulative raw usage through this candidate
+        id: finalize
         if: always() && steps.python.outcome == 'success'
         continue-on-error: true
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
         run: |
           $ErrorActionPreference = "Stop"
-          New-Item -ItemType Directory -Force artifacts/g8-h4-prior-attempts | Out-Null
           $args = @()
           if ($env:TRACEPIXEL_PYTHON_PREFIX) { $args += $env:TRACEPIXEL_PYTHON_PREFIX }
-          & $env:TRACEPIXEL_PYTHON @args -m evidence.g8_h4.cumulative_complexity --current artifacts/g8-h4-retained --prior-root artifacts/g8-h4-prior-attempts --current-run-id $env:GITHUB_RUN_ID --output artifacts/g8-h4-retained/complexity.json
-          if ($LASTEXITCODE -ne 0) { throw "Cumulative complexity aggregation failed." }
+          & $env:TRACEPIXEL_PYTHON @args -m evidence.g8_h4.retry_owner_evidence finalize `
+            --current artifacts/g8-h4-retained `
+            --prior-root artifacts/g8-h4-prior-attempts `
+            --repository $env:REPOSITORY `
+            --owner $env:OWNER `
+            --token $env:GH_TOKEN `
+            --current-run-id $env:GITHUB_RUN_ID
+          if ($LASTEXITCODE -ne 0) { throw "Failed to finalize cumulative G8-H4 retry evidence." }
 
-      - name: Verify candidate when authoring succeeded
-        id: verify
-        if: steps.authoring.outcome == 'success' && steps.aggregate.outcome == 'success'
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          $summary = Get-Content artifacts/g8-h4-retained/summary.json -Raw | ConvertFrom-Json
-          $complexity = Get-Content artifacts/g8-h4-retained/complexity.json -Raw | ConvertFrom-Json
-          if ($summary.status -ne "succeeded") { throw "Retained authoring summary is not succeeded." }
-          if ($summary.owner_verdict -ne "pending") { throw "H4 may not self-approve H5." }
-          if ($complexity.authority.authoritative_evidence -ne "raw-usage-metrics") { throw "Raw usage is not authoritative." }
-          foreach ($path in @("artifacts/g8-h4-retained/final.png", "artifacts/g8-h4-retained/preview-8x.png", "artifacts/g8-h4-retained/review-package/index.ko.html")) {
-            if (-not (Test-Path $path)) { throw "Missing retained review file: $path" }
-          }
-
-      - name: Upload retained evidence
+      - name: Upload retained H4 review artifact
         id: upload
         if: always()
         uses: actions/upload-artifact@v4
@@ -145,6 +145,18 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Verify retained candidate after artifact preservation
+        id: verify
+        if: always() && steps.python.outcome == 'success' && steps.finalize.outcome == 'success'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $args = @()
+          if ($env:TRACEPIXEL_PYTHON_PREFIX) { $args += $env:TRACEPIXEL_PYTHON_PREFIX }
+          & $env:TRACEPIXEL_PYTHON @args -m evidence.g8_h4.retry_owner_evidence verify --current artifacts/g8-h4-retained
+          if ($LASTEXITCODE -ne 0) { throw "G8-H4 retained candidate verification failed." }
+
       - name: Report retained authoring result
         if: always()
         shell: pwsh
@@ -152,14 +164,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
           AUTHORING_OUTCOME: ${{ steps.authoring.outcome }}
-          AGGREGATE_OUTCOME: ${{ steps.aggregate.outcome }}
-          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          FINALIZE_OUTCOME: ${{ steps.finalize.outcome }}
           UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
         run: |
           $ErrorActionPreference = "Continue"
           $summaryStatus = "unavailable"
           $failure = "none retained"
-          $usage = "unknown"
+          $attemptCount = "unknown"
+          $provider = "unknown"
+          $inputTokens = "unknown"
+          $outputTokens = "unknown"
           if (Test-Path artifacts/g8-h4-retained/summary.json) {
             try { $summaryStatus = [string](Get-Content artifacts/g8-h4-retained/summary.json -Raw | ConvertFrom-Json).status } catch {}
           }
@@ -167,14 +182,36 @@ jobs:
             try { $f = Get-Content artifacts/g8-h4-retained/failure.json -Raw | ConvertFrom-Json; $failure = "$($f.failure_type): $($f.message)" } catch {}
           }
           if (Test-Path artifacts/g8-h4-retained/complexity.json) {
-            try { $c = Get-Content artifacts/g8-h4-retained/complexity.json -Raw | ConvertFrom-Json; $usage = "provider=$($c.provider_calls), input=$($c.input_tokens), output=$($c.output_tokens)" } catch {}
+            try {
+              $c = Get-Content artifacts/g8-h4-retained/complexity.json -Raw | ConvertFrom-Json
+              $attemptCount = [string]$c.attempt_count
+              $provider = [string]$c.provider_calls
+              $inputTokens = [string]$c.input_tokens
+              $outputTokens = [string]$c.output_tokens
+            } catch {}
           }
-          $body = "### G8-H4 retained authoring result`n`nRun ``$env:GITHUB_RUN_ID`` finished the trusted authoring path.`n`n- authoring: ``$env:AUTHORING_OUTCOME```n- cumulative complexity: ``$env:AGGREGATE_OUTCOME```n- verification: ``$env:VERIFY_OUTCOME```n- artifact upload: ``$env:UPLOAD_OUTCOME```n- retained summary: ``$summaryStatus```n- failure: ``$failure```n- raw usage: ``$usage```n- artifact: ``g8-h4-retained-authoring-$env:GITHUB_RUN_ID```n`nH5 remains human-only; this result does not advance G9 or Trace2D."
-          $payload = @{ body = $body } | ConvertTo-Json
+          $body = @"
+### G8-H4 preview-guided retained authoring result
+
+Run `$env:GITHUB_RUN_ID` finished the trusted retry path.
+
+- authoring: `$env:AUTHORING_OUTCOME`
+- cumulative finalize: `$env:FINALIZE_OUTCOME`
+- artifact upload: `$env:UPLOAD_OUTCOME`
+- retained verification: `$env:VERIFY_OUTCOME`
+- retained summary: `$summaryStatus`
+- retained failure: `$failure`
+- cumulative retained attempts: `$attemptCount`
+- cumulative provider calls / input / output tokens: `$provider / $inputTokens / $outputTokens`
+- artifact: `g8-h4-retained-authoring-$env:GITHUB_RUN_ID`
+
+The cumulative evidence includes the first real failed H4 attempt. H5 remains human-only; this run does not self-approve visual quality or advance G9/Trace2D.
+"@
+          $payload = @{ body = $body } | ConvertTo-Json -Depth 4
           $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json"; "X-GitHub-Api-Version" = "2022-11-28" }
           Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/issues/119/comments" -Headers $headers -ContentType "application/json" -Body $payload | Out-Null
 
-      - name: Fail if retained authoring was not fully verified
-        if: always() && (steps.authoring.outcome != 'success' || steps.aggregate.outcome != 'success' || steps.verify.outcome != 'success' || steps.upload.outcome != 'success')
+      - name: Fail if retained authoring is not fully verified
+        if: always() && (steps.authoring.outcome != 'success' || steps.finalize.outcome != 'success' || steps.upload.outcome != 'success' || steps.verify.outcome != 'success')
         shell: pwsh
-        run: throw "G8-H4 retained authoring did not complete with fully verified evidence."
+        run: throw "G8-H4 preview-guided retained authoring did not complete with fully verified cumulative evidence."
