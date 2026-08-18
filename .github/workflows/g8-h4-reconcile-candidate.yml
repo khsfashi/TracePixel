@@ -1,0 +1,91 @@
+name: G8-H4 reconcile successful candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/g8-h4-reconcile-candidate.trigger
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install TracePixel
+        run: python -m pip install -e .
+
+      - name: Reconcile retained attempts through successful candidate
+        id: reconcile
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python -m evidence.g8_h4.reconcile_success_candidate \
+            --output artifacts/g8-h4-reconciled \
+            --work-root artifacts/g8-h4-reconcile-work \
+            --repository "$REPOSITORY" \
+            --token "$GH_TOKEN"
+
+      - name: Upload reconciled H5 review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-h4-reconciled-candidate-32111680356
+          path: artifacts/g8-h4-reconciled
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report reconciled cumulative evidence
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          import json, os, urllib.request
+          from pathlib import Path
+
+          complexity = json.loads(Path("artifacts/g8-h4-reconciled/complexity.json").read_text())
+          metrics = complexity["p10_c4_comparison"]["metrics"]
+          body = f"""### G8-H4 successful candidate reconciled
+
+Provider-free reconciliation run `{os.environ['RUN_ID']}` rebuilt the evidence for successful candidate run `32111680356` / artifact `9315292791` while retaining failed real attempt `32111453098` / artifact `9315231038`.
+
+- retained attempts: `{complexity['attempt_count']}`
+- cumulative provider calls: `{complexity['provider_calls']}`
+- cumulative input/output tokens: `{complexity['input_tokens']} / {complexity['output_tokens']}`
+- cumulative iterations/revisions: `{complexity['iterations']} / {complexity['revisions']}`
+- cumulative operation calls: `{complexity['operation_calls']}`
+- cumulative pixel edits/changed pixels: `{complexity['pixel_edits']} / {complexity['changed_pixels']}`
+- cumulative repair/regeneration: `{complexity['repair_vs_regeneration']['repair_provider_calls']} / {complexity['repair_vs_regeneration']['regeneration_provider_calls']}`
+- cumulative wall time ns: `{complexity['wall_time_ns']}`
+- P10-C4 provider/input/output deltas: `{metrics['provider_calls']['percent_change']}% / {metrics['input_tokens']['percent_change']}% / {metrics['output_tokens']['percent_change']}%`
+- reconciliation provider calls added: `0`
+- reconciled artifact: `g8-h4-reconciled-candidate-32111680356`
+
+The candidate remains `owner_verdict: pending`. H5 is still the human perceptual gate; G9/Trace2D remain blocked."""
+          headers = {
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Content-Type": "application/json",
+          }
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/119/comments",
+              data=json.dumps({"body": body}).encode("utf-8"),
+              headers=headers,
+              method="POST",
+          )
+          urllib.request.urlopen(req, timeout=30).read()
