@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
   "current": "G8",
-  "current_child": "G8-H2",
+  "current_child": "G8-H3",
   "active_issue": 119,
   "sequence": [
     "P0",
