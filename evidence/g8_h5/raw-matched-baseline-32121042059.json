@@ -1,0 +1,77 @@
+{
+  "schema": "tracepixel.g8-raw-matched-baseline-freeze.v1",
+  "date": "2026-08-18",
+  "run_id": 32121042059,
+  "artifact_id": 9318584657,
+  "artifact_digest": "sha256:e9b450a2b94046e12ed6c3c3f6d0ea55b7bd11b87e8064e5b633d016dd416808",
+  "source_sha": "ff35ef3f2d4a8d322588d1a6cd7fa1b53859bd49",
+  "matched_tracepixel_run_id": 32118899233,
+  "authoring_status": "success",
+  "deterministic_qa_passed": true,
+  "deterministic_qa_findings": 0,
+  "budget_guard_passed": false,
+  "budget_guard_failure": {
+    "metric": "output_tokens",
+    "ceiling": 3548,
+    "actual": 3590,
+    "excess": 42,
+    "excess_percent": 1.184893"
+  },
+  "provider": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "low",
+    "auth_mode": "chatgpt",
+    "version": "codex-cli 0.144.6",
+    "calls": 1,
+    "input_tokens": 17533,
+    "output_tokens": 3590,
+    "iterations": 1,
+    "revisions": 1,
+    "repair_provider_calls": 0,
+    "provider_wall_time_ns": 99721868300,
+    "total_wall_time_ns": 99965325700
+  },
+  "raster": {
+    "pixel_edits": 277,
+    "changed_pixels": 277,
+    "native_png_sha256": "0462260f8245cbe3048bb6ab46a3d1b5ba90e3c22e46276c4061cbac0c07c020",
+    "preview_8x_sha256": "eb2bcbafc501a77441c8e4ac82c9e4c498b1035cdfbeebaa475f12f5e12cd808",
+    "provider_response_sha256": "5e874b865420f4a77cbe90d73db2f2384c81c99869a590043d30893142078510",
+    "telemetry_sha256": "f6177b595cdc720185087c95db01fb861f4475f62e15897976b91595338441e1",
+    "qa_sha256": "98a738c6317146fdb34c3dd71a50452de7c9911bad43a65d89679498a08394ac",
+    "budget_guard_sha256": "2ff2cd8a285c0f0ed3d02aace12edca8c3078fca5152568cad59f16765c4c815"
+  },
+  "matched_cost_delta_vs_32118899233": {
+    "provider_calls": 0,
+    "input_tokens": -1333,
+    "input_tokens_percent": -7.065621,
+    "output_tokens": 119,
+    "output_tokens_percent": 3.428407,
+    "wall_time_ns": 1864790800,
+    "wall_time_percent": 1.900898,
+    "pixel_edits": 20,
+    "pixel_edits_percent": 7.782101,
+    "repair_provider_calls": 0,
+    "final_deterministic_qa_findings": 0
+  },
+  "reviewer_perceptual_observation": {
+    "anatomy": "RAW clearer",
+    "pose_readability": "mixed: RAW clearer body separation; TracePixel more dynamic",
+    "silhouette": "mixed: TracePixel more dramatic; RAW more legible",
+    "equipment_attachment": "RAW clearer",
+    "material_readability": "RAW clearer",
+    "identity": "mixed: TracePixel more exaggerated; RAW more coherent",
+    "pixel_cluster_quality": "RAW visually cleaner at native intent, but still coarse and not owner-approved"
+  },
+  "architecture_recommendation": "PIVOT",
+  "recommendation_basis": "RAW has no staged controller, humanoid contract, or PixelProgram authoring dependency yet is materially more recognizable in anatomy, equipment and material separation. Cost is mixed rather than cheaper: one call and zero repairs on both sides, RAW input is lower but output/wall/pixel edits are slightly higher and the preregistered output-token ceiling was exceeded by 42. This supports preserving deterministic TracePixel components while stopping humanoid-specific direct generation expansion, not a cost-based RETIRE claim.",
+  "owner_decision_pending": true,
+  "no_retry": true,
+  "blocked_until_owner_decision": [
+    "G9 animation",
+    "128x128 expansion",
+    "additional humanoid schema",
+    "new generation architecture",
+    "Trace2D integration"
+  ]
+}
