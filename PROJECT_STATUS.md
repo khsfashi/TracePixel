@@ -31,45 +31,63 @@ Issue #151 is superseded by #155.
 Current child:
 
 ```text
-P12-R0 responsibility diff + unique-hypothesis freeze
+P12-R1 precision-edit matched benchmark freeze
 ```
 
 Fixed P12 sequence:
 
 ```text
-P12-R0 responsibility diff + unique-hypothesis freeze
- -> P12-R1 precision-edit matched benchmark freeze
+P12-R0 responsibility diff + unique-hypothesis freeze [complete]
+ -> P12-R1 precision-edit matched benchmark freeze [active]
  -> P12-R2 owner-triggered matched run
  -> P12-P0 KEEP-AS-LAB / UPSTREAM / ARCHIVE decision
 ```
 
-P12-R0 is provider-free and adds no raster feature.
+P12-R0 completed provider-free and feature-free. The frozen responsibility analysis is `docs/P12_R0_RESPONSIBILITY_DIFF.md`.
 
-## Research thesis
+R0 found that region-local pixel mutation itself is not unique: Aseprite scripting/raw image APIs and ImageMagick region operations already provide mature primitives for bounded raster operations. The only candidate worth testing is the **Agent-facing bound-edit evidence contract**: exact source identity, explicit allowed/protected pixels, protected-pixel byte-equality proof, collateral-change measurement and deterministic replay/evidence.
 
-TracePixel should only continue when it can answer a narrow falsifiable question that is not already solved well enough elsewhere.
+P12-R1 must remain provider-free and feature-free until that matched experiment is completely preregistered.
 
-The default candidate is:
+## Frozen research thesis
 
-> **Can an Agent perform a requested raster edit while proving protected pixels remain byte-identical and collateral changes are materially lower than RAW/image-edit alternatives?**
+The active hypothesis is:
 
-Representative task:
+> **For a frozen source sprite and a localized owner-requested edit, can an Agent using a TracePixel bounded-edit contract preserve every protected pixel byte-identically and materially reduce collateral pixel changes versus an unguarded RAW Agent raster-edit path (and an external image-edit path when honestly matchable), while still producing an owner-acceptable requested change at practical cost?**
+
+Representative task shape:
 
 ```text
 Shorten only the sword hilt.
 Face, hair, body, palette and all pixels outside the allowed region must remain unchanged.
 ```
 
-Matched evidence should compare RAW/image-edit/TracePixel where honestly possible and keep these dimensions separate:
+Matched evidence must keep these dimensions separate:
 
 - requested visual change quality,
-- protected-pixel violations,
+- exact protected-pixel violations,
 - total/collateral changed pixels,
 - provider calls/tokens/time,
 - revisions,
 - exact replay/evidence.
 
 No composite score should hide a quality or collateral-damage loss.
+
+## P12-R1 acceptance direction
+
+Before any live/provider edit execution, R1 must freeze:
+
+- realistic source sprite(s) and exact content digests,
+- localized natural-language edit request(s),
+- exact allowed region/mask and protected complement,
+- owner-visible requested-change criteria,
+- RAW Agent / honestly matchable external path / TracePixel bounded path,
+- provider/model/tool versions and budgets where applicable,
+- maximum calls/revisions and stop rules,
+- retained artifact locations for success and failure,
+- separate deterministic locality, owner-quality, cost and Agent-complexity metrics.
+
+R1 does **not** execute the benchmark and does not add a new raster operation merely to make the benchmark easier.
 
 ## Preserved infrastructure
 
@@ -137,7 +155,7 @@ The next continuation must:
 1. resolve live issue/PR/check state,
 2. continue an existing P12 PR first,
 3. otherwise begin only `current_child` from `config/tracepixel.core-lane.json`,
-4. keep P12-R0 provider-free and implementation-free,
-5. explicitly compare responsibility overlap with Trace2D SPP/Workspace/WorkResult and relevant external tools,
-6. freeze one unique hypothesis before writing new product code,
+4. keep P12-R1 provider-free and feature-free until the entire matched experiment is frozen,
+5. use `docs/P12_R0_RESPONSIBILITY_DIFF.md` as the scope boundary,
+6. do not treat ordinary region editing/diff tooling as a unique TracePixel product claim,
 7. preserve all prior negative evidence and never reopen G8 merely to chase a prettier result.
