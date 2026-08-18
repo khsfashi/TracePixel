@@ -22,7 +22,18 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           import json, os, urllib.request
-          body = f"### G8-H4 minimal gate accepted\n\nRun `{os.environ['GITHUB_RUN_ID']}` is a valid GitHub-hosted issue-comment workflow."
+          body = f"### G8-H4 minimal gate accepted\n\nRun `{os.environ['GITHUB_RUN_ID']}` passed the GitHub-hosted gate. The self-hosted scheduling probe is next."
           headers = {"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json"}
           req = urllib.request.Request(f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/119/comments", data=json.dumps({"body": body}).encode(), headers=headers, method="POST")
           urllib.request.urlopen(req, timeout=30).read()
+
+  selfhost-probe:
+    needs: gate
+    if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-h4-author'
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 5
+    steps:
+      - name: Confirm trusted runner scheduling
+        shell: pwsh
+        run: |
+          Write-Host "G8-H4 self-hosted scheduling probe running on $env:RUNNER_NAME"
