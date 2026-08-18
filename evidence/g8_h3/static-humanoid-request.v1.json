@@ -1,0 +1,20 @@
+{
+  "schema": "tracepixel.static-humanoid-request.v1",
+  "request_ref": "evidence/g8_h3/asset-request.v1.json",
+  "request_schema": "tracepixel.asset-request.v1",
+  "request_sha256": "b01be604a09a7d4e8e983af20e6fbd85a2897ef7e34159439532397c02eea819",
+  "profile_ref": {
+    "profile_id": "fixture-static-humanoid-v1",
+    "profile_schema": "tracepixel.humanoid-profile.v1",
+    "sha256": "6211afefa340c4c0141aae8a14ac946cbc05acaee4270a60f4862ecf477c15a5"
+  },
+  "pose_ref": {
+    "pose_id": "g8-h2-grounded-guard",
+    "pose_schema": "tracepixel.humanoid-pose.v1",
+    "sha256": "d77b7a6934e9deb6edb6600e60bfc45ff11ead9e0f53d0d6a44ee79de2ccc1f3"
+  },
+  "evidence_policy_ref": {
+    "policy_schema": "tracepixel.static-humanoid-evidence-policy.v1",
+    "sha256": "04afeeca47b1313bc67f7d8f2109eeb7b7368cd8fca6512283912e1ac7634dff"
+  }
+}
