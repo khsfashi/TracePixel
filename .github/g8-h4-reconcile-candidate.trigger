@@ -1,5 +1,6 @@
-triggered_at=2026-08-18T16:53:00+09:00
+triggered_at=2026-08-18T16:58:00+09:00
 candidate_run_id=32111680356
 candidate_artifact_id=9315292791
 prior_failed_run_id=32111453098
 prior_failed_artifact_id=9315231038
+reason=provider-free final cumulative reconciliation after workflow registration
