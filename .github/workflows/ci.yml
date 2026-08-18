@@ -108,3 +108,5 @@ jobs:
         run: python -m evidence.g8_h4.checkpoint
       - name: P11-X0 generator-neutral candidate intake checkpoint
         run: python -m evidence.p11_x0.checkpoint
+      - name: P11-X1 owner-operated review protocol checkpoint
+        run: python -m evidence.p11_x1.checkpoint
