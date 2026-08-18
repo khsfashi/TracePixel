@@ -1,0 +1,109 @@
+{
+  "cache_or_profile_reuse": {
+    "humanoid_profile_reused": true,
+    "pose_profile_reused": true,
+    "pose_sha256": "d77b7a6934e9deb6edb6600e60bfc45ff11ead9e0f53d0d6a44ee79de2ccc1f3",
+    "profile_research_provider_calls": 0,
+    "profile_sha256": "6211afefa340c4c0141aae8a14ac946cbc05acaee4270a60f4862ecf477c15a5"
+  },
+  "changed_pixels": 268,
+  "deterministic_qa": {
+    "all_evaluations_ref": "qa-history.json",
+    "evaluation_count": 2,
+    "final_findings": [],
+    "initial_findings": [
+      {
+        "category": "structural",
+        "rule": "structural.non_empty",
+        "severity": "error"
+      },
+      {
+        "category": "connectivity",
+        "rule": "connectivity.single_component",
+        "severity": "error"
+      }
+    ]
+  },
+  "equipment_specific_raster_authority_added": false,
+  "failure_category": null,
+  "hidden_scheduler_provider_calls": 0,
+  "human_interventions": 0,
+  "input_tokens": 18943,
+  "iterations": 1,
+  "operation_calls": 1,
+  "output_tokens": 3548,
+  "p10_c4_comparison": {
+    "baseline": "P10-C4 retained simple-creature run 32099831527 / artifact 9311214420",
+    "baseline_facts": {
+      "artifact_id": 9311214420,
+      "canvas": {
+        "height": 32,
+        "width": 32
+      },
+      "changed_pixels": 270,
+      "input_tokens": 18854,
+      "operation_calls": 1,
+      "output_tokens": 3762,
+      "pixel_edits": 270,
+      "provider_calls": 1,
+      "regeneration_provider_calls": 0,
+      "run_id": 32099831527
+    },
+    "metrics": {
+      "changed_pixels": {
+        "delta": -2,
+        "g8_h4": 268,
+        "multiplier": 0.9926,
+        "p10_c4": 270
+      },
+      "input_tokens": {
+        "delta": 89,
+        "g8_h4": 18943,
+        "multiplier": 1.0047,
+        "p10_c4": 18854
+      },
+      "operation_calls": {
+        "delta": 0,
+        "g8_h4": 1,
+        "multiplier": 1.0,
+        "p10_c4": 1
+      },
+      "output_tokens": {
+        "delta": -214,
+        "g8_h4": 3548,
+        "multiplier": 0.9431,
+        "p10_c4": 3762
+      },
+      "pixel_edits": {
+        "delta": -2,
+        "g8_h4": 268,
+        "multiplier": 0.9926,
+        "p10_c4": 270
+      },
+      "provider_calls": {
+        "delta": 0,
+        "g8_h4": 1,
+        "multiplier": 1.0,
+        "p10_c4": 1
+      },
+      "wall_time": {
+        "g8_h4_wall_time_ns": 97756393400,
+        "multiplier": null,
+        "p10_c4": "not frozen in the public P10-C5 summary"
+      }
+    }
+  },
+  "pixel_edits": 268,
+  "provider_calls": 1,
+  "repair_vs_regeneration": {
+    "canvas_restarts": 0,
+    "initial_authoring_provider_calls": 1,
+    "regeneration_provider_calls": 0,
+    "repair_mode": "same-canvas-local-pixelprogram",
+    "repair_provider_calls": 0
+  },
+  "revisions": 1,
+  "second_raster_authority": false,
+  "skeletal_or_ik_authority_added": false,
+  "wall_time_ns": 97756393400
+}

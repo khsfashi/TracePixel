@@ -1,0 +1,15 @@
+{
+  "note": "The full proposal remains in GitHub Actions artifact 9315292791; this pinned summary records only facts used by H5 failure analysis.",
+  "operation_count": 1,
+  "operation_kinds": [
+    "set_pixels"
+  ],
+  "pixel_edit_count": 268,
+  "pixel_program_schema": "tracepixel.pixel-program.v1",
+  "proposal_kind": "pixel_program",
+  "provider_call_count": 1,
+  "provider_proposals_sha256": "fa5113c0564ef85e2b0ac3a2395322e05f660a70d683b4348b07c52ed554bc6f",
+  "semantic_plan_present_in_retained_proposal": false,
+  "source_artifact_id": 9315292791,
+  "source_run_id": 32111680356
+}

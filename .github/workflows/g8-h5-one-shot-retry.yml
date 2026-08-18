@@ -1,0 +1,114 @@
+name: G8-H5 one-shot humanoid retry
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  gate:
+    if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-h5-retry'
+    runs-on: ubuntu-latest
+    steps:
+      - shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          import json, os, urllib.request
+          body = f"### G8-H5 one-shot retry accepted\n\nRun `{os.environ['GITHUB_RUN_ID']}` passed the owner gate. One provider call maximum; deterministic QA cannot self-promote H5."
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/119/comments",
+              data=json.dumps({"body": body}).encode(),
+              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json", "Content-Type": "application/json"},
+              method="POST",
+          )
+          urllib.request.urlopen(req, timeout=30).read()
+
+  retry:
+    needs: gate
+    if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-h5-retry'
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact SHA
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
+          git -C $env:GITHUB_WORKSPACE init
+          git -C $env:GITHUB_WORKSPACE remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C $env:GITHUB_WORKSPACE fetch --depth=1 origin $env:GITHUB_SHA
+          git -C $env:GITHUB_WORKSPACE checkout --detach FETCH_HEAD
+          if ((git -C $env:GITHUB_WORKSPACE rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw "checkout drift" }
+
+      - name: Install and verify trusted provider
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          py -3.12 -m pip install -e .
+          codex --version
+          $status = codex login status 2>&1 | Out-String
+          if ($status -notmatch "Logged in using ChatGPT" -or $status -match "Logged in using an API key") { throw "ChatGPT Codex login required" }
+
+      - name: Run one-shot retry
+        id: author
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          py -3.12 -m evidence.g8_h5.retry_authoring --output artifacts/g8-h5-retry --source-sha $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw "retry is not review-eligible; retain evidence" }
+
+      - name: Verify cost and owner gate
+        id: verify
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $s = Get-Content artifacts/g8-h5-retry/summary.json -Raw | ConvertFrom-Json
+          $g = Get-Content artifacts/g8-h5-retry/quality-per-cost-guard.json -Raw | ConvertFrom-Json
+          $c = Get-Content artifacts/g8-h5-retry/complexity.json -Raw | ConvertFrom-Json
+          if ($s.status -ne "awaiting-owner-review" -or $s.owner_verdict -ne "pending") { throw "not owner-review eligible" }
+          if ($s.deterministic_qa_is_visual_quality_success -ne $false) { throw "deterministic self-promotion" }
+          if ($g.passed -ne $true -or $c.provider_calls -gt 1 -or $c.repair_vs_regeneration.repair_provider_calls -ne 0) { throw "quality-per-cost guard failed" }
+          if ($s.h5_required_approvals.Count -ne 7) { throw "owner criteria incomplete" }
+
+      - name: Upload retained retry evidence
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-h5-one-shot-retry-${{ github.run_id }}
+          path: artifacts/g8-h5-retry
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report
+        if: always()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          AUTHOR: ${{ steps.author.outcome }}
+          VERIFY: ${{ steps.verify.outcome }}
+          UPLOAD: ${{ steps.upload.outcome }}
+        run: |
+          $ErrorActionPreference = "Continue"
+          $state = "unavailable"; $usage = "unknown"; $guard = "unknown"
+          if (Test-Path artifacts/g8-h5-retry/summary.json) { $state = [string](Get-Content artifacts/g8-h5-retry/summary.json -Raw | ConvertFrom-Json).status }
+          if (Test-Path artifacts/g8-h5-retry/complexity.json) {
+            $c = Get-Content artifacts/g8-h5-retry/complexity.json -Raw | ConvertFrom-Json
+            $usage = "provider=$($c.provider_calls), input=$($c.input_tokens), output=$($c.output_tokens), repairs=$($c.repair_vs_regeneration.repair_provider_calls)"
+          }
+          if (Test-Path artifacts/g8-h5-retry/quality-per-cost-guard.json) { $guard = [string](Get-Content artifacts/g8-h5-retry/quality-per-cost-guard.json -Raw | ConvertFrom-Json).passed }
+          $body = "### G8-H5 one-shot retry result`n`nRun ``$env:GITHUB_RUN_ID``: author=``$env:AUTHOR``, verify=``$env:VERIFY``, upload=``$env:UPLOAD``; state=``$state``; cost-guard=``$guard``; $usage.`n`nThis is **not** H5 acceptance. Owner must approve anatomy, pose readability, silhouette, equipment attachment, material readability, identity, and pixel-cluster quality. G9/Trace2D remain blocked."
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
+          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/issues/119/comments" -Headers $headers -ContentType "application/json" -Body (@{ body = $body } | ConvertTo-Json) | Out-Null
+
+      - name: Fail unless review-eligible evidence was retained
+        if: always() && (steps.author.outcome != 'success' || steps.verify.outcome != 'success' || steps.upload.outcome != 'success')
+        shell: pwsh
+        run: throw "G8-H5 retry not review-elible"
