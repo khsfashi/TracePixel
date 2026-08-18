@@ -97,4 +97,6 @@ jobs:
       - name: P10-C5 owner review and promotion postmortem checkpoint
         run: python -m evidence.p10_c5.forward_checkpoint
       - name: G8-H0 humanoid promotion authority contract checkpoint
-        run: python -m evidence.g8_h0.checkpoint
+        run: python -m evidence.g8_h0.forward_checkpoint
+      - name: G8-H1 humanoid anatomy/proportion/identity profile checkpoint
+        run: python -m evidence.g8_h1.checkpoint
