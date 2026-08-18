@@ -103,4 +103,6 @@ jobs:
       - name: G8-H2 humanoid pose and equipment constraint checkpoint
         run: python -m evidence.g8_h2.forward_checkpoint
       - name: G8-H3 static humanoid request binding checkpoint
-        run: python -m evidence.g8_h3.checkpoint
+        run: python -m evidence.g8_h3.forward_checkpoint
+      - name: G8-H4 retained static humanoid authoring checkpoint
+        run: python -m evidence.g8_h4.checkpoint
