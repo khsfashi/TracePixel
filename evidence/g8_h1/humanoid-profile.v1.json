@@ -1,0 +1,105 @@
+{
+  "schema": "tracepixel.humanoid-profile.v1",
+  "profile_id": "fixture-static-humanoid-v1",
+  "subject_label": "Synthetic static humanoid contract fixture",
+  "identity": {
+    "family_id": "fixture-humanoid-family",
+    "archetype_id": "fixture-adventurer",
+    "form_id": "fixture-form-a"
+  },
+  "source_evidence": [
+    {
+      "source_id": "g8-h1-contract",
+      "kind": "contract-fixture",
+      "locator": "fixture://g8-h1/profile-contract",
+      "title": "G8-H1 synthetic humanoid profile fixture",
+      "retrieved_at_utc": "2026-08-18T05:20:00Z"
+    }
+  ],
+  "observed_facts": [
+    {
+      "fact_id": "biped-structure",
+      "text": "The synthetic fixture declares a pelvis-rooted biped with a head, paired hands, and paired foot support landmarks.",
+      "source_ids": ["g8-h1-contract"]
+    },
+    {
+      "fact_id": "identity-readability",
+      "text": "The synthetic fixture requires a distinct head treatment and a coarse silhouette identity before surface detail.",
+      "source_ids": ["g8-h1-contract"]
+    },
+    {
+      "fact_id": "equipment-anchors",
+      "text": "Paired hand landmarks are declared as identity-stable equipment attachment anchors without pixel authority.",
+      "source_ids": ["g8-h1-contract"]
+    },
+    {
+      "fact_id": "low-resolution-tolerance",
+      "text": "Low-resolution authoring may exaggerate identity-critical features by a bounded number of pixels.",
+      "source_ids": ["g8-h1-contract"]
+    }
+  ],
+  "unknowns": [],
+  "landmarks": [
+    {"landmark_id": "pelvis", "label": "Pelvis center", "parent_landmark_id": null, "mirror_landmark_id": null, "side": "center"},
+    {"landmark_id": "spine", "label": "Torso center", "parent_landmark_id": "pelvis", "mirror_landmark_id": null, "side": "center"},
+    {"landmark_id": "head", "label": "Head center", "parent_landmark_id": "spine", "mirror_landmark_id": null, "side": "center"},
+    {"landmark_id": "hand-left", "label": "Left hand", "parent_landmark_id": "spine", "mirror_landmark_id": "hand-right", "side": "left"},
+    {"landmark_id": "hand-right", "label": "Right hand", "parent_landmark_id": "spine", "mirror_landmark_id": "hand-left", "side": "right"},
+    {"landmark_id": "foot-left", "label": "Left foot support", "parent_landmark_id": "pelvis", "mirror_landmark_id": "foot-right", "side": "left"},
+    {"landmark_id": "foot-right", "label": "Right foot support", "parent_landmark_id": "pelvis", "mirror_landmark_id": "foot-left", "side": "right"}
+  ],
+  "category_declarations": [
+    {"category": "character-family-or-archetype-identity", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "canonical-body-landmarks", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "bounded-relative-proportion-ranges", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "symmetry-and-declared-asymmetry", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "limb-and-joint-relationships", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "head-face-hair-identity-features", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "silhouette-critical-identity-features", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "support-contact-expectations", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "resolution-and-stylization-tolerances", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "equipment-anchor-definitions", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "provenance-evidence-references", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null},
+    {"category": "confidence-and-unknowns", "status": "constrained", "rationale": "Required by the frozen G8-H0 static-humanoid profile contract.", "unknown_id": null}
+  ],
+  "proportion_constraints": [
+    {
+      "constraint_id": "head-body-ratio",
+      "mode": "required-range",
+      "landmark_ids": ["head", "pelvis"],
+      "ratio_range": {"minimum": 0.15, "maximum": 0.35},
+      "text": "Retain a bounded head-to-body coarse proportion suitable for the fixture identity.",
+      "basis_fact_ids": ["biped-structure"],
+      "confidence": "high"
+    }
+  ],
+  "identity_features": [
+    {
+      "feature_id": "head-treatment",
+      "kind": "head-face-hair",
+      "landmark_ids": ["head"],
+      "text": "Keep the head treatment distinct enough to carry character identity at low resolution.",
+      "basis_fact_ids": ["identity-readability"],
+      "confidence": "high"
+    },
+    {
+      "feature_id": "biped-silhouette",
+      "kind": "silhouette-critical",
+      "landmark_ids": ["head", "hand-left", "hand-right", "foot-left", "foot-right"],
+      "text": "Keep head, paired hands, and paired supports readable as the coarse static humanoid silhouette.",
+      "basis_fact_ids": ["identity-readability", "biped-structure"],
+      "confidence": "high"
+    }
+  ],
+  "support_landmark_ids": ["foot-left", "foot-right"],
+  "equipment_anchors": [
+    {"anchor_id": "hand-left-grip", "landmark_id": "hand-left", "side": "left", "attachment_class": "handheld", "basis_fact_ids": ["equipment-anchors"], "confidence": "high"},
+    {"anchor_id": "hand-right-grip", "landmark_id": "hand-right", "side": "right", "attachment_class": "handheld", "basis_fact_ids": ["equipment-anchors"], "confidence": "high"}
+  ],
+  "stylization_tolerance": {
+    "minimum_feature_pixels": 1,
+    "maximum_exaggeration_pixels": 2,
+    "basis_fact_ids": ["low-resolution-tolerance"],
+    "confidence": "medium"
+  }
+}
