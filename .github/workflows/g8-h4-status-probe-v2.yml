@@ -43,6 +43,9 @@ jobs:
                   return json.load(response)
 
           targets = [
+              "g8-h4-status-probe.yml",
+              "g8-h4-status-probe-v2.yml",
+              "g8-h4-minimal-gate.yml",
               "owner-g8-h4-retained-authoring.yml",
               "owner-g8-h4-push-executor.yml",
               "owner-g8-h4-command-executor.yml",
