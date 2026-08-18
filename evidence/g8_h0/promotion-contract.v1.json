@@ -1,0 +1,147 @@
+{
+  "schema": "tracepixel.g8-h0-promotion-contract.v1",
+  "source_issue": 119,
+  "owner_gate": "G8",
+  "owner_decision_date": "2026-08-17",
+  "status": "contract-frozen",
+  "prerequisites": {
+    "p10_c5_postmortem": "frozen-complete",
+    "p10_c5_postmortem_path": "evidence/p10_c5/postmortem.v1.json",
+    "g8_humanoid_direction": "owner-approved"
+  },
+  "lane": {
+    "phase": "G8",
+    "current_child": "G8-H0",
+    "children": [
+      "G8-H0",
+      "G8-H1",
+      "G8-H2",
+      "G8-H3",
+      "G8-H4",
+      "G8-H5"
+    ],
+    "next_child": "G8-H1",
+    "humanoid_provider_or_raster_earliest_child": "G8-H4"
+  },
+  "scope": {
+    "asset_class": "static-humanoid-character",
+    "humanoid_raster_generation_allowed": false,
+    "humanoid_provider_execution_allowed": false,
+    "animation_implementation_allowed": false,
+    "trace2d_adapter_allowed": false,
+    "new_raster_authority_allowed": false,
+    "skeletal_simulation_required": false,
+    "inverse_kinematics_required": false,
+    "equipment_second_raster_authority_allowed": false
+  },
+  "anatomy_identity_profile": {
+    "planned_schema": "tracepixel.humanoid-profile.v1",
+    "versioned": true,
+    "digest_pinned": true,
+    "reuse_existing_profile_provenance_seams": true,
+    "authority": "research-evidence-and-authoring-context-only",
+    "constraint_modes": [
+      "required-range",
+      "hint",
+      "stylization-tolerance"
+    ],
+    "required_categories": [
+      "character-family-or-archetype-identity",
+      "canonical-body-landmarks",
+      "bounded-relative-proportion-ranges",
+      "symmetry-and-declared-asymmetry",
+      "limb-and-joint-relationships",
+      "head-face-hair-identity-features",
+      "silhouette-critical-identity-features",
+      "support-contact-expectations",
+      "resolution-and-stylization-tolerances",
+      "equipment-anchor-definitions",
+      "provenance-evidence-references",
+      "confidence-and-unknowns"
+    ],
+    "is_raster_authority": false
+  },
+  "pose_equipment_constraint": {
+    "planned_schema": "tracepixel.humanoid-pose.v1",
+    "binds_profile_digest": true,
+    "constraint_modes": [
+      "required-range",
+      "hint",
+      "stylization-tolerance"
+    ],
+    "required_capabilities": [
+      "named-static-pose-and-orientation-intent",
+      "body-landmark-or-joint-relations",
+      "bounded-articulation-ranges",
+      "support-and-contact-landmarks",
+      "coarse-balance-and-contact-intent",
+      "silhouette-facing-expectations",
+      "equipment-anchor-identity-and-reference-integrity",
+      "equipment-anchor-occupancy-and-side-intent",
+      "attachment-overlap-or-occlusion-intent"
+    ],
+    "equipment_anchor_is_pixel_authority": false,
+    "is_physics_engine": false,
+    "is_inverse_kinematics_solver": false,
+    "is_skeletal_raster_authority": false
+  },
+  "evidence_authority": {
+    "deterministic_facts": [
+      "schema-and-version-identity",
+      "digest-binding",
+      "finite-range-validity",
+      "body-landmark-reference-integrity",
+      "equipment-anchor-reference-integrity",
+      "declared-required-relation-satisfaction-when-structured",
+      "support-contact-declarations",
+      "declared-orientation-and-attachment-side-intent",
+      "existing-raster-and-qa-facts",
+      "provider-cost-and-provenance-accounting"
+    ],
+    "perceptual_facts": [
+      "humanoid-recognizability",
+      "anatomy-believability-for-stylization",
+      "pose-intent-readability",
+      "identity-coherence",
+      "silhouette-readability",
+      "equipment-readability",
+      "visual-style-coherence"
+    ],
+    "vlm_is_deterministic_correctness": false,
+    "final_aesthetic_acceptance": "human"
+  },
+  "complexity": {
+    "reuse_existing_single_asset_accounting": true,
+    "required_metrics": [
+      "provider-calls",
+      "input-tokens",
+      "output-tokens",
+      "iterations",
+      "revisions",
+      "operation-calls",
+      "pixel-edits",
+      "changed-pixels",
+      "deterministic-qa-findings",
+      "repair-versus-regeneration",
+      "wall-time",
+      "cache-or-profile-reuse",
+      "failure-category"
+    ],
+    "profile_or_reference_preparation_cost_separately_attributable": true,
+    "equipment_or_attachment_context_cost_separately_attributable": true,
+    "synthetic_quality_cost_winner_allowed": false,
+    "b1_single_member_staged_cost_warning_resolved": false
+  },
+  "authority": {
+    "single_asset_pixelprogram_canvas_reused": true,
+    "profile_pose_or_equipment_anchor_becomes_pixel_authority": false,
+    "second_humanoid_drawing_engine_allowed": false,
+    "equipment_specific_second_drawing_engine_allowed": false,
+    "skeletal_or_physics_authority_allowed": false,
+    "hidden_humanoid_scheduler_provider_work_allowed": false
+  },
+  "sequencing": {
+    "g9_animation": "blocked-until-g8-static-humanoid-evidence-frozen",
+    "p9_trace2d": "requires-explicit-g10-owner-approval"
+  }
+}
