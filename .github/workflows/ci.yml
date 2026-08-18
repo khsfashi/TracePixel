@@ -77,7 +77,7 @@ jobs:
       - name: B1-S0 frozen held-out schedule checkpoint
         run: python -m evidence.b1_s0.checkpoint
       - name: B1-P0 immutable generalization postmortem checkpoint
-        run: python -m evidence.b1_p0.checkpoint
+        run: python -m evidence.b1_p0.forward_checkpoint
       - name: Frozen P8 history checkpoints
         run: python -m evidence.p8_history.checkpoint
       - name: P10-C0 simple-creature promotion contract checkpoint
