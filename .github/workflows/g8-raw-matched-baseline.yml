@@ -1,0 +1,115 @@
+name: G8 RAW matched humanoid baseline
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  gate:
+    if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-raw-baseline'
+    runs-on: ubuntu-latest
+    steps:
+      - shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          import json, os, urllib.request
+          body = f"### G8 RAW matched baseline accepted\n\nRun `{os.environ['GITHUB_RUN_ID']}` is the single preregistered RAW call matched against retained TracePixel run `32118899233`. No result-chasing retry is authorized."
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/119/comments",
+              data=json.dumps({"body": body}).encode(),
+              headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json", "Content-Type": "application/json"},
+              method="POST",
+          )
+          urllib.request.urlopen(req, timeout=30).read()
+
+  raw:
+    needs: gate
+    if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-raw-baseline'
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact SHA
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
+          git -C $env:GITHUB_WORKSPACE init
+          git -C $env:GITHUB_WORKSPACE remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C $env:GITHUB_WORKSPACE fetch --depth=1 origin $env:GITHUB_SHA
+          git -C $env:GITHUB_WORKSPACE checkout --detach FETCH_HEAD
+          if ((git -C $env:GITHUB_WORKSPACE rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw "checkout drift" }
+
+      - name: Install and verify trusted provider
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          py -3.12 -m pip install -e .
+          codex --version
+          $status = codex login status 2>&1 | Out-String
+          if ($status -notmatch "Logged in using ChatGPT" -or $status -match "Logged in using an API key") { throw "ChatGPT Codex login required" }
+
+      - name: Run exactly one RAW authoring call
+        id: author
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          py -3.12 -m evidence.g8_h5.raw_matched_baseline --output artifacts/g8-raw-baseline --source-sha $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw "RAW baseline failed; retain evidence and do not retry" }
+
+      - name: Verify matched-budget evidence
+        id: verify
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          if (-not (Test-Path artifacts/g8-raw-baseline/summary.json)) { throw "RAW summary missing" }
+          $s = Get-Content artifacts/g8-raw-baseline/summary.json -Raw | ConvertFrom-Json
+          $t = Get-Content artifacts/g8-raw-baseline/telemetry.json -Raw | ConvertFrom-Json
+          $g = Get-Content artifacts/g8-raw-baseline/budget-guard.json -Raw | ConvertFrom-Json
+          if ($s.matched_tracepixel_run_id -ne 32118899233) { throw "matched run drift" }
+          if ($s.no_tracepixel_staged_controller -ne $true -or $s.no_humanoid_specific_contract -ne $true -or $s.no_pixelprogram_authoring -ne $true) { throw "RAW boundary drift" }
+          if ($t.provider_calls -ne 1 -or $t.iterations -ne 1 -or $t.repair_provider_calls -ne 0) { throw "provider-call budget drift" }
+          if ($g.passed -ne $true) { throw "token/call ceiling exceeded; retain but do not rerun" }
+
+      - name: Upload immutable RAW evidence
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-raw-matched-baseline-${{ github.run_id }}
+          path: artifacts/g8-raw-baseline
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report
+        if: always()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          AUTHOR: ${{ steps.author.outcome }}
+          VERIFY: ${{ steps.verify.outcome }}
+          UPLOAD: ${{ steps.upload.outcome }}
+        run: |
+          $ErrorActionPreference = "Continue"
+          $usage = "unavailable"; $qa = "unavailable"; $guard = "unavailable"
+          if (Test-Path artifacts/g8-raw-baseline/telemetry.json) {
+            $t = Get-Content artifacts/g8-raw-baseline/telemetry.json -Raw | ConvertFrom-Json
+            $usage = "provider=$($t.provider_calls), input=$($t.input_tokens), output=$($t.output_tokens), pixels=$($t.pixel_edits), wall_ns=$($t.total_wall_time_ns), repairs=$($t.repair_provider_calls)"
+            $qa = "findings=$($t.deterministic_qa_final_findings.Count)"
+          }
+          if (Test-Path artifacts/g8-raw-baseline/budget-guard.json) { $guard = [string](Get-Content artifacts/g8-raw-baseline/budget-guard.json -Raw | ConvertFrom-Json).passed }
+          $body = "### G8 RAW matched baseline result`n`nRun ``$env:GITHUB_RUN_ID``: author=``$env:AUTHOR``, verify=``$env:VERIFY``, upload=``$env:UPLOAD``; budget-guard=``$guard``; $usage; $qa.`n`nThis result is retained whether good or bad. Do **not** retry it. H5 remains owner-REJECT and G9/128x128/extra humanoid schema/new generation architecture/Trace2D integration remain blocked until the owner records KEEP / PIVOT / RETIRE."
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
+          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/issues/119/comments" -Headers $headers -ContentType "application/json" -Body (@{ body = $body } | ConvertTo-Json) | Out-Null
+
+      - name: Fail if evidence was not matched and retained
+        if: always() && (steps.author.outcome != 'success' || steps.verify.outcome != 'success' || steps.upload.outcome != 'success')
+        shell: pwsh
+        run: throw "RAW matched baseline was not fully valid; evidence retained and retry remains forbidden"

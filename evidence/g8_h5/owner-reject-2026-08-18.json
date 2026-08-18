@@ -1,0 +1,35 @@
+{
+  "schema": "tracepixel.g8-h5-owner-verdict.v1",
+  "date": "2026-08-18",
+  "owner_verdict": "reject",
+  "h5_passed": false,
+  "g9_animation_blocked": true,
+  "trace2d_integration_blocked": true,
+  "direct_authoring_provider_retry_blocked": true,
+  "additional_humanoid_schema_blocked": true,
+  "new_pixelprogram_operations_blocked": true,
+  "skeleton_ik_physics_blocked": true,
+  "rejected_runs": [
+    {
+      "run_id": 32111680356,
+      "artifact_id": 9315292791,
+      "artifact_digest": "sha256:4afeab835c2567a4a5f5669d2a512f5260610acb7dce5802eec47d39d2ba3721",
+      "final_png_sha256": "35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82",
+      "preview_png_sha256": "73a6b8298c5e2282648875a4837cbadf1d2d42c5d2aca9c98549ced039ddef45",
+      "technical_status": "succeeded",
+      "product_quality_status": "rejected"
+    },
+    {
+      "run_id": 32118899233,
+      "artifact_id": 9317806659,
+      "artifact_digest": "sha256:1db25691496bf70196fa920ebdff544c5ef88eb3d90f2728ec9d44be9670ca2f",
+      "final_png_sha256": "0ba697dd345272761428a98c4a26398ff9db760fa2ee6305a0a5b94b045bf247",
+      "preview_png_sha256": "dc23a3486ac3f007419c97ece5d0fc7e7da7c11818166c4f1d43174ee76ce6ea",
+      "technical_status": "succeeded",
+      "product_quality_status": "rejected"
+    }
+  ],
+  "next_experiment": "matched RAW direct-raster baseline against run 32118899233",
+  "decision_pending": "direct-authoring KEEP / PIVOT / RETIRE",
+  "owner_decision_point": "review RAW baseline and TracePixel run 32118899233 side-by-side on perceptual quality, then compare raw cost metrics separately"
+}
