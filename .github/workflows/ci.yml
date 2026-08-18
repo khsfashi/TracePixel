@@ -97,4 +97,6 @@ jobs:
       - name: P8-B5 batch mobile-review surface checkpoint
         run: python -m evidence.p8_b5.forward_checkpoint
       - name: P8-B6 production-breadth postmortem checkpoint
-        run: python -m evidence.p8_b6.checkpoint
+        run: python -m evidence.p8_b6.forward_checkpoint
+      - name: P10-C0 simple-creature promotion contract checkpoint
+        run: python -m evidence.p10_c0.checkpoint
