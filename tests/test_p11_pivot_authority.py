@@ -7,15 +7,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class P11PivotAuthorityTests(unittest.TestCase):
-    def test_core_lane_points_to_p11_x0(self) -> None:
+    def test_core_lane_preserves_p11_sequence_and_live_child(self) -> None:
         lane = json.loads((ROOT / "config" / "tracepixel.core-lane.json").read_text(encoding="utf-8"))
         self.assertEqual(lane["current"], "P11")
-        self.assertEqual(lane["current_child"], "P11-X0")
         self.assertEqual(lane["active_issue"], 151)
+        p11_children = lane["child_sequences"]["P11"]
         self.assertEqual(
-            lane["child_sequences"]["P11"],
+            p11_children,
             ["P11-X0", "P11-X1", "P11-X2", "P11-X3", "P11-B0", "P11-B1", "P11-P0"],
         )
+        self.assertIn(lane["current_child"], p11_children)
 
     def test_owner_review_loop_requires_explicit_human_aesthetic_authority(self) -> None:
         policy = json.loads(
