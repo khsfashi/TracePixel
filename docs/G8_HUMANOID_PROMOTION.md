@@ -114,6 +114,10 @@ G8 reuses existing single-asset complexity accounting. Retained humanoid attempt
 - cache/profile reuse,
 - failure category.
 
+**G8-H4 complexity is cumulative through the retained output that the owner actually accepts, not merely the first generated or first deterministic-QA-passing image.** Every retained H4 attempt before that accepted candidate remains part of the cost evidence. Each run keeps its own single-attempt raw record, while the candidate review artifact aggregates all prior retained H4 attempts plus the current attempt. When H5 accepts a candidate, H5 must freeze that exact cumulative record rather than recomputing only the final run.
+
+The authoritative cost evidence is the raw usage itself: provider calls, input/output tokens, iterations/revisions, operation calls, pixel edits/changed pixels, repair/regeneration counts, profile/pose reuse and profile-research calls, and wall time. Currency/price conversion is derived and non-authoritative; it must not replace or outrank the raw usage metrics. H4 must compute absolute deltas, multipliers, and percentage changes against the owner-accepted P10-C4 simple-creature retained authoring baseline wherever the P10 baseline is non-zero. For zero baselines such as repair/regeneration, percentage change is mathematically undefined and the evidence must report the absolute delta instead of inventing a percentage.
+
 Profile/reference preparation and equipment/attachment context preparation, if dynamic provider work is later introduced, must remain separately attributable. Humanoid structure must not hide work inside a second scheduler/planner or equipment renderer.
 
 The B1 staged single-member cost warning remains unresolved and must continue to be reported rather than erased by humanoid promotion.
