@@ -12,6 +12,13 @@ from tracepixel.model import PIXEL_PROGRAM_SCHEMA_V1
 
 ROOT = Path(__file__).resolve().parents[1]
 NEGATIVE = ROOT / "evidence" / "g8_h5" / "negative-evidence" / "32111680356"
+SOURCE_EVIDENCE_SHA256 = {
+    "final.png": "35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82",
+    "complexity.json": "dd837bff88101dc155960761fd9f5f6c44bb3032ae70bdb082daf6689417e5bb",
+    "attempt-complexity.json": "05b467a6909a472bbbc2b861042abeb9435cead68f29b3c55bd73e1fa171b865",
+    "qa-history.json": "b3a45f0d5b6b4153bc585753a4da76146f5f8166712f296648052b290c3b678a",
+    "telemetry.json": "11779d46cb1277bc7f6429613a08b75ab2949ec09c4ebdb9f859046e1b1d7d4c",
+}
 
 
 class _Provider:
@@ -40,12 +47,10 @@ class _Provider:
 
 
 class G8H5Tests(unittest.TestCase):
-    def test_owner_reject_is_retained(self) -> None:
-        final = NEGATIVE / "final.png"
-        self.assertEqual(
-            sha256(final.read_bytes()).hexdigest(),
-            "35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82",
-        )
+    def test_owner_reject_is_retained_byte_exact(self) -> None:
+        for name, expected in SOURCE_EVIDENCE_SHA256.items():
+            self.assertEqual(sha256((NEGATIVE / name).read_bytes()).hexdigest(), expected, name)
+
         verdict = json.loads((NEGATIVE / "verdict.json").read_text(encoding="utf-8"))
         self.assertEqual(verdict["owner_verdict"], "reject")
         self.assertEqual(verdict["technical_execution"], "valid")
