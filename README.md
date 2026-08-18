@@ -1,131 +1,124 @@
 # TracePixel
 
-Generator-neutral deterministic pixel-asset quality, repair and benchmarking toolkit.
+Deterministic raster R&D for AI-operated game-asset workflows.
 
-TracePixel explores a production question:
+TracePixel started by asking whether staged/direct LLM pixel authoring could beat simpler RAW approaches. B0/B1/G8 evidence did not support that as a production product thesis. A later generator-neutral quality-controller pivot produced useful owner-review machinery, but broad QA/normalization also overlaps heavily with Trace2D's completed Sprite processing stack and existing public tools.
 
-> **Can heterogeneous AI/RAW/external raster generators be turned into game-ready pixel assets through deterministic inspection, normalization, bounded repair, exact replay/evidence and explicit human review?**
+The current question is narrower:
 
-The project originally centered staged/direct PixelProgram generation. B0/B1/G8 evidence did not prove that complex direct authoring was perceptually superior to simpler RAW generation, and G8 humanoid evidence selected an owner-confirmed **PIVOT** on 2026-08-18. The direct generator is retained as an optional backend/control and precision-repair path, not the privileged production path.
+> **Can deterministic raster operations give an Agent a measurable advantage on precision editing, protected-region preservation, collateral-damage control, exact replay or similarly specific problems that are not already solved well enough elsewhere?**
 
-See [`docs/G8_DIRECT_AUTHORING_POSTMORTEM.md`](docs/G8_DIRECT_AUTHORING_POSTMORTEM.md) and [`docs/P11_GENERATOR_NEUTRAL_PIVOT.md`](docs/P11_GENERATOR_NEUTRAL_PIVOT.md).
+TracePixel is therefore a **research lab**, not the product owner for an Asset Studio, sprite showroom or general game-asset manager.
 
-## Product contract
+The human-facing production product belongs to **Trace2D Asset Studio** (`khsfashi/Trace2D#318`).
 
-> Humans define intent and judge the result. AI owns bounded iteration in between.
+## Current role
 
-> Deterministic where possible. Multimodal where necessary. Human judgment at the end.
+TracePixel preserves and experiments with:
 
-TracePixel is not trying to beat every image generator at raw illustration quality. It targets the parts that remain valuable regardless of which generator is best today:
+- exact RGBA8 Canvas authority,
+- PixelProgram validation/execution and canonical replay,
+- transactional raster mutation,
+- exact PNG/digest/diff evidence,
+- deterministic QA primitives,
+- bounded local repair,
+- owner feedback bound to exact artifacts,
+- provider/token/iteration/wall-time evidence,
+- matched benchmark harnesses and immutable failures.
 
-- exact RGBA8 raster authority,
-- deterministic QA for objective constraints,
-- generator-neutral candidate intake,
-- palette/alpha/grid/bounds and other exact normalization where justified,
-- bounded local pixel repair,
-- exact before/after replay and changed-pixel evidence,
-- provider/token/iteration/wall-time telemetry,
-- retained negative evidence rather than retry-until-pretty behavior,
-- explicit owner perceptual review.
+These are research capabilities, not a claim that TracePixel should own the full production pipeline.
 
-## Intended post-pivot pipeline
+## Explicitly not owned here
+
+TracePixel does **not** own:
+
+- an end-user Asset Studio/showroom,
+- the project asset library,
+- broad sprite generation orchestration,
+- the best image/sprite generator,
+- generic alpha/palette/grid/frame processing already owned by Trace2D SPP0-SPP5,
+- animation/runtime Sprite authority,
+- autonomous aesthetic approval.
+
+Trace2D already owns canonical SpriteAsset/animation/runtime state, deterministic Sprite processing/import/generation orchestration, WorkResult and Workspace review. TracePixel should not duplicate that architecture.
+
+## Active P12 research lane
+
+Issue #155 owns the current lane:
 
 ```text
-intent / frozen experiment
- -> replaceable generator, RAW path, or retained external candidate
- -> TracePixel candidate import / Canvas
- -> deterministic QA + normalization
- -> bounded local repair when useful
- -> owner perceptual review
- -> exact replay / evidence / telemetry
- -> game-ready output or explicit retained rejection
+P12-R0 responsibility diff + unique-hypothesis freeze
+ -> P12-R1 precision-edit matched benchmark freeze
+ -> P12-R2 owner-triggered matched run
+ -> P12-P0 KEEP-AS-LAB / UPSTREAM / ARCHIVE decision
 ```
 
-A generator may be nondeterministic. Once one concrete candidate enters TracePixel, deterministic code owns exact facts and any exact repair mutations.
+The default candidate hypothesis is **precision raster editing with protected-region preservation**.
 
-The following must not be collapsed into one score:
+Example:
 
 ```text
-objective structural correctness -> deterministic code
-ambiguous perceptual quality      -> optional bounded multimodal evidence
-final aesthetic/product approval  -> human owner
+Shorten only the sword hilt.
+Everything outside the allowed region must remain byte-identical.
 ```
 
-## Direct authoring remains, but changes role
+A matched experiment should compare RAW/image-edit/TracePixel where honest and report separately:
 
-The existing staged/PixelProgram direct path is not deleted. It may still be useful for:
+- human-visible requested-change quality,
+- exact protected-pixel violations,
+- total/collateral changed pixels,
+- provider calls/tokens/time,
+- revisions,
+- exact replay/evidence.
 
-- small/simple assets where benchmark evidence supports it,
-- a matched control against RAW/external generators,
-- precision local repair where preserving unaffected pixels matters.
+TracePixel only earns further implementation when such evidence shows a practical advantage.
 
-It must not gain new humanoid schemas, solvers or operations merely to force a benchmark win. New direct-generation breadth requires evidence that it beats or complements simpler alternatives on quality, cost, repairability, reproducibility or another explicit production dimension.
+## Historical results kept intact
 
-## Owner-operated loop
+The repository preserves B0/B1/G8 evidence, including owner-rejected humanoid results. Do not rerun or rewrite historical evidence merely to improve the narrative.
 
-Repository state is designed so a fresh agent can continue without hidden chat history.
+P11-X0/X1 are also retained as useful research: generator-neutral candidate identity plus the owner-run / `awaiting-owner-review` protocol. P11-X2 and later broad quality-controller work are superseded by P12.
 
-Normal owner command:
+## Owner workflow
+
+Normal continuation remains:
 
 ```text
 @GitHub TracePixel 다음 작업 진행해줘
 ```
 
-The agent resolves live issue/PR state and `config/tracepixel.core-lane.json`.
+A fresh Agent resolves live GitHub state and `config/tracepixel.core-lane.json`.
 
-For provider-backed experiments the required loop is:
+P12-R0 is provider-free and feature-free. Before any new implementation, it must establish that the proposed problem is not already adequately owned by Trace2D or existing tools.
+
+Later provider-backed experiments reuse the retained owner protocol:
 
 ```text
-freeze task/backends/budgets/review criteria
+freeze experiment
  -> owner-triggered bounded run
- -> native PNG + enlarged preview + deterministic QA + cost evidence
+ -> retain exact artifacts/evidence
  -> awaiting-owner-review
- -> explicit owner ACCEPT / REJECT + natural-language feedback
- -> freeze result OR bind feedback to the exact artifact
- -> only preregistered bounded repair/regeneration
- -> review again or stop
+ -> owner natural-language feedback
+ -> exact feedback binding
+ -> bounded continuation or stop
 ```
 
-When a result is awaiting owner review, automation stops before another provider call. The owner can reply naturally; the agent conservatively converts that feedback into the existing bounded human-feedback/repair contracts.
+No `while aesthetic_score < threshold: regenerate()` loop is allowed.
 
-TracePixel does **not** use an autonomous `aesthetic_score >= threshold` regeneration loop. Cheap deterministic QA/normalization may repeat without provider calls; subjective acceptance remains human.
+## Promotion to Trace2D
 
-## Current lane
+TracePixel does not automatically integrate with Trace2D because code exists. A technique is upstreamed only after matched evidence shows a product advantage for Trace2D Asset Studio or another explicit Trace2D workflow.
 
-The active post-G8 lane is **P11 — generator-neutral quality-controller pivot and owner review loop**, tracked by issue #151.
-
-Its first production-facing north-star benchmark is planned around **128x128 static game art**. A later 32x32 animation/sprite-sheet benchmark is an owner decision after P11 evidence; G9 direct animation remains blocked meanwhile.
-
-## Evidence-first output
-
-A production/promotion experiment should retain, as applicable:
-
-- native-size PNG,
-- nearest-neighbor enlarged preview,
-- exact candidate/backend provenance,
-- deterministic QA JSON,
-- normalization/repair before-and-after evidence,
-- changed-pixel/operation evidence,
-- provider and Agent complexity/cost evidence,
-- explicit owner review state and feedback binding,
-- retained unsuccessful/negative attempts.
-
-Normal portable CI remains provider-free. Paid/model execution is owner-triggered and bounded by a frozen experiment contract.
-
-## Relationship to external generators and Trace2D
-
-Public generators such as PerfectPixel and sprite-gen are comparison/interop precedents, not stacks TracePixel automatically clones. The preferred boundary is generator-neutral: external/generated RGBA and metadata enter TracePixel's deterministic quality/review path.
-
-TracePixel remains independent from Trace2D until G10 is explicitly approved. A future adapter should feed provider-neutral RGBA/metadata/manifests into Trace2D's existing Sprite/Asset preparation boundaries without putting Python, an LLM or a provider into engine runtime authority.
+If P12 finds no unique advantage, preserving this repository as a documented research result and stopping expansion is an acceptable outcome.
 
 ## Repository operation
 
 - live GitHub issue/PR/check state is highest authority,
 - `config/tracepixel.core-lane.json` is the machine-readable continuation lane,
-- `PROJECT_STATUS.md` is the current explanatory handoff,
-- `AGENTS.md` defines non-negotiable Agent rules,
-- `docs/DECISION_GATES.md` defines owner decisions automation may not silently cross.
+- `PROJECT_STATUS.md` is the explanatory handoff,
+- `AGENTS.md` defines Agent rules,
+- issue #155 owns the active research hypothesis.
 
 ## License
 
-MIT. Reference projects are studied for architecture and benchmark design; their code and licenses remain independent.
+MIT. External projects remain independent references unless a current license/version review explicitly promotes an integration.
