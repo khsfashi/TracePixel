@@ -1,182 +1,20 @@
-name: G8-H4 owner authoring status callback
+name: G8-H4 authoring status historical evidence
 
+# Historical path retained because the frozen G8-H4 checkpoint binds this
+# filename as status-callback evidence. The live retained H5 candidate already
+# has provider-free cumulative evidence, so this placeholder has no automatic
+# trigger and performs no status publication or provider/raster work.
 on:
-  workflow_run:
-    workflows: ["Owner G8-H4 retained static humanoid authoring"]
-    types: [completed]
+  workflow_dispatch:
 
 permissions:
-  actions: read
   contents: read
-  issues: write
 
 jobs:
-  report:
-    if: >-
-      github.event.workflow_run.actor.login == github.repository_owner &&
-      github.event.workflow_run.head_repository.full_name == github.repository &&
-      github.event.workflow_run.head_branch == 'main' &&
-      (github.event.workflow_run.event == 'workflow_dispatch' ||
-       github.event.workflow_run.event == 'issue_comment')
+  historical-evidence-only:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-
     steps:
-      - name: Report retained H4 evidence to issue 119
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
-          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
-          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
-          RUN_URL: ${{ github.event.workflow_run.html_url }}
-          RUN_EVENT: ${{ github.event.workflow_run.event }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      - name: Explain inert historical workflow
         run: |
-          python - <<'PY'
-          import io
-          import json
-          import os
-          import urllib.request
-          import zipfile
-
-          repo = os.environ["REPOSITORY"]
-          run_id = os.environ["RUN_ID"]
-          attempt = os.environ["RUN_ATTEMPT"]
-          conclusion = os.environ["RUN_CONCLUSION"]
-          run_url = os.environ["RUN_URL"]
-          event = os.environ["RUN_EVENT"]
-          head_sha = os.environ["HEAD_SHA"]
-          token = os.environ["GH_TOKEN"]
-
-          headers = {
-              "Authorization": f"Bearer {token}",
-              "Accept": "application/vnd.github+json",
-              "X-GitHub-Api-Version": "2022-11-28",
-              "User-Agent": "TracePixel-G8-H4-owner-authoring-status",
-          }
-
-          def request_json(url):
-              request = urllib.request.Request(url, headers=headers)
-              with urllib.request.urlopen(request, timeout=30) as response:
-                  return json.load(response)
-
-          artifacts_payload = request_json(
-              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/artifacts?per_page=100"
-          )
-          artifacts = [
-              artifact
-              for artifact in artifacts_payload.get("artifacts", [])
-              if not artifact.get("expired", False)
-          ]
-          retained = next(
-              (artifact for artifact in artifacts if artifact.get("name", "").startswith("g8-h4-retained-authoring-")),
-              None,
-          )
-
-          summary = None
-          complexity = None
-          stages = None
-          failure = None
-          if retained is not None:
-              archive_request = urllib.request.Request(retained["archive_download_url"], headers=headers)
-              with urllib.request.urlopen(archive_request, timeout=60) as response:
-                  archive_bytes = response.read()
-              with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
-                  names = set(archive.namelist())
-                  if "summary.json" in names:
-                      summary = json.loads(archive.read("summary.json"))
-                  if "complexity.json" in names:
-                      complexity = json.loads(archive.read("complexity.json"))
-                  if "stage-index.json" in names:
-                      stages = json.loads(archive.read("stage-index.json"))
-                  if "failure.json" in names:
-                      failure = json.loads(archive.read("failure.json"))
-
-          artifact_lines = (
-              f"- `{retained['name']}` (artifact id `{retained['id']}`)"
-              if retained is not None
-              else "- no retained H4 artifact was published"
-          )
-
-          detail_lines = []
-          if summary is not None:
-              detail_lines.extend([
-                  f"- retained status: `{summary.get('status')}`; owner verdict: `{summary.get('owner_verdict')}`",
-                  f"- target: `{summary.get('character_target')}`",
-                  f"- native PNG SHA-256: `{summary.get('final_png_sha256')}`",
-                  "- deterministic QA is explicitly **not** visual-quality success; face/anatomy/pose/silhouette/equipment remain H5 human review",
-              ])
-          if complexity is not None:
-              repair = complexity.get("repair_vs_regeneration", {})
-              reuse = complexity.get("cache_or_profile_reuse", {})
-              authority = complexity.get("authority", {})
-              detail_lines.extend([
-                  f"- cumulative scope: `{complexity.get('measurement_scope')}`; attempts: `{complexity.get('attempt_count')}`; provider attempts: `{complexity.get('provider_attempt_count')}`",
-                  f"- **cumulative provider calls:** `{complexity.get('provider_calls')}`; input/output tokens: `{complexity.get('input_tokens')}` / `{complexity.get('output_tokens')}`",
-                  f"- cumulative iterations/revisions: `{complexity.get('iterations')}` / `{complexity.get('revisions')}`; operation calls: `{complexity.get('operation_calls')}`",
-                  f"- cumulative pixel edits / changed pixels: `{complexity.get('pixel_edits')}` / `{complexity.get('changed_pixels')}`",
-                  f"- cumulative repair / regeneration provider calls: `{repair.get('repair_provider_calls')}` / `{repair.get('regeneration_provider_calls')}`; canvas restarts: `{repair.get('canvas_restarts')}`",
-                  f"- cumulative wall time: `{complexity.get('wall_time_ns')}` ns",
-                  f"- all provider attempts reused retained profile / pose: `{reuse.get('humanoid_profile_reused_for_all_provider_attempts')}` / `{reuse.get('pose_profile_reused_for_all_provider_attempts')}`; research provider calls: `{reuse.get('profile_research_provider_calls')}`",
-                  f"- evidence authority: `{authority.get('authoritative_evidence')}`; price conversion: `{authority.get('price_conversion')}`; price used for comparison: `{authority.get('price_fields_used_for_comparison')}`",
-              ])
-              comparison = complexity.get("p10_c4_comparison", {}).get("metrics", {})
-              if comparison:
-                  defined = []
-                  zero_baseline = []
-                  for key, value in comparison.items():
-                      if not isinstance(value, dict):
-                          continue
-                      percent = value.get("percent_change")
-                      if percent is not None:
-                          defined.append(f"{key} `{percent:+g}%` (`{value.get('multiplier')}x`)")
-                      elif value.get("rate_status") == "undefined-zero-baseline":
-                          zero_baseline.append(f"{key} delta `{value.get('absolute_delta')}` (P10 baseline 0; rate undefined)")
-                  if defined:
-                      detail_lines.append("- P10-C4 → cumulative G8-H4 raw-metric change: " + ", ".join(defined))
-                  if zero_baseline:
-                      detail_lines.append("- zero-baseline comparisons: " + ", ".join(zero_baseline))
-              incomplete = [
-                  key for key, value in (complexity.get("usage_completeness") or {}).items()
-                  if value is not True
-              ]
-              if incomplete:
-                  detail_lines.append(
-                      "- **raw usage is incomplete** for: " + ", ".join(incomplete) + "; H5 must not freeze exact cumulative cost evidence until resolved"
-                  )
-              else:
-                  detail_lines.append("- all cumulative raw usage fields required for H5 are exact/complete")
-          if stages is not None:
-              detail_lines.append(
-                  f"- retained QA-evaluation snapshots in current candidate: `{len(stages.get('stages', []))}` (evidence only; not a new semantic stage authority)"
-              )
-          if failure is not None:
-              detail_lines.extend([
-                  f"- **retained failure evidence:** `{failure.get('failure_type')}` — {failure.get('message')}",
-                  "- no schema/authority expansion is authorized from this failure; review the evidence first and apply only a minimal fix if necessary",
-              ])
-
-          details = "\n".join(detail_lines) if detail_lines else "- artifact details unavailable"
-          body = (
-              "### G8-H4 retained static-humanoid authoring callback\n\n"
-              f"Run `{run_id}` attempt `{attempt}` completed with **{conclusion}** from `{event}` on main SHA `{head_sha}`.\n\n"
-              f"Run: {run_url}\n\n"
-              "Retained artifact:\n"
-              f"{artifact_lines}\n\n"
-              "Objective H4 evidence:\n"
-              f"{details}\n\n"
-              "The cumulative raw metrics are authoritative evidence through this owner candidate; price conversion is derived/non-authoritative. If this image is accepted, H5 must freeze this exact cumulative evidence. H5 remains the human perceptual gate. G9 animation and Trace2D integration remain blocked."
-          )
-          payload = json.dumps({"body": body}).encode("utf-8")
-          comment_request = urllib.request.Request(
-              f"https://api.github.com/repos/{repo}/issues/119/comments",
-              data=payload,
-              method="POST",
-              headers={**headers, "Content-Type": "application/json"},
-          )
-          with urllib.request.urlopen(comment_request, timeout=30) as response:
-              if response.status not in (200, 201):
-                  raise SystemExit(f"status callback failed with HTTP {response.status}")
-          PY
+          echo "Historical G8-H4 status workflow path retained for checkpoint evidence."
+          echo "No callback publication, provider calls, raster work, H5 approval, G9 advancement, or Trace2D integration occur here."
