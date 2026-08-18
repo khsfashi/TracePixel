@@ -1,9 +1,18 @@
 {
-  "schema": "tracepixel.core-lane.v2",
+  "schema": "tracepixel.core-lane.v3",
   "updated": "2026-08-18",
-  "current": "P12",
-  "current_child": "P12-R0",
-  "active_issue": 155,
+  "status": "archived",
+  "disposition": "research-complete",
+  "archived_on": "2026-08-18",
+  "current": "ARCHIVED",
+  "current_child": "NONE",
+  "active_issue": null,
+  "archive_issue": 155,
+  "product_successor": {
+    "repository": "khsfashi/Trace2D",
+    "issue": 318,
+    "name": "Asset Studio"
+  },
   "sequence": [
     "P0",
     "P1",
@@ -20,7 +29,8 @@
     "G8",
     "P11",
     "P12",
-    "P9"
+    "P9",
+    "ARCHIVED"
   ],
   "items": {
     "P0": "Repository and benchmark foundation",
@@ -37,8 +47,9 @@
     "P10": "Historical simple-creature research",
     "G8": "Completed humanoid direct-authoring research lane; owner REJECT + PIVOT disposition",
     "P11": "Superseded generator-neutral quality-controller experiment; X0/X1 retained, X2+ cancelled",
-    "P12": "Deterministic raster R&D lab and evidence-gated Trace2D handoff",
-    "P9": "Historical/deferred Trace2D adapter experiment"
+    "P12": "Terminated deterministic raster R&D-lab proposal; no further experiment required by owner",
+    "P9": "Historical/deferred Trace2D adapter experiment",
+    "ARCHIVED": "Research complete; no automatic continuation or standalone product roadmap"
   },
   "child_sequences": {
     "P1": ["P1-R0", "P1-R1", "P1-R2", "P1-R3", "P1-R4"],
@@ -62,9 +73,7 @@
     "P2-IR4": "IR compactness/replay/invalidity microbenchmark",
     "P4-Q5": "Seeded deterministic QA coverage suite",
     "P5-A5": "Non-scored Agent complexity pilot before B0",
-    "P8-C0": "Historical batch cost-scaling checkpoint",
-    "P12-R1": "Freeze a matched precision-edit experiment before any provider execution",
-    "P12-P0": "Decide KEEP-AS-LAB / UPSTREAM / ARCHIVE from matched evidence"
+    "P8-C0": "Historical batch cost-scaling checkpoint"
   },
   "preview_milestones": {
     "P1-R3": "Native PNG and nearest-neighbor enlarged preview",
@@ -72,8 +81,7 @@
     "P4-Q5": "Preview plus deterministic QA findings",
     "P5-A5": "First opt-in AI-authored raster preview",
     "P6-V5": "Mobile static review flow",
-    "P11-X1": "Reusable owner-run / awaiting-owner-review / natural-language feedback protocol",
-    "P12-R2": "Owner-reviewed matched precision-edit evidence"
+    "P11-X1": "Reusable owner-run / awaiting-owner-review / natural-language feedback protocol"
   },
   "owner_gates": [
     "G1 authoritative pixel representation",
@@ -84,27 +92,24 @@
     "G6 home Windows self-hosted preview/provider runner",
     "G7 simple-creature promotion",
     "G8 humanoid direct-authoring promotion — resolved PIVOT 2026-08-18",
-    "G9 animation/multi-frame promotion — no longer a TracePixel product target by default",
-    "G10 Trace2D product integration — only evidence-backed upstreaming is allowed",
-    "G12 post-P12 lab disposition"
+    "G9 animation/multi-frame promotion — not pursued in TracePixel",
+    "G10 Trace2D product integration — product responsibility moved to Trace2D Asset Studio",
+    "G12 post-P12 disposition — resolved ARCHIVE / research-complete 2026-08-18"
   ],
   "rules": [
-    "Continue an active implementation PR before opening later core-lane or child-lane scope.",
-    "Do not advance the current child until its acceptance criteria and required checks are green.",
+    "Repository status is archived/research-complete; a generic next-task request must not create a new implementation or research lane.",
+    "Only an explicit owner decision to unarchive/reopen TracePixel may establish new roadmap authority.",
     "Do not mutate, relabel, overwrite or rerun frozen scored/negative evidence merely to improve the recorded result.",
-    "Public pull-request CI must not execute on the owner home self-hosted runner.",
-    "Provider/model calls must be owner-triggered and bounded by a frozen experiment contract; portable CI remains provider-free.",
+    "No new provider/model run is authorized by the archived lane.",
     "G8 issue #119 remains closed with owner REJECT + PIVOT; do not reopen humanoid direct-authoring expansion.",
-    "P11-X0 and P11-X1 are retained useful research. P11-X2, P11-X3, P11-B0, P11-B1 and P11-P0 are superseded as active standalone-product work by P12 and must not continue automatically.",
-    "TracePixel is not the owner of an Asset Studio, showroom, general asset library, provider marketplace or broad game-sprite production product. That product responsibility belongs to Trace2D issue #318.",
-    "Do not duplicate Trace2D SPP0-SPP5 generic processing, extraction, QA/repair, import or provider-neutral generation orchestration merely to preserve TracePixel scope.",
-    "TracePixel-direct is research infrastructure and an optional control/precision-edit path, not a privileged production generator.",
-    "P12-R0 is provider-free and feature-free: perform responsibility diff and freeze one falsifiable unique hypothesis before implementing anything new.",
-    "The default unique hypothesis candidate is protected-region precision editing with exact collateral-damage measurement; it is not promoted until P12-R1 freezes an honest matched comparison.",
-    "When state is awaiting-owner-review, stop provider work, surface exact artifacts/evidence and use the retained P11-X1/P7 owner-feedback protocol.",
+    "P11-X0 and P11-X1 remain retained useful research; P11-X2+ remain cancelled as standalone-product work.",
+    "P12 precision-edit research is terminated before execution; no R1/R2 provider experiment is required to justify keeping the repository alive.",
+    "TracePixel is not the owner of an Asset Studio, showroom, general asset library, provider marketplace or broad game-sprite production product; that responsibility belongs to Trace2D issue #318.",
+    "Do not duplicate Trace2D SPP0-SPP5 generic processing, extraction, QA/repair, import or provider-neutral generation orchestration.",
+    "TracePixel-direct remains historical research infrastructure, not a privileged production generator.",
     "Deterministic QA green never implies aesthetic/product PASS; subjective quality remains perceptual/human.",
     "Do not implement an autonomous aesthetic-score-until-threshold regeneration loop.",
-    "Promote a TracePixel technique into Trace2D only when matched evidence shows a practical advantage for the Trace2D Asset Studio or another explicit product workflow.",
-    "If P12 cannot demonstrate a unique practical advantage, preserve the repository as research evidence and archive/stop expansion rather than inventing a new product reason."
+    "Future Trace2D reuse should upstream only the smallest evidence-backed historical technique needed by a concrete Trace2D workload rather than reopening TracePixel by default.",
+    "Explicitly requested archival maintenance for security, reproducibility, accessibility or evidence preservation is allowed but must not become feature development."
   ]
 }
