@@ -1,0 +1,54 @@
+name: G8-H4 candidate cumulative repack
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - .github/g8-h4-repack.trigger
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  repack:
+    if: >-
+      github.event.pull_request.user.login == github.repository_owner &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == 'main' &&
+      startsWith(github.event.pull_request.head.ref, 'agent/g8-h4-repack-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact trigger head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Resolve candidate metadata
+        id: meta
+        shell: bash
+        run: |
+          candidate="$(python -c "import json; print(json.load(open('.github/g8-h4-repack.trigger', encoding='utf-8'))['candidate_run_id'])")"
+          echo "candidate=$candidate" >> "$GITHUB_OUTPUT"
+
+      - name: Repack successful candidate with cumulative raw usage
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python -m evidence.g8_h4.repack_candidate \
+            --repository "$REPOSITORY" \
+            --token "$GH_TOKEN" \
+            --trigger .github/g8-h4-repack.trigger \
+            --output artifacts/g8-h4-owner-review
+
+      - name: Upload owner H5 review package
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-h4-owner-review-candidate-${{ steps.meta.outputs.candidate }}
+          path: artifacts/g8-h4-owner-review
+          if-no-files-found: error
+          retention-days: 30
