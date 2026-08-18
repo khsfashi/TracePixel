@@ -1,0 +1,56 @@
+{
+  "schema": "tracepixel.owner-review-loop.v1",
+  "updated": "2026-08-18",
+  "active_issue": 151,
+  "continuation_prompt": "@GitHub TracePixel 다음 작업 진행해줘",
+  "states": [
+    "contract-only",
+    "experiment-frozen",
+    "ready-for-owner-run",
+    "running",
+    "awaiting-owner-review",
+    "accepted",
+    "repair-requested",
+    "rejected-stop",
+    "postmortem"
+  ],
+  "owner_review": {
+    "final_aesthetic_authority": "repository-owner",
+    "natural_language_feedback_allowed": true,
+    "manual_json_required": false,
+    "unspecified_criterion_status": "unresolved",
+    "deterministic_qa_can_auto_accept_aesthetics": false,
+    "vlm_can_auto_accept_aesthetics": false,
+    "feedback_binding": "exact-reviewed-run-and-artifact-digest",
+    "reuse_existing_human_feedback_contract": "tracepixel.human-feedback.v1",
+    "reuse_existing_feedback_intake_contract": "tracepixel.feedback-intake.v1"
+  },
+  "awaiting_owner_review_requires": [
+    "run_or_candidate_identity",
+    "native_png",
+    "enlarged_preview",
+    "deterministic_qa_status",
+    "provider_and_agent_complexity_evidence",
+    "frozen_human_review_criteria"
+  ],
+  "continuation_behavior": {
+    "when_awaiting_owner_review": "stop-before-provider-call-and-surface-review-package",
+    "when_owner_accepts": "freeze-reviewed-result-and-advance-only-if-lane-allows",
+    "when_owner_rejects": "retain-negative-evidence-and-bind-feedback-before-any-bounded-repair",
+    "when_feedback_is_partial": "record-only-explicit-criteria-and-leave-others-unresolved"
+  },
+  "retry_policy": {
+    "aesthetic_score_until_threshold_loop": "forbidden",
+    "provider_retry_requires_preregistered_budget": true,
+    "provider_budget_may_not_expand_after_result_seen": true,
+    "deterministic_provider_free_normalization_may_repeat_when_exact_and_bounded": true,
+    "prefer_local_repair_after_explicit_feedback": true,
+    "full_regeneration_is_separate_budgeted_action": true
+  },
+  "evidence_policy": {
+    "retain_rejected_results": true,
+    "overwrite_negative_evidence": false,
+    "separate_quality_and_cost": true,
+    "composite_aesthetic_correctness_score": "not-authoritative"
+  }
+}
