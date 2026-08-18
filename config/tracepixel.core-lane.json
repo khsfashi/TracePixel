@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
   "current": "P10",
-  "current_child": "P10-C3",
+  "current_child": "P10-C4",
   "active_issue": 109,
   "sequence": [
     "P0",
@@ -93,6 +93,7 @@
     "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but no creature, humanoid, or animation implementation belongs in P8; promotions occur only after P8-B6 through dedicated sequential post-P8 gates with creature evidence before humanoid and humanoid evidence before animation.",
     "P10 opens only after the frozen P8-B6 postmortem and the recorded G7 owner approval. P10-C0 is contract-only: it must freeze morphology/species-profile, pose/constraint, perceptual-evidence, and complexity-accounting boundaries before any creature raster generation or provider execution is permitted.",
     "P10 creature work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Morphology and pose data are digest-pinned authoring constraints/evidence, never a second raster authority or physical-simulation engine.",
+    "P10-C4 real creature provider execution is owner-triggered on the trusted self-hosted runner only; portable PR CI remains provider-free, and retained output must preserve provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence without adding hidden scheduler work or a second raster authority.",
     "Humanoid and animation implementation remain blocked behind later sequential G8/G9 promotion evidence; P10 must not pull them forward.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
