@@ -1,8 +1,8 @@
 # G8 direct-authoring postmortem and matched RAW baseline
 
-Status: **G8-H5 owner REJECT; matched RAW baseline executed once; architecture recommendation = PIVOT, pending owner decision.**
+Status: **G8-H5 owner REJECT; matched RAW baseline executed once; owner architecture decision = PIVOT (confirmed 2026-08-18).**
 
-This document freezes the two rejected TracePixel humanoid attempts, the preregistered one-call RAW comparison, and the resulting architecture recommendation. It does not authorize another provider retry, another humanoid schema, a new PixelProgram operation, animation, 128x128 expansion, a new generation architecture, or Trace2D integration.
+This document freezes the two rejected TracePixel humanoid attempts, the preregistered one-call RAW comparison, and the owner-confirmed architecture decision. It does not authorize another provider retry, another humanoid schema, a new PixelProgram operation, animation, unrestricted 128x128 expansion, a new direct-generation architecture, or Trace2D integration.
 
 ## Frozen owner verdict
 
@@ -11,7 +11,7 @@ Both TracePixel humanoid runs are technically valid retained evidence and produc
 - `32111680356` / artifact `9315292791` / native PNG SHA-256 `35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82` — **owner REJECT**.
 - `32118899233` / artifact `9317806659` / native PNG SHA-256 `0ba697dd345272761428a98c4a26398ff9db760fa2ee6305a0a5b94b045bf247` — **owner REJECT**.
 
-Deterministic QA green is structural evidence only. It is not anatomy, equipment, material, identity, cluster or aesthetic acceptance. G9 animation and Trace2D integration remain blocked.
+Deterministic QA green is structural evidence only. It is not anatomy, equipment, material, identity, cluster or aesthetic acceptance.
 
 ## TracePixel attempt-to-attempt postmortem
 
@@ -54,7 +54,7 @@ The workflow is intentionally retained as a failed run because the preregistered
 
 ### Human-visible comparison against `32118899233`
 
-The following is reviewer observation to support the owner decision, not an owner PASS:
+The following is reviewer observation to support the owner decision, not an owner PASS for RAW:
 
 | Criterion | TracePixel `32118899233` | RAW `32121042059` | Observation |
 | --- | --- | --- | --- |
@@ -81,28 +81,51 @@ This is enough to reject the hypothesis that the humanoid-specific staged/contra
 | Wall time | 98.101 s | 99.965 s | +1.864 s (+1.90%) |
 | Final deterministic QA findings | 0 | 0 | 0 |
 
-Cost is therefore **mixed, not a RAW cost win**. RAW reduces input context but slightly increases output, raster edits and wall time, and it misses the preregistered output ceiling by 42 tokens. A cost-based **RETIRE** claim is not justified by this single matched run.
+Provider/runtime cost is therefore **mixed, not a decisive RAW cost win**. However, this does not erase the additional implementation/context/maintenance complexity already present in the humanoid staged/contracts path.
 
-## Architecture recommendation: PIVOT
+## Owner architecture decision: PIVOT
 
-**Recommended disposition: PIVOT, pending owner confirmation.**
+**Owner-confirmed disposition: PIVOT.**
 
 Reasoning:
 
-- **KEEP is not supported**: TracePixel direct humanoid authoring did not demonstrate an owner-visible quality advantage. On the most important failed dimensions — anatomy, equipment attachment and material separation — the simpler RAW path is visibly clearer.
-- **RETIRE is too strong from this evidence**: RAW is not materially cheaper across the recorded cost fields and exceeded the frozen output-token ceiling. The comparison also does not test whether deterministic local repair/replay would create a durable production advantage.
-- **PIVOT is supported**: preserve the parts whose value does not depend on the failed direct-generation strategy — Canvas, PixelProgram/exact replay, deterministic QA, bounded local repair, evidence/telemetry harness, import/export surfaces — while stopping further humanoid-specific staged generation/schema expansion.
+- **KEEP as the privileged complex-generation architecture is not supported**: TracePixel direct humanoid authoring did not demonstrate an owner-visible quality advantage. On anatomy, equipment attachment and material separation, the simpler RAW path is visibly clearer.
+- **Project-wide RETIRE is too strong**: the comparison does not test whether deterministic candidate QA, normalization, exact replay, evidence or bounded local repair create durable production value independent of the generator.
+- **PIVOT is supported**: preserve the parts whose value does not depend on the failed direct-generation strategy — Canvas, PixelProgram/exact replay, deterministic QA, bounded local repair, evidence/telemetry harness and import/export surfaces — while stopping further humanoid-specific staged generation/schema expansion.
 
-The next architecture option, only after owner confirmation, is **external or RAW generator -> TracePixel deterministic import/Canvas -> deterministic QA -> bounded local repair where useful -> exact replay/evidence**. This is an option, not authorization to implement a new generator now.
+The direct generator itself is not deleted. It is demoted to an optional backend/control and precision-repair mechanism where evidence supports it.
+
+## Post-pivot architecture
+
+The active direction is:
+
+```text
+external / RAW / optional TracePixel-direct candidate
+ -> TracePixel deterministic candidate import / Canvas
+ -> deterministic QA + normalization
+ -> bounded local repair when useful
+ -> explicit owner perceptual review
+ -> exact replay / evidence / telemetry
+```
+
+Detailed authority and owner-operated continuation protocol live in `docs/P11_GENERATOR_NEUTRAL_PIVOT.md` and issue #151.
 
 ## Existing external-generator overlap
 
 Trace2D already treats public sprite generators as interop sources rather than runtimes it must own. `docs/SPRITE_GENERATOR_INTEROP_SPP4.md` supports `sprite-gen` component-row and `PerfectPixelV2` manifest adapters into the canonical import path while explicitly avoiding ownership of their generation/editor/runtime stacks.
 
-That separation is the relevant precedent for TracePixel. Do not clone, integrate or reimplement `sprite-gen`, PerfectPixel, or another external generator during this G8 decision.
+That separation is the relevant precedent for TracePixel. Do not clone, integrate or reimplement `sprite-gen`, PerfectPixel, or another external generator merely because PIVOT was selected. P11 first freezes a generator-neutral boundary and fair benchmark/review loop.
 
-## Next owner decision point
+## Lane closure and blocks
 
-Owner reviews RAW run `32121042059` beside rejected TracePixel run `32118899233` and chooses **KEEP / PIVOT / RETIRE**. The evidence-backed recommendation is **PIVOT**.
+G8 issue #119 is closed as completed research/promotion evidence with **owner REJECT + PIVOT** disposition.
 
-Until the owner records that choice, **G8-H5 remains REJECT** and **G9 animation, 128x128 expansion, additional humanoid schema, new generation architecture and Trace2D integration remain BLOCKED**. No provider retry is permitted.
+Until P11-P0 and a new owner decision:
+
+- G9 direct animation remains blocked,
+- unrestricted 128x128 expansion outside the P11 north-star benchmark remains blocked,
+- additional humanoid schema/skeleton/IK/physics remains blocked,
+- new direct-generation architecture remains blocked,
+- Trace2D integration remains blocked by G10.
+
+The next active work is **P11-X0** under issue #151, not another G8 provider retry.
