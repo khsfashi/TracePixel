@@ -1,9 +1,9 @@
 {
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
-  "current": "P11",
-  "current_child": "P11-X2",
-  "active_issue": 151,
+  "current": "P12",
+  "current_child": "P12-R0",
+  "active_issue": 155,
   "sequence": [
     "P0",
     "P1",
@@ -19,6 +19,7 @@
     "P10",
     "G8",
     "P11",
+    "P12",
     "P9"
   ],
   "items": {
@@ -32,11 +33,12 @@
     "B0": "Matched development-visible architecture benchmark",
     "P7": "Targeted repair and human feedback loop",
     "B1": "Held-out generalization benchmark",
-    "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles, gated by batch cost-scaling evidence",
-    "P10": "Simple-creature morphology and pose promotion",
+    "P8": "Historical production-breadth research",
+    "P10": "Historical simple-creature research",
     "G8": "Completed humanoid direct-authoring research lane; owner REJECT + PIVOT disposition",
-    "P11": "Generator-neutral quality controller pivot and owner review loop",
-    "P9": "Trace2D adapter experiment"
+    "P11": "Superseded generator-neutral quality-controller experiment; X0/X1 retained, X2+ cancelled",
+    "P12": "Deterministic raster R&D lab and evidence-gated Trace2D handoff",
+    "P9": "Historical/deferred Trace2D adapter experiment"
   },
   "child_sequences": {
     "P1": ["P1-R0", "P1-R1", "P1-R2", "P1-R3", "P1-R4"],
@@ -52,6 +54,7 @@
     "P10": ["P10-C0", "P10-C1", "P10-C2", "P10-C3", "P10-C4", "P10-C5"],
     "G8": ["G8-H0", "G8-H1", "G8-H2", "G8-H3", "G8-H4", "G8-H5"],
     "P11": ["P11-X0", "P11-X1", "P11-X2", "P11-X3", "P11-B0", "P11-B1", "P11-P0"],
+    "P12": ["P12-R0", "P12-R1", "P12-R2", "P12-P0"],
     "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
@@ -59,9 +62,9 @@
     "P2-IR4": "IR compactness/replay/invalidity microbenchmark",
     "P4-Q5": "Seeded deterministic QA coverage suite",
     "P5-A5": "Non-scored Agent complexity pilot before B0",
-    "P8-C0": "Mandatory batch cost-scaling checkpoint before P8 breadth expansion",
-    "P11-B0": "Frozen 128x128 static north-star benchmark contract before any scored/provider execution",
-    "P11-P0": "Generator-neutral quality-controller value/postmortem checkpoint before animation or integration promotion"
+    "P8-C0": "Historical batch cost-scaling checkpoint",
+    "P12-R1": "Freeze a matched precision-edit experiment before any provider execution",
+    "P12-P0": "Decide KEEP-AS-LAB / UPSTREAM / ARCHIVE from matched evidence"
   },
   "preview_milestones": {
     "P1-R3": "Native PNG and nearest-neighbor enlarged preview",
@@ -70,7 +73,7 @@
     "P5-A5": "First opt-in AI-authored raster preview",
     "P6-V5": "Mobile static review flow",
     "P11-X1": "Reusable owner-run / awaiting-owner-review / natural-language feedback protocol",
-    "P11-B1": "Owner-triggered 128x128 static benchmark review package"
+    "P12-R2": "Owner-reviewed matched precision-edit evidence"
   },
   "owner_gates": [
     "G1 authoritative pixel representation",
@@ -81,35 +84,27 @@
     "G6 home Windows self-hosted preview/provider runner",
     "G7 simple-creature promotion",
     "G8 humanoid direct-authoring promotion — resolved PIVOT 2026-08-18",
-    "G9 animation/multi-frame promotion",
-    "G10 Trace2D adapter experiment",
-    "G11 post-P11 production-scope promotion"
+    "G9 animation/multi-frame promotion — no longer a TracePixel product target by default",
+    "G10 Trace2D product integration — only evidence-backed upstreaming is allowed",
+    "G12 post-P12 lab disposition"
   ],
   "rules": [
     "Continue an active implementation PR before opening later core-lane or child-lane scope.",
     "Do not advance the current child until its acceptance criteria and required checks are green.",
-    "Stop at unresolved owner gates documented in docs/DECISION_GATES.md; do not silently choose scope/product decisions.",
-    "Run preregistered engineering checkpoints before scored cohorts where specified.",
-    "Do not mutate, relabel, overwrite or rerun a frozen scored/negative evidence cohort merely to improve the recorded result.",
+    "Do not mutate, relabel, overwrite or rerun frozen scored/negative evidence merely to improve the recorded result.",
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
     "Provider/model calls must be owner-triggered and bounded by a frozen experiment contract; portable CI remains provider-free.",
-    "G8 issue #119 is closed with owner REJECT + PIVOT. Do not reopen humanoid direct-authoring retries or H0-H3 schema expansion as ordinary continuation.",
-    "P11 is generator-neutral: RAW, external and TracePixel-direct candidates must converge on the same downstream Canvas/QA/review authority; generator identity is provenance, not canonical raster truth.",
-    "TracePixel-direct remains an optional backend/control and precision local-repair path, not the privileged production generator.",
-    "P11-X0 is contract-only and must perform zero new provider generation calls.",
-    "P11-X1 must define an owner-operated state machine with frozen experiment -> owner-triggered run -> awaiting-owner-review -> accepted|repair-requested|rejected-stop, and must reuse existing P7 human-feedback authority where it fits.",
-    "When state is awaiting-owner-review, autonomous continuation must surface exact artifacts, deterministic QA, cost evidence and frozen perceptual criteria and must stop before another provider call.",
-    "Owner feedback may be natural language; agents must bind it to the exact reviewed artifact and interpret unspecified criteria conservatively rather than inventing success/failure or region/stage hints.",
-    "Deterministic QA green never implies aesthetic/product PASS. Anatomy, identity, material readability, motion quality, pixel-cluster craft and overall taste remain perceptual/human unless a narrower objective fact is separately frozen.",
-    "Do not implement an autonomous aesthetic-score-until-threshold regeneration loop. Cheap exact deterministic normalization may repeat provider-free; provider repair/regeneration is allowed only within the preregistered bounded budget.",
-    "P11-X2 should prioritize cheap objective QA/normalization before expensive perceptual review and must add only workload-justified exact checks.",
-    "P11-X3 should prefer bounded local repair tied to exact owner feedback and preserve unaffected pixels where required; full regeneration is a separate explicit budgeted action.",
-    "P11-B0 must freeze the 128x128 static task, candidate backends, matched information, provider/model settings, budgets, deterministic checks, human criteria and retention before P11-B1 runs.",
-    "P11-B1 must keep human-visible quality and provider/Agent cost as separate result layers and preserve every unsuccessful attempt.",
-    "G9 direct animation, unrestricted 128x128 expansion, additional humanoid schema/skeleton/IK/physics, a new direct-generation architecture and Trace2D integration remain blocked until P11-P0 plus the relevant explicit owner gate.",
-    "P11-P0 must ask the owner whether evidence supports static production expansion, a 32x32 animation/sprite-sheet benchmark, keeping direct authoring only as repair/control, retiring more direct generation, G10 integration evaluation, or project contraction; no option is automatic.",
-    "Existing P1 Canvas, P2 PixelProgram/replay, P4 QA, P7 feedback/repair/human-review and P6/P8 review-package seams must be reused before creating a competing authority.",
-    "External projects such as PerfectPixel and sprite-gen are references/candidate backends, not code to clone, vendor or integrate without an active-lane need and current license/version review.",
-    "Trace2D integration remains deferred until independent P11 evidence and explicit G10 owner approval justify it."
+    "G8 issue #119 remains closed with owner REJECT + PIVOT; do not reopen humanoid direct-authoring expansion.",
+    "P11-X0 and P11-X1 are retained useful research. P11-X2, P11-X3, P11-B0, P11-B1 and P11-P0 are superseded as active standalone-product work by P12 and must not continue automatically.",
+    "TracePixel is not the owner of an Asset Studio, showroom, general asset library, provider marketplace or broad game-sprite production product. That product responsibility belongs to Trace2D issue #318.",
+    "Do not duplicate Trace2D SPP0-SPP5 generic processing, extraction, QA/repair, import or provider-neutral generation orchestration merely to preserve TracePixel scope.",
+    "TracePixel-direct is research infrastructure and an optional control/precision-edit path, not a privileged production generator.",
+    "P12-R0 is provider-free and feature-free: perform responsibility diff and freeze one falsifiable unique hypothesis before implementing anything new.",
+    "The default unique hypothesis candidate is protected-region precision editing with exact collateral-damage measurement; it is not promoted until P12-R1 freezes an honest matched comparison.",
+    "When state is awaiting-owner-review, stop provider work, surface exact artifacts/evidence and use the retained P11-X1/P7 owner-feedback protocol.",
+    "Deterministic QA green never implies aesthetic/product PASS; subjective quality remains perceptual/human.",
+    "Do not implement an autonomous aesthetic-score-until-threshold regeneration loop.",
+    "Promote a TracePixel technique into Trace2D only when matched evidence shows a practical advantage for the Trace2D Asset Studio or another explicit product workflow.",
+    "If P12 cannot demonstrate a unique practical advantage, preserve the repository as research evidence and archive/stop expansion rather than inventing a new product reason."
   ]
 }
