@@ -28,14 +28,45 @@ def _expect(condition: bool, message: str) -> None:
         raise SystemExit(f"G8-H4 checkpoint failed: {message}")
 
 
+def _validate_lane_history(lane: dict[str, object]) -> None:
+    sequence = lane.get("sequence")
+    children = lane.get("child_sequences")
+    _expect(type(sequence) is list, "core lane sequence is malformed")
+    _expect(type(children) is dict, "core lane child history is malformed")
+
+    ordered = cast(list[object], sequence)
+    child_map = cast(dict[str, object], children)
+    g8 = child_map.get("G8")
+    _expect(type(g8) is list, "G8 child history is missing")
+    _expect(
+        cast(list[object], g8) == ["G8-H0", "G8-H1", "G8-H2", "G8-H3", "G8-H4", "G8-H5"],
+        "frozen G8 child history drifted",
+    )
+
+    current = lane.get("current")
+    current_child = lane.get("current_child")
+    if current == "G8":
+        _expect(current_child in ("G8-H4", "G8-H5"), "live G8 lane has not reached H4")
+        _expect(lane.get("active_issue") == 119, "live G8 lane is not bound to issue #119")
+        return
+
+    _expect(type(current) is str and current in ordered, "live core lane identity is missing from sequence")
+    _expect("G8" in ordered, "G8 history is missing from live sequence")
+    _expect(ordered.index("G8") < ordered.index(cast(str, current)), "live lane has not advanced beyond G8")
+
+    # After the owner-confirmed PIVOT, G8-H4/H5 are historical evidence. The
+    # checkpoint must continue proving that frozen authority/evidence exists,
+    # but it must not force the repository's live continuation pointer back to
+    # issue #119. P11 and later lanes are allowed only after the complete G8
+    # child sequence remains recorded above.
+
+
 def main() -> int:
     _expect(g8_h3_forward_main() == 0, "G8-H3 historical checkpoint failed")
     lane = _json(CORE_LANE)
     contract = _json(H0_CONTRACT)
 
-    _expect(lane.get("current") == "G8", "core lane is not G8")
-    _expect(lane.get("current_child") == "G8-H4", "core lane is not G8-H4")
-    _expect(lane.get("active_issue") == 119, "G8-H4 is not bound to issue #119")
+    _validate_lane_history(lane)
 
     contract_lane = cast(dict[str, object], contract.get("lane"))
     _expect(
@@ -81,8 +112,9 @@ def main() -> int:
     print(json.dumps({
         "status": "pass",
         "source_issue": 119,
-        "current_child": "G8-H4",
-        "next_child": "G8-H5",
+        "historical_child": "G8-H4",
+        "historical_next_child": "G8-H5",
+        "live_child": lane.get("current_child"),
         "portable_provider_calls": 0,
         "portable_humanoid_raster_generation": 0,
         "new_contract_or_schema_required": False,
