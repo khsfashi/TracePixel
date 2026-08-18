@@ -1,9 +1,9 @@
 {
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
-  "current": "P8",
-  "current_child": "P8-B6",
-  "active_issue": 92,
+  "current": "P10",
+  "current_child": "P10-C0",
+  "active_issue": 109,
   "sequence": [
     "P0",
     "P1",
@@ -16,6 +16,7 @@
     "P7",
     "B1",
     "P8",
+    "P10",
     "P9"
   ],
   "items": {
@@ -30,6 +31,7 @@
     "P7": "Targeted repair and human feedback loop",
     "B1": "Held-out generalization benchmark",
     "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles, gated by batch cost-scaling evidence",
+    "P10": "Simple-creature morphology and pose promotion",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
@@ -43,6 +45,7 @@
     "P7": ["P7-F0", "P7-F1", "P7-F2", "P7-F3", "P7-F4", "P7-F5"],
     "B1": ["B1-F0", "B1-S0", "B1-P0"],
     "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-C0", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
+    "P10": ["P10-C0", "P10-C1", "P10-C2", "P10-C3", "P10-C4", "P10-C5"],
     "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
@@ -88,6 +91,9 @@
     "P8-B3 must prove representative item-icon and scene-prop members can coexist in one AssetSet through the existing validated request, schedule, consistency, and isolated-execution seams without a second authoring path, new provider work, or new raster authority; member-specific canvas/composition remains independent while exact shared-style binding is preserved.",
     "P8-B4 must prove a representative terrain-tile family can reuse the same bounded single-asset AssetSet path with one exact tile grid plus shared style/palette bindings, while retained semantic edge intent fails closed on mismatched internal neighbors; semantic adjacency is deterministic evidence but visual pixel seamlessness remains perceptual evidence for P8-B5.",
     "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but no creature, humanoid, or animation implementation belongs in P8; promotions occur only after P8-B6 through dedicated sequential post-P8 gates with creature evidence before humanoid and humanoid evidence before animation.",
+    "P10 opens only after the frozen P8-B6 postmortem and the recorded G7 owner approval. P10-C0 is contract-only: it must freeze morphology/species-profile, pose/constraint, perceptual-evidence, and complexity-accounting boundaries before any creature raster generation or provider execution is permitted.",
+    "P10 creature work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Morphology and pose data are digest-pinned authoring constraints/evidence, never a second raster authority or physical-simulation engine.",
+    "Humanoid and animation implementation remain blocked behind later sequential G8/G9 promotion evidence; P10 must not pull them forward.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
