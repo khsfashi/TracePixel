@@ -52,46 +52,60 @@ P12 asks narrow falsifiable questions about Agent-controlled raster editing.
 Current sequence:
 
 ```text
-P12-R0 responsibility diff + unique-hypothesis freeze
- -> P12-R1 precision-edit matched benchmark freeze
+P12-R0 responsibility diff + unique-hypothesis freeze [complete]
+ -> P12-R1 precision-edit matched benchmark freeze [active]
  -> P12-R2 owner-triggered matched run
  -> P12-P0 KEEP-AS-LAB / UPSTREAM / ARCHIVE decision
 ```
 
-### P12-R0
+### P12-R0 — frozen scope boundary
 
-R0 must perform **zero provider calls and zero new raster feature implementation**.
+`docs/P12_R0_RESPONSIBILITY_DIFF.md` is the authority for what R0 found.
 
-It must compare the proposed work against:
+R0 established that ordinary region-local pixel mutation is **not** a unique TracePixel capability. Aseprite/ImageMagick and ordinary raster tooling already provide region/pixel mutation and comparison primitives, while Trace2D already owns generic Sprite processing, production review and transactional Sprite metadata authoring.
 
-- Trace2D SPP0-SPP5,
-- Trace2D Workspace/WorkResult/#178 transactional Sprite authoring,
-- current external tools relevant to the exact hypothesis.
+Do not reopen those responsibilities in TracePixel.
 
-Classify candidate responsibilities as:
+### P12-R1 — active child
 
-```text
-already solved elsewhere
-TracePixel-only but unproven
-measurably unique candidate
-should upstream to Trace2D
-should retire/archive
-```
+R1 must perform **zero provider/live edit calls and zero new raster feature implementation until the matched experiment is fully frozen**.
 
-Do not invent a new product purpose merely because previous code exists.
+Freeze before execution:
 
-### Default unique hypothesis
+- exact source sprite identity/content digest,
+- localized natural-language edit request,
+- exact allowed region/mask and protected complement,
+- owner-visible requested-change review criteria,
+- matched RAW Agent / honestly matchable external / TracePixel bounded paths,
+- provider/model/tool versions and budgets when applicable,
+- maximum calls/revisions and stop rules,
+- retained success/failure artifact locations,
+- separate quality, locality, cost, Agent-complexity and replay/evidence metrics.
 
-The first candidate is **protected-region precision editing / collateral-damage control**.
+R1 does not run the benchmark. When the preregistration is complete and checks are green, advance to owner-triggered P12-R2.
 
-Example:
+### Frozen unique hypothesis
+
+The first candidate is **protected-region precision editing / collateral-damage control**:
+
+> For a frozen source sprite and a localized owner-requested edit, an Agent using a TracePixel bounded-edit contract can preserve every protected pixel byte-identically and materially reduce collateral pixel changes versus an unguarded RAW Agent raster-edit path (and an external image-edit path when honestly matchable), while still producing an owner-acceptable requested change at practical cost.
+
+Representative shape:
 
 ```text
 Shorten only the sword hilt.
 All pixels outside the allowed region must remain byte-identical.
 ```
 
-Before implementing a new mechanism, P12-R1 must freeze an honest matched comparison against RAW/image-edit alternatives where available.
+The candidate value is the combined Agent-facing contract, not the primitive ability to edit a rectangle:
+
+- exact source identity,
+- explicit allowed/protected pixel identity,
+- bounded mutation authority,
+- exact protected-pixel violation evidence,
+- exact total/collateral changed-pixel evidence,
+- retained before/after/replay evidence,
+- separation of owner-visible quality from deterministic locality facts.
 
 Measure separately:
 

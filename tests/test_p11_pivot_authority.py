@@ -15,7 +15,7 @@ class P11PivotAuthorityTests(unittest.TestCase):
             ["P11-X0", "P11-X1", "P11-X2", "P11-X3", "P11-B0", "P11-B1", "P11-P0"],
         )
         self.assertEqual(lane["current"], "P12")
-        self.assertEqual(lane["current_child"], "P12-R0")
+        self.assertEqual(lane["current_child"], "P12-R1")
         self.assertEqual(lane["active_issue"], 155)
         self.assertIn("P11", lane["sequence"])
         self.assertIn("P12", lane["sequence"])
@@ -26,6 +26,20 @@ class P11PivotAuthorityTests(unittest.TestCase):
         )
         self.assertTrue(any("P11-X0 and P11-X1 are retained useful research" in rule for rule in lane["rules"]))
         self.assertTrue(any("P11-X2, P11-X3, P11-B0, P11-B1 and P11-P0 are superseded" in rule for rule in lane["rules"]))
+        self.assertTrue(any("P12-R0 completed" in rule for rule in lane["rules"]))
+        self.assertTrue(any("P12-R1 is provider-free and feature-free" in rule for rule in lane["rules"]))
+
+    def test_p12_r0_freezes_responsibility_diff_before_matched_benchmark(self) -> None:
+        doc = (ROOT / "docs" / "P12_R0_RESPONSIBILITY_DIFF.md").read_text(encoding="utf-8")
+        self.assertIn("Status: **complete / provider-free / feature-free**", doc)
+        self.assertIn("Aseprite", doc)
+        self.assertIn("ImageMagick", doc)
+        self.assertIn("Local rectangular/pixel mutation as a primitive", doc)
+        self.assertIn("measurably unique candidate", doc)
+        self.assertIn("protected pixel byte-identically", doc)
+        self.assertIn("P12-R1 gate", doc)
+        self.assertIn("R1 must not execute the matched run", doc)
+        self.assertIn("Do **not** create a composite winner score", doc)
 
     def test_owner_review_loop_requires_explicit_human_aesthetic_authority(self) -> None:
         policy = json.loads(
