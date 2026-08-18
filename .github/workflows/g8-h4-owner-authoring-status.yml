@@ -1,0 +1,162 @@
+name: G8-H4 owner authoring status callback
+
+on:
+  workflow_run:
+    workflows: ["Owner G8-H4 retained static humanoid authoring"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.event.workflow_run.actor.login == github.repository_owner &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main' &&
+      (github.event.workflow_run.event == 'workflow_dispatch' ||
+       github.event.workflow_run.event == 'issue_comment')
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Report retained H4 evidence to issue 119
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          python - <<'PY'
+          import io
+          import json
+          import os
+          import urllib.request
+          import zipfile
+
+          repo = os.environ["REPOSITORY"]
+          run_id = os.environ["RUN_ID"]
+          attempt = os.environ["RUN_ATTEMPT"]
+          conclusion = os.environ["RUN_CONCLUSION"]
+          run_url = os.environ["RUN_URL"]
+          event = os.environ["RUN_EVENT"]
+          head_sha = os.environ["HEAD_SHA"]
+          token = os.environ["GH_TOKEN"]
+
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TracePixel-G8-H4-owner-authoring-status",
+          }
+
+          def request_json(url):
+              request = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          artifacts_payload = request_json(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/artifacts?per_page=100"
+          )
+          artifacts = [
+              artifact
+              for artifact in artifacts_payload.get("artifacts", [])
+              if not artifact.get("expired", False)
+          ]
+          retained = next(
+              (artifact for artifact in artifacts if artifact.get("name", "").startswith("g8-h4-retained-authoring-")),
+              None,
+          )
+
+          summary = None
+          complexity = None
+          stages = None
+          failure = None
+          if retained is not None:
+              archive_request = urllib.request.Request(retained["archive_download_url"], headers=headers)
+              with urllib.request.urlopen(archive_request, timeout=60) as response:
+                  archive_bytes = response.read()
+              with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
+                  names = set(archive.namelist())
+                  if "summary.json" in names:
+                      summary = json.loads(archive.read("summary.json"))
+                  if "complexity.json" in names:
+                      complexity = json.loads(archive.read("complexity.json"))
+                  if "stage-index.json" in names:
+                      stages = json.loads(archive.read("stage-index.json"))
+                  if "failure.json" in names:
+                      failure = json.loads(archive.read("failure.json"))
+
+          artifact_lines = (
+              f"- `{retained['name']}` (artifact id `{retained['id']}`)"
+              if retained is not None
+              else "- no retained H4 artifact was published"
+          )
+
+          detail_lines = []
+          if summary is not None:
+              detail_lines.extend([
+                  f"- retained status: `{summary.get('status')}`; owner verdict: `{summary.get('owner_verdict')}`",
+                  f"- target: `{summary.get('character_target')}`",
+                  f"- native PNG SHA-256: `{summary.get('final_png_sha256')}`",
+                  "- deterministic QA is explicitly **not** visual-quality success; face/anatomy/pose/silhouette/equipment remain H5 human review",
+              ])
+          if complexity is not None:
+              qa = complexity.get("deterministic_qa", {})
+              repair = complexity.get("repair_vs_regeneration", {})
+              reuse = complexity.get("cache_or_profile_reuse", {})
+              detail_lines.extend([
+                  f"- provider calls: `{complexity.get('provider_calls')}`; input/output tokens: `{complexity.get('input_tokens')}` / `{complexity.get('output_tokens')}`",
+                  f"- iterations/revisions: `{complexity.get('iterations')}` / `{complexity.get('revisions')}`; operation calls: `{complexity.get('operation_calls')}`",
+                  f"- pixel edits / changed pixels: `{complexity.get('pixel_edits')}` / `{complexity.get('changed_pixels')}`",
+                  f"- deterministic QA evaluations: `{qa.get('evaluation_count')}`; final findings: `{len(qa.get('final_findings') or [])}`",
+                  f"- repair / regeneration provider calls: `{repair.get('repair_provider_calls')}` / `{repair.get('regeneration_provider_calls')}`; canvas restarts: `{repair.get('canvas_restarts')}`",
+                  f"- wall time: `{complexity.get('wall_time_ns')}` ns",
+                  f"- retained profile / pose reused: `{reuse.get('humanoid_profile_reused')}` / `{reuse.get('pose_profile_reused')}`; research provider calls: `{reuse.get('profile_research_provider_calls')}`",
+              ])
+              comparison = complexity.get("p10_c4_comparison", {}).get("metrics", {})
+              if comparison:
+                  detail_lines.append("- P10-C4 simple-creature → G8-H4 multipliers: " + ", ".join(
+                      f"{key} `{value.get('multiplier')}x`"
+                      for key, value in comparison.items()
+                      if isinstance(value, dict) and value.get("multiplier") is not None
+                  ))
+          if stages is not None:
+              detail_lines.append(
+                  f"- retained QA-evaluation snapshots: `{len(stages.get('stages', []))}` (evidence only; not a new semantic stage authority)"
+              )
+          if failure is not None:
+              detail_lines.extend([
+                  f"- **retained failure evidence:** `{failure.get('failure_type')}` — {failure.get('message')}",
+                  "- no schema/authority expansion is authorized from this failure; review the evidence first and apply only a minimal fix if necessary",
+              ])
+
+          details = "\n".join(detail_lines) if detail_lines else "- artifact details unavailable"
+          body = (
+              "### G8-H4 retained static-humanoid authoring callback\n\n"
+              f"Run `{run_id}` attempt `{attempt}` completed with **{conclusion}** from `{event}` on main SHA `{head_sha}`.\n\n"
+              f"Run: {run_url}\n\n"
+              "Retained artifact:\n"
+              f"{artifact_lines}\n\n"
+              "Objective H4 evidence:\n"
+              f"{details}\n\n"
+              "H5 remains the human perceptual gate. G9 animation and Trace2D integration remain blocked; this callback does not advance either lane."
+          )
+          payload = json.dumps({"body": body}).encode("utf-8")
+          comment_request = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/issues/119/comments",
+              data=payload,
+              method="POST",
+              headers={**headers, "Content-Type": "application/json"},
+          )
+          with urllib.request.urlopen(comment_request, timeout=30) as response:
+              if response.status not in (200, 201):
+                  raise SystemExit(f"status callback failed with HTTP {response.status}")
+          PY

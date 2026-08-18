@@ -2,7 +2,7 @@
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
   "current": "G8",
-  "current_child": "G8-H3",
+  "current_child": "G8-H4",
   "active_issue": 119,
   "sequence": [
     "P0",
@@ -101,6 +101,8 @@
     "G8 opens only after frozen P10-C5 owner-accepted evidence and the recorded G8 owner approval. G8-H0 is contract-only: it must freeze anatomy/proportion/identity, static pose/equipment-anchor, perceptual-evidence, complexity-accounting, and authority boundaries before any humanoid provider execution or raster generation is permitted.",
     "G8 humanoid work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Anatomy/identity profiles, pose constraints, and equipment anchors are digest-pinned authoring constraints/evidence, never a second raster authority, skeletal simulation authority, inverse-kinematics engine, or equipment-specific drawing engine.",
     "G8-H4 is the earliest child that may perform retained real humanoid provider/raster work, and only after H1-H3 contracts are green; portable PR CI must remain provider-free and full provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence must be retained.",
+    "G8-H4 must treat H0-H3 as the sufficiency test surface: do not add a schema, authority, solver, scheduler, or abstraction unless retained H4 failure evidence demonstrates a concrete blocker; preserve that failure evidence first and make only the smallest fix necessary.",
+    "G8-H4 deterministic QA success is not visual-quality success; face, anatomy, pose, silhouette, equipment readability, and aesthetic acceptance remain H5 human perceptual evidence.",
     "G9 animation/multi-frame implementation remains blocked until G8 static-humanoid evidence is frozen; G8 must not pull animation forward.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
