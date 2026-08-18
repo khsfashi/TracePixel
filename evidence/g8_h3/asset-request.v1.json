@@ -1,0 +1,32 @@
+{
+  "schema": "tracepixel.asset-request.v1",
+  "instruction": "Create one compact static humanoid guard character using the bound anatomy/identity profile, three-quarter-right pose, and equipment-anchor constraints. Keep the right-hand spear readable and the left hand clear.",
+  "art_intent": {
+    "schema": "tracepixel.art-intent.v1",
+    "asset_class": "static-humanoid-character",
+    "canvas": {
+      "width": 32,
+      "height": 32
+    },
+    "composition": {
+      "occupied_bounds": {
+        "x": 4,
+        "y": 2,
+        "width": 24,
+        "height": 29
+      },
+      "facing": "right",
+      "symmetry": null,
+      "light_direction": "top_left",
+      "palette_budget": 16
+    }
+  },
+  "profile_refs": [
+    {
+      "kind": "morphology",
+      "profile_id": "fixture-static-humanoid-v1",
+      "profile_schema": "tracepixel.humanoid-profile.v1",
+      "sha256": "6211afefa340c4c0141aae8a14ac946cbc05acaee4270a60f4862ecf477c15a5"
+    }
+  ]
+}
