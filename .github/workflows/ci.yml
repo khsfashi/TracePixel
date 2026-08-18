@@ -81,4 +81,6 @@ jobs:
       - name: Frozen P8 history checkpoints
         run: python -m evidence.p8_history.checkpoint
       - name: P10-C0 simple-creature promotion contract checkpoint
-        run: python -m evidence.p10_c0.checkpoint
+        run: python -m evidence.p10_c0.forward_checkpoint
+      - name: P10-C1 morphology profile checkpoint
+        run: python -m evidence.p10_c1.checkpoint

@@ -1,0 +1,214 @@
+{
+  "schema": "tracepixel.morphology-profile.v1",
+  "profile_id": "p10-c1-simple-creature-fixture",
+  "subject_label": "Synthetic simple-creature morphology fixture",
+  "source_evidence": [
+    {
+      "source_id": "fixture-source",
+      "kind": "academic",
+      "locator": "fixture://p10-c1/morphology",
+      "title": "Synthetic P10-C1 morphology evidence",
+      "retrieved_at_utc": "2026-08-18T01:30:00Z"
+    }
+  ],
+  "observed_facts": [
+    {
+      "fact_id": "structure",
+      "text": "The retained fixture declares a trunk, head, paired supports, and a bounded head articulation.",
+      "source_ids": [
+        "fixture-source"
+      ]
+    },
+    {
+      "fact_id": "stylization",
+      "text": "The retained fixture permits bounded pixel-space exaggeration at low resolution.",
+      "source_ids": [
+        "fixture-source"
+      ]
+    }
+  ],
+  "inferred_constraints": [],
+  "artistic_conventions": [],
+  "unknowns": [
+    {
+      "unknown_id": "exact-neck-axis",
+      "text": "No universal neck articulation axis is asserted."
+    }
+  ],
+  "creature_structure": {
+    "subject": {
+      "family_id": "fixture-family",
+      "species_id": "fixture-species",
+      "form_id": "fixture-form"
+    },
+    "landmarks": [
+      {
+        "landmark_id": "trunk",
+        "label": "Trunk",
+        "parent_landmark_id": null,
+        "mirror_landmark_id": null
+      },
+      {
+        "landmark_id": "head",
+        "label": "Head",
+        "parent_landmark_id": "trunk",
+        "mirror_landmark_id": null
+      },
+      {
+        "landmark_id": "support-left",
+        "label": "Left support",
+        "parent_landmark_id": "trunk",
+        "mirror_landmark_id": "support-right"
+      },
+      {
+        "landmark_id": "support-right",
+        "label": "Right support",
+        "parent_landmark_id": "trunk",
+        "mirror_landmark_id": "support-left"
+      }
+    ],
+    "category_declarations": [
+      {
+        "category": "relative-proportion",
+        "status": "constrained",
+        "rationale": "Coarse head/trunk proportion is retained.",
+        "unknown_id": null
+      },
+      {
+        "category": "symmetry-orientation",
+        "status": "constrained",
+        "rationale": "Paired support symmetry is retained as guidance.",
+        "unknown_id": null
+      },
+      {
+        "category": "articulation",
+        "status": "constrained",
+        "rationale": "Head articulation has a bounded retained range.",
+        "unknown_id": null
+      },
+      {
+        "category": "silhouette-critical",
+        "status": "constrained",
+        "rationale": "Head separation is silhouette-critical.",
+        "unknown_id": null
+      },
+      {
+        "category": "support-contact",
+        "status": "constrained",
+        "rationale": "Paired supports declare expected contact landmarks.",
+        "unknown_id": null
+      },
+      {
+        "category": "resolution-stylization",
+        "status": "constrained",
+        "rationale": "Low-resolution deviation is explicitly bounded.",
+        "unknown_id": null
+      }
+    ],
+    "constraints": [
+      {
+        "constraint_id": "head-ratio",
+        "category": "relative-proportion",
+        "mode": "required-range",
+        "landmark_ids": [
+          "head",
+          "trunk"
+        ],
+        "value_range": {
+          "minimum": 0.35,
+          "maximum": 0.65,
+          "unit": "ratio"
+        },
+        "text": "Retain a bounded coarse head/trunk ratio.",
+        "basis_fact_ids": [
+          "structure"
+        ],
+        "confidence": "high"
+      },
+      {
+        "constraint_id": "support-symmetry",
+        "category": "symmetry-orientation",
+        "mode": "hint",
+        "landmark_ids": [
+          "support-left",
+          "support-right"
+        ],
+        "value_range": null,
+        "text": "Keep paired supports approximately bilateral before pose-specific overrides.",
+        "basis_fact_ids": [
+          "structure"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "constraint_id": "head-joint",
+        "category": "articulation",
+        "mode": "required-range",
+        "landmark_ids": [
+          "head",
+          "trunk"
+        ],
+        "value_range": {
+          "minimum": -45.0,
+          "maximum": 45.0,
+          "unit": "degrees"
+        },
+        "text": "Keep neutral head articulation inside the retained range.",
+        "basis_fact_ids": [
+          "structure"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "constraint_id": "head-silhouette",
+        "category": "silhouette-critical",
+        "mode": "hint",
+        "landmark_ids": [
+          "head",
+          "trunk"
+        ],
+        "value_range": null,
+        "text": "Preserve a readable head break from the trunk.",
+        "basis_fact_ids": [
+          "structure"
+        ],
+        "confidence": "high"
+      },
+      {
+        "constraint_id": "support-contact",
+        "category": "support-contact",
+        "mode": "hint",
+        "landmark_ids": [
+          "support-left",
+          "support-right"
+        ],
+        "value_range": null,
+        "text": "Retain both support landmarks as possible ground contacts.",
+        "basis_fact_ids": [
+          "structure"
+        ],
+        "confidence": "high"
+      },
+      {
+        "constraint_id": "pixel-tolerance",
+        "category": "resolution-stylization",
+        "mode": "stylization-tolerance",
+        "landmark_ids": [
+          "head",
+          "support-left",
+          "support-right"
+        ],
+        "value_range": {
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "unit": "pixels"
+        },
+        "text": "Allow at most two pixels of declared low-resolution exaggeration.",
+        "basis_fact_ids": [
+          "stylization"
+        ],
+        "confidence": "medium"
+      }
+    ]
+  }
+}

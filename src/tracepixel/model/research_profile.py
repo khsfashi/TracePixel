@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 FORM_RESOLUTION_SCHEMA_V1 = "tracepixel.form-resolution.v1"
 MORPHOLOGY_PROFILE_SCHEMA_V1 = "tracepixel.morphology-profile.v1"
@@ -14,6 +14,9 @@ MAX_PROFILE_FACTS_V1 = 64
 MAX_PROFILE_CONSTRAINTS_V1 = 64
 MAX_PROFILE_CONVENTIONS_V1 = 32
 MAX_PROFILE_UNKNOWNS_V1 = 32
+MAX_PROFILE_LANDMARKS_V1 = 64
+MAX_PROFILE_STRUCTURAL_CONSTRAINTS_V1 = 96
+MAX_PROFILE_CATEGORY_DECLARATIONS_V1 = 6
 
 SourceKindV1 = Literal[
     "official",
@@ -25,6 +28,17 @@ SourceKindV1 = Literal[
 ]
 ResearchResolutionKindV1 = Literal["known_profile", "research_required"]
 ConfidenceV1 = Literal["low", "medium", "high"]
+ConstraintModeV1 = Literal["required-range", "hint", "stylization-tolerance"]
+CreatureConstraintCategoryV1 = Literal[
+    "relative-proportion",
+    "symmetry-orientation",
+    "articulation",
+    "silhouette-critical",
+    "support-contact",
+    "resolution-stylization",
+]
+CreatureConstraintStatusV1 = Literal["constrained", "not-applicable", "unknown"]
+RangeUnitV1 = Literal["ratio", "degrees", "pixels"]
 
 
 class MorphologyProfileRefV1(TypedDict):
@@ -89,6 +103,52 @@ class UnknownV1(TypedDict):
     text: str
 
 
+class MorphologySubjectV1(TypedDict):
+    family_id: str
+    species_id: str
+    form_id: str
+
+
+class MorphologyLandmarkV1(TypedDict):
+    landmark_id: str
+    label: str
+    parent_landmark_id: str | None
+    mirror_landmark_id: str | None
+
+
+class MorphologyValueRangeV1(TypedDict):
+    minimum: float
+    maximum: float
+    unit: RangeUnitV1
+
+
+class MorphologyCategoryDeclarationV1(TypedDict):
+    category: CreatureConstraintCategoryV1
+    status: CreatureConstraintStatusV1
+    rationale: str
+    unknown_id: str | None
+
+
+class MorphologyStructuralConstraintV1(TypedDict):
+    constraint_id: str
+    category: CreatureConstraintCategoryV1
+    mode: ConstraintModeV1
+    landmark_ids: list[str]
+    value_range: MorphologyValueRangeV1 | None
+    text: str
+    basis_fact_ids: list[str]
+    confidence: ConfidenceV1
+
+
+class CreatureStructureV1(TypedDict):
+    """Provider-neutral simple-creature structure; never pixel/raster authority."""
+
+    subject: MorphologySubjectV1
+    landmarks: list[MorphologyLandmarkV1]
+    category_declarations: list[MorphologyCategoryDeclarationV1]
+    constraints: list[MorphologyStructuralConstraintV1]
+
+
 class MorphologyProfileV1(TypedDict):
     """Reusable research-backed form knowledge, separate from pixel/raster authority."""
 
@@ -100,3 +160,4 @@ class MorphologyProfileV1(TypedDict):
     inferred_constraints: list[InferredConstraintV1]
     artistic_conventions: list[ArtisticConventionV1]
     unknowns: list[UnknownV1]
+    creature_structure: NotRequired[CreatureStructureV1]
