@@ -1,3 +1,3 @@
-triggered_at=2026-08-18T16:22:00+09:00
-reason=run retained static humanoid authoring through observable owner PR executor
-event=synchronize-after-minimal-probe-registration
+triggered_at=2026-08-18T16:25:00+09:00
+reason=prove minimal H4 PR executor reaches trusted self-hosted runner
+event=synchronize-after-minimal-executor-merge
