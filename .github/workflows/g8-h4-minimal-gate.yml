@@ -30,10 +30,8 @@ jobs:
   selfhost-probe:
     needs: gate
     if: github.event.issue.number == 119 && github.event.comment.user.login == 'khsfashi' && github.event.comment.body == '/tracepixel g8-h4-author'
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: self-hosted
     timeout-minutes: 5
     steps:
       - name: Confirm trusted runner scheduling
-        shell: pwsh
-        run: |
-          Write-Host "G8-H4 self-hosted scheduling probe running on $env:RUNNER_NAME"
+        run: echo "G8-H4 self-hosted scheduling probe is running"
