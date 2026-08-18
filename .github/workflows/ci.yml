@@ -77,24 +77,8 @@ jobs:
       - name: B1-S0 frozen held-out schedule checkpoint
         run: python -m evidence.b1_s0.checkpoint
       - name: B1-P0 immutable generalization postmortem checkpoint
-        run: python -m evidence.b1_p0.checkpoint
-      - name: P8-X0 bounded AssetSet contract checkpoint
-        run: python -m evidence.p8_x0.checkpoint
-      - name: P8-R0 research-to-asset profile checkpoint
-        run: python -m evidence.p8_r0.checkpoint
-      - name: P8-B0 multi-asset request and schedule checkpoint
-        run: python -m evidence.p8_b0.checkpoint
-      - name: P8-B1 isolated execution and cost telemetry checkpoint
-        run: python -m evidence.p8_b1.checkpoint
-      - name: P8-C0 batch cost-scaling gate
-        run: python -m evidence.p8_c0.checkpoint
-      - name: P8-B2 cross-asset consistency contract checkpoint
-        run: python -m evidence.p8_b2.checkpoint
-      - name: P8-B3 icon/prop set breadth checkpoint
-        run: python -m evidence.p8_b3.checkpoint
-      - name: P8-B4 tile-set breadth checkpoint
-        run: python -m evidence.p8_b4.checkpoint
-      - name: P8-B5 batch mobile-review surface checkpoint
-        run: python -m evidence.p8_b5.forward_checkpoint
-      - name: P8-B6 production-breadth postmortem checkpoint
-        run: python -m evidence.p8_b6.checkpoint
+        run: python -m evidence.b1_p0.forward_checkpoint
+      - name: Frozen P8 history checkpoints
+        run: python -m evidence.p8_history.checkpoint
+      - name: P10-C0 simple-creature promotion contract checkpoint
+        run: python -m evidence.p10_c0.checkpoint

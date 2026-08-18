@@ -1,0 +1,126 @@
+{
+  "schema": "tracepixel.p10-c0-promotion-contract.v1",
+  "source_issue": 109,
+  "owner_gate": "G7",
+  "owner_decision_date": "2026-08-17",
+  "status": "contract-frozen",
+  "prerequisites": {
+    "p8_b6_postmortem": "frozen-complete",
+    "p8_b6_postmortem_path": "evidence/p8_b6/postmortem.v1.json",
+    "g7_simple_creature_direction": "owner-approved"
+  },
+  "lane": {
+    "phase": "P10",
+    "current_child": "P10-C0",
+    "children": [
+      "P10-C0",
+      "P10-C1",
+      "P10-C2",
+      "P10-C3",
+      "P10-C4",
+      "P10-C5"
+    ],
+    "next_child": "P10-C1"
+  },
+  "scope": {
+    "asset_class": "simple-creature",
+    "creature_raster_generation_allowed": false,
+    "creature_provider_execution_allowed": false,
+    "humanoid_implementation_allowed": false,
+    "animation_implementation_allowed": false,
+    "trace2d_adapter_allowed": false,
+    "new_raster_authority_allowed": false,
+    "physical_simulation_required": false
+  },
+  "morphology_profile": {
+    "planned_schema": "tracepixel.morphology-profile.v1",
+    "versioned": true,
+    "digest_pinned": true,
+    "authority": "research-evidence-and-authoring-context-only",
+    "constraint_modes": [
+      "required-range",
+      "hint",
+      "stylization-tolerance"
+    ],
+    "required_categories": [
+      "subject-family",
+      "canonical-landmarks",
+      "relative-proportion-ranges",
+      "symmetry-orientation-expectations",
+      "articulation-relationships",
+      "silhouette-critical-features",
+      "support-contact-expectations",
+      "resolution-stylization-tolerances",
+      "provenance-evidence-references",
+      "confidence-and-unknowns"
+    ],
+    "is_raster_authority": false
+  },
+  "pose_constraint": {
+    "planned_schema": "tracepixel.creature-pose.v1",
+    "binds_morphology_digest": true,
+    "constraint_modes": [
+      "required-range",
+      "hint",
+      "stylization-tolerance"
+    ],
+    "required_capabilities": [
+      "named-pose-orientation-intent",
+      "landmark-or-joint-relations",
+      "bounded-articulation-ranges",
+      "support-contact-landmarks",
+      "coarse-support-contact-plausibility",
+      "silhouette-facing-expectations"
+    ],
+    "is_physics_engine": false,
+    "is_skeletal_raster_authority": false
+  },
+  "evidence_authority": {
+    "deterministic_facts": [
+      "schema-and-version-identity",
+      "digest-binding",
+      "finite-range-validity",
+      "landmark-reference-integrity",
+      "declared-required-relation-satisfaction-when-structured",
+      "support-contact-declarations",
+      "existing-raster-and-qa-facts",
+      "provider-cost-and-provenance-accounting"
+    ],
+    "perceptual_facts": [
+      "species-or-form-recognizability",
+      "silhouette-readability",
+      "stylized-anatomy-believability",
+      "pose-intent-readability",
+      "visual-identity-and-style-coherence"
+    ],
+    "vlm_is_deterministic_correctness": false,
+    "final_aesthetic_acceptance": "human"
+  },
+  "complexity": {
+    "reuse_existing_single_asset_accounting": true,
+    "required_metrics": [
+      "provider-calls",
+      "input-tokens",
+      "output-tokens",
+      "iterations",
+      "revisions",
+      "operation-calls",
+      "pixel-edits",
+      "changed-pixels",
+      "deterministic-qa-findings",
+      "repair-versus-regeneration",
+      "wall-time",
+      "cache-or-profile-reuse",
+      "failure-category"
+    ],
+    "research_profile_cost_separately_attributable": true,
+    "synthetic_quality_cost_winner_allowed": false,
+    "b1_single_member_staged_cost_warning_resolved": false
+  },
+  "authority": {
+    "single_asset_pixelprogram_canvas_reused": true,
+    "morphology_or_pose_becomes_pixel_authority": false,
+    "second_creature_drawing_engine_allowed": false,
+    "hidden_creature_scheduler_provider_work_allowed": false
+  }
+}
