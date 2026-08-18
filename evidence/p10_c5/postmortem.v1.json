@@ -1,0 +1,80 @@
+{
+  "schema": "tracepixel.p10-c5-postmortem.v1",
+  "status": "frozen-complete",
+  "source_issue": 109,
+  "owner_approval_comment_id": 5323810558,
+  "scope": {
+    "promotion": "simple-creature",
+    "single_asset_authority_reused": true,
+    "new_raster_authority_added": false,
+    "humanoid_implementation_added": false,
+    "animation_implementation_added": false,
+    "trace2d_integration_added": false
+  },
+  "quality": {
+    "deterministic_qa_final_findings": 0,
+    "owner_verdict": "accepted",
+    "recognizable_as_generic_simple_creature": true,
+    "pose_readable": true,
+    "tail_readable": true,
+    "light_shadow_readable": true,
+    "ground_shadow_readable": true,
+    "named_real_species_required": false
+  },
+  "cost": {
+    "provider_calls": 1,
+    "input_tokens": 18854,
+    "output_tokens": 3762,
+    "operation_calls": 1,
+    "pixel_edits": 270,
+    "changed_pixels": 270,
+    "regeneration_provider_calls": 0,
+    "scheduler_provider_calls": 0,
+    "morphology_research_provider_calls": 0,
+    "b1_staged_single_asset_cost_warning": "carried-forward-unresolved"
+  },
+  "failure_behavior": {
+    "deterministic_final_failures": 0,
+    "owner_rejected_retained_outputs": 0,
+    "repair_attempts": 0,
+    "canvas_restarts": 0,
+    "infrastructure_failure_in_retained_success_run": false
+  },
+  "findings": [
+    {
+      "id": "Q1",
+      "category": "quality",
+      "finding": "A synthetic generic quadruped can be authored through the existing single-asset PixelProgram/Canvas path and accepted by the human owner without a creature-specific raster engine."
+    },
+    {
+      "id": "Q2",
+      "category": "quality",
+      "finding": "The retained 32x32 output communicates four supports, right-facing pose, tail, light/shadow separation, and a simple ground shadow sufficiently for the approved generic creature fixture."
+    },
+    {
+      "id": "C1",
+      "category": "cost",
+      "finding": "The accepted retained output required one real provider call with 18,854 input tokens and 3,762 output tokens; P10 does not erase the previously retained B1 staged-cost warning."
+    },
+    {
+      "id": "C2",
+      "category": "cost",
+      "finding": "Creature promotion added no hidden scheduler provider call, morphology-research provider call, regeneration call, or second raster authority."
+    },
+    {
+      "id": "F1",
+      "category": "failure",
+      "finding": "The successful retained attempt needed no human-requested repair, canvas restart, or regeneration provider call after deterministic QA converged."
+    },
+    {
+      "id": "A1",
+      "category": "authority",
+      "finding": "Human perceptual acceptance remains separate from deterministic QA; recognizability, stylized anatomy, pose readability, and visual coherence are not converted into deterministic truth."
+    }
+  ],
+  "post_p10": {
+    "g8_humanoid_direction": "owner-approved-long-term-destination-contract-lane-next",
+    "g9_animation_direction": "blocked-until-humanoid-promotion-evidence",
+    "p9_trace2d": "still requires explicit G10 approval before adapter work"
+  }
+}
