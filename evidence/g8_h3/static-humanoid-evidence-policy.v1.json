@@ -1,0 +1,26 @@
+{
+  "schema": "tracepixel.static-humanoid-evidence-policy.v1",
+  "deterministic_facts": [
+    "schema-and-version-identity",
+    "digest-binding",
+    "finite-range-validity",
+    "body-landmark-reference-integrity",
+    "equipment-anchor-reference-integrity",
+    "declared-required-relation-satisfaction-when-structured",
+    "support-contact-declarations",
+    "declared-orientation-and-attachment-side-intent",
+    "existing-raster-and-qa-facts",
+    "provider-cost-and-provenance-accounting"
+  ],
+  "perceptual_facts": [
+    "humanoid-recognizability",
+    "anatomy-believability-for-stylization",
+    "pose-intent-readability",
+    "identity-coherence",
+    "silhouette-readability",
+    "equipment-readability",
+    "visual-style-coherence"
+  ],
+  "vlm_is_deterministic_correctness": false,
+  "final_aesthetic_acceptance": "human"
+}
