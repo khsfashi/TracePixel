@@ -8,6 +8,7 @@ on:
 permissions:
   actions: read
   contents: read
+  issues: write
 
 concurrency:
   group: g8-h4-owner-retained-authoring
@@ -20,8 +21,8 @@ jobs:
        github.ref == 'refs/heads/main' &&
        github.actor == github.repository_owner) ||
       (github.event_name == 'issue_comment' &&
-       github.actor == github.repository_owner &&
        github.event.issue.number == 119 &&
+       github.event.comment.user.login == github.repository_owner &&
        github.event.comment.body == '/tracepixel g8-h4-author')
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
@@ -251,6 +252,7 @@ jobs:
           }
 
       - name: Verify retained evidence and H5 gate
+        id: verify
         if: always()
         shell: pwsh
         run: |
@@ -314,6 +316,7 @@ jobs:
           if (-not (Test-Path artifacts/g8-h4-retained/review-package/H5_REVIEW.md)) { throw "H5 perceptual review guide is missing." }
 
       - name: Upload retained static humanoid review artifact
+        id: upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -321,3 +324,75 @@ jobs:
           path: artifacts/g8-h4-retained
           if-no-files-found: error
           retention-days: 30
+
+      - name: Report H4 owner run directly to issue 119
+        if: always()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          JOB_STATUS: ${{ job.status }}
+          AUTHORING_OUTCOME: ${{ steps.authoring.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+        run: |
+          $ErrorActionPreference = "Continue"
+          $summaryStatus = "unavailable"
+          $failureLine = "none retained"
+          $providerCalls = "unknown"
+          $inputTokens = "unknown"
+          $outputTokens = "unknown"
+
+          if (Test-Path artifacts/g8-h4-retained/summary.json) {
+            try {
+              $summary = Get-Content artifacts/g8-h4-retained/summary.json -Raw | ConvertFrom-Json
+              $summaryStatus = [string]$summary.status
+            } catch {}
+          }
+          if (Test-Path artifacts/g8-h4-retained/failure.json) {
+            try {
+              $failure = Get-Content artifacts/g8-h4-retained/failure.json -Raw | ConvertFrom-Json
+              $failureLine = "${($failure.failure_type)} — ${($failure.message)}"
+            } catch {
+              $failureLine = "failure.json exists but could not be parsed"
+            }
+          }
+          if (Test-Path artifacts/g8-h4-retained/complexity.json) {
+            try {
+              $complexity = Get-Content artifacts/g8-h4-retained/complexity.json -Raw | ConvertFrom-Json
+              $providerCalls = [string]$complexity.provider_calls
+              $inputTokens = [string]$complexity.input_tokens
+              $outputTokens = [string]$complexity.output_tokens
+            } catch {}
+          }
+
+          $body = @"
+### G8-H4 direct owner-run report
+
+Run `$env:RUN_ID` attempt `$env:RUN_ATTEMPT` finished with job status **$env:JOB_STATUS**.
+
+- run: https://github.com/$env:REPOSITORY/actions/runs/$env:RUN_ID
+- authoring step: `$env:AUTHORING_OUTCOME`
+- retained summary status: `$summaryStatus`
+- verify step: `$env:VERIFY_OUTCOME`
+- artifact upload step: `$env:UPLOAD_OUTCOME`
+- retained failure: `$failureLine`
+- cumulative provider calls / input tokens / output tokens: `$providerCalls` / `$inputTokens` / `$outputTokens`
+- expected artifact: `g8-h4-retained-authoring-$env:RUN_ID`
+
+This direct report is emitted by the trusted self-hosted H4 job itself so diagnosis does not depend on the separate GitHub-hosted callback workflow. H5 remains the human perceptual gate; this report does not self-approve the image or advance G9/Trace2D.
+"@
+
+          $payload = @{ body = $body } | ConvertTo-Json -Depth 4
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = "application/vnd.github+json"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          Invoke-RestMethod -Method Post `
+            -Uri "https://api.github.com/repos/$env:REPOSITORY/issues/119/comments" `
+            -Headers $headers `
+            -ContentType "application/json" `
+            -Body $payload | Out-Null
