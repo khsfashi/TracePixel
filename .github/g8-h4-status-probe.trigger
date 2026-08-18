@@ -1,2 +1,2 @@
-triggered_at=2026-08-18T16:10:00+09:00
-reason=inspect live H4 workflow and runner status without launching authoring
+triggered_at=2026-08-18T16:12:30+09:00
+reason=execute existing read-only H4 status probe after workflow registration
