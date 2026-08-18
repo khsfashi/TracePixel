@@ -1,0 +1,20 @@
+name: G8-H4 authoring status historical evidence
+
+# Historical path retained because the frozen G8-H4 checkpoint binds this
+# filename as status-callback evidence. The live retained H5 candidate already
+# has provider-free cumulative evidence, so this placeholder has no automatic
+# trigger and performs no status publication or provider/raster work.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  historical-evidence-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain inert historical workflow
+        run: |
+          echo "Historical G8-H4 status workflow path retained for checkpoint evidence."
+          echo "No callback publication, provider calls, raster work, H5 approval, G9 advancement, or Trace2D integration occur here."
