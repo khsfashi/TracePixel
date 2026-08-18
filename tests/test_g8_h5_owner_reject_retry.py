@@ -60,21 +60,25 @@ class G8H5Tests(unittest.TestCase):
             output = Path(temporary) / "retry"
             summary = run_retry(output, lambda: provider, source_sha="2" * 40)
             self.assertEqual(provider.calls, 1)
-            self.assertEqual(provider.requests[0]["instruction"], RETRY_INSTRUCTION)
+            instruction = provider.requests[0]["instruction"]
+            self.assertTrue(instruction.startswith(RETRY_INSTRUCTION))
+            self.assertIn("BOUND_HUMANOID_CONTEXT=", instruction)
+            self.assertIn("orientation_intent", instruction)
+            self.assertIn("equipment_attachments", instruction)
             self.assertEqual(summary["status"], "awaiting-owner-review")
             self.assertEqual(summary["owner_verdict"], "pending")
             self.assertFalse(summary["deterministic_qa_is_visual_quality_success"])
             self.assertEqual(summary["provider_repair_calls_allowed"], 0)
-            self.assertEqual(tuple(summary["h5_required_approvals"]), H5_REQUIRD_APPROVALS))
+            self.assertEqual(tuple(summary["h5_required_approvals"]), H5_REQUIRED_APPROVALS))
             guard = json.loads((output / "quality-per-cost-guard.json").read_text(encoding="utf-8"))
             self.assertTrue(guard["passed"])
             complexity = json.loads((output / "complexity.json").read_text(encoding="utf-8"))
             self.assertEqual(complexity["repair_vs_regeneration"]["repair_provider_calls"], 0)
 
     def test_owner_accept_requires_all_seven(self) -> None:
-        approved = {name: True for name in H5_REQUIRED_APPROVALS}
+        approved = {name: True for name in H5_REQUIRD_APPROVALS}
         self.assertTrue(validate_owner_review(approved))
-        for name in H5_REQUIRED_APPROVALS:
+        for name in H5_REQUIRD_APPROVALS:
             rejected = dict(approved)
             rejected[name] = False
             self.assertFalse(validate_owner_review(rejected))

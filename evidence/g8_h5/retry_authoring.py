@@ -46,7 +46,12 @@ class _RetryProvider:
         if self.requests:
             raise RuntimeError("G8-H5 forbids provider repair/retry calls")
         transformed = copy.deepcopy(request)
-        transformed["instruction"] = RETRY_INSTRUCTION
+        original_instruction = transformed.get("instruction", "")
+        marker = "BOUND_HUMANOID_CONTEXT="
+        if type(original_instruction) is not str or marker not in original_instruction:
+            raise RuntimeError("H5 retry requires the retained H1/H2 bound humanoid context")
+        bound_context = original_instruction[original_instruction.index(marker):]
+        transformed["instruction"] = f"{RETRY_INSTRUCTION} {bound_context}"
         self.requests.append(copy.deepcopy(transformed))
         return self.delegate.propose(transformed)
 
