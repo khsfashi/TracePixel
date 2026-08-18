@@ -19,6 +19,10 @@ class CanvasSizeError(RasterContractError):
     """Raised when requested canvas dimensions violate the raster contract."""
 
 
+class RasterByteDataError(RasterContractError):
+    """Raised when authoritative RGBA8 byte data violates the raster contract."""
+
+
 class PixelCoordinateError(RasterContractError):
     """Raised when a pixel coordinate is not an in-bounds integer coordinate."""
 
