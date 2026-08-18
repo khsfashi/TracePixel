@@ -1,0 +1,76 @@
+{
+  "schema": "tracepixel.creature-pose.v1",
+  "pose_id": "p10-c2-grounded-alert",
+  "pose_name": "Grounded three-quarter alert",
+  "morphology_ref": {
+    "profile_id": "p10-c1-simple-creature-fixture",
+    "profile_schema": "tracepixel.morphology-profile.v1",
+    "sha256": "a828dcc541ffd431705bbb6dec47e201eab99dfd64632910088bcf159ada02ad"
+  },
+  "orientation_intent": {
+    "facing": "three-quarter-right",
+    "description": "Read as a grounded three-quarter-right alert pose without asserting camera projection or skeletal raster coordinates."
+  },
+  "relations": [
+    {
+      "relation_id": "coarse-head-trunk-read",
+      "kind": "landmark-relation",
+      "mode": "hint",
+      "landmark_ids": [
+        "head",
+        "trunk"
+      ],
+      "value_range": null,
+      "morphology_constraint_ids": [
+        "head-ratio"
+      ],
+      "text": "Keep the head-to-trunk grouping readable in the named pose."
+    },
+    {
+      "relation_id": "alert-head-angle",
+      "kind": "articulation",
+      "mode": "required-range",
+      "landmark_ids": [
+        "head",
+        "trunk"
+      ],
+      "value_range": {
+        "minimum": -20.0,
+        "maximum": 25.0,
+        "unit": "degrees"
+      },
+      "morphology_constraint_ids": [
+        "head-joint"
+      ],
+      "text": "Keep the alert head articulation inside this narrower pose-specific range."
+    },
+    {
+      "relation_id": "grounded-supports",
+      "kind": "support-contact",
+      "mode": "hint",
+      "landmark_ids": [
+        "support-left",
+        "support-right"
+      ],
+      "value_range": null,
+      "morphology_constraint_ids": [
+        "support-contact"
+      ],
+      "text": "Both declared support landmarks should read as coarse ground contacts; this is not a physics solve."
+    },
+    {
+      "relation_id": "facing-head-silhouette",
+      "kind": "silhouette-facing",
+      "mode": "hint",
+      "landmark_ids": [
+        "head",
+        "trunk"
+      ],
+      "value_range": null,
+      "morphology_constraint_ids": [
+        "head-silhouette"
+      ],
+      "text": "Preserve a visible head break that supports the declared three-quarter-right facing intent."
+    }
+  ]
+}
