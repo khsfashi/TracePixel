@@ -1,0 +1,20 @@
+{
+  "schema": "tracepixel.simple-creature-request.v1",
+  "request_ref": "evidence/p10_c3/asset-request.v1.json",
+  "request_schema": "tracepixel.asset-request.v1",
+  "request_sha256": "c19257772e1a7e888c6826d64df86869ae710183819afad063bcd11ba79afe7b",
+  "morphology_ref": {
+    "profile_id": "p10-c1-simple-creature-fixture",
+    "profile_schema": "tracepixel.morphology-profile.v1",
+    "sha256": "a828dcc541ffd431705bbb6dec47e201eab99dfd64632910088bcf159ada02ad"
+  },
+  "pose_ref": {
+    "pose_id": "p10-c2-grounded-alert",
+    "pose_schema": "tracepixel.creature-pose.v1",
+    "sha256": "f32b0cab9874443352016feb00caee03f137abb9f9a24d77ba534d8a465468a9"
+  },
+  "evidence_policy_ref": {
+    "policy_schema": "tracepixel.simple-creature-evidence-policy.v1",
+    "sha256": "ef66464e7d6a107beacc336a4a04bc22aa975d2e472819cf102dff1175ac4278"
+  }
+}

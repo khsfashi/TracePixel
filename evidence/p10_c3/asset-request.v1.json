@@ -1,0 +1,32 @@
+{
+  "schema": "tracepixel.asset-request.v1",
+  "instruction": "Create a compact four-legged simple creature in a grounded alert pose using the bound morphology and pose constraints.",
+  "art_intent": {
+    "schema": "tracepixel.art-intent.v1",
+    "asset_class": "simple-creature",
+    "canvas": {
+      "width": 32,
+      "height": 32
+    },
+    "composition": {
+      "occupied_bounds": {
+        "x": 3,
+        "y": 5,
+        "width": 26,
+        "height": 23
+      },
+      "facing": "right",
+      "symmetry": null,
+      "light_direction": "top_left",
+      "palette_budget": 12
+    }
+  },
+  "profile_refs": [
+    {
+      "kind": "morphology",
+      "profile_id": "p10-c1-simple-creature-fixture",
+      "profile_schema": "tracepixel.morphology-profile.v1",
+      "sha256": "a828dcc541ffd431705bbb6dec47e201eab99dfd64632910088bcf159ada02ad"
+    }
+  ]
+}
