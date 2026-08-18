@@ -109,28 +109,48 @@ jobs:
                   "- deterministic QA is explicitly **not** visual-quality success; face/anatomy/pose/silhouette/equipment remain H5 human review",
               ])
           if complexity is not None:
-              qa = complexity.get("deterministic_qa", {})
               repair = complexity.get("repair_vs_regeneration", {})
               reuse = complexity.get("cache_or_profile_reuse", {})
+              authority = complexity.get("authority", {})
               detail_lines.extend([
-                  f"- provider calls: `{complexity.get('provider_calls')}`; input/output tokens: `{complexity.get('input_tokens')}` / `{complexity.get('output_tokens')}`",
-                  f"- iterations/revisions: `{complexity.get('iterations')}` / `{complexity.get('revisions')}`; operation calls: `{complexity.get('operation_calls')}`",
-                  f"- pixel edits / changed pixels: `{complexity.get('pixel_edits')}` / `{complexity.get('changed_pixels')}`",
-                  f"- deterministic QA evaluations: `{qa.get('evaluation_count')}`; final findings: `{len(qa.get('final_findings') or [])}`",
-                  f"- repair / regeneration provider calls: `{repair.get('repair_provider_calls')}` / `{repair.get('regeneration_provider_calls')}`; canvas restarts: `{repair.get('canvas_restarts')}`",
-                  f"- wall time: `{complexity.get('wall_time_ns')}` ns",
-                  f"- retained profile / pose reused: `{reuse.get('humanoid_profile_reused')}` / `{reuse.get('pose_profile_reused')}`; research provider calls: `{reuse.get('profile_research_provider_calls')}`",
+                  f"- cumulative scope: `{complexity.get('measurement_scope')}`; attempts: `{complexity.get('attempt_count')}`; provider attempts: `{complexity.get('provider_attempt_count')}`",
+                  f"- **cumulative provider calls:** `{complexity.get('provider_calls')}`; input/output tokens: `{complexity.get('input_tokens')}` / `{complexity.get('output_tokens')}`",
+                  f"- cumulative iterations/revisions: `{complexity.get('iterations')}` / `{complexity.get('revisions')}`; operation calls: `{complexity.get('operation_calls')}`",
+                  f"- cumulative pixel edits / changed pixels: `{complexity.get('pixel_edits')}` / `{complexity.get('changed_pixels')}`",
+                  f"- cumulative repair / regeneration provider calls: `{repair.get('repair_provider_calls')}` / `{repair.get('regeneration_provider_calls')}`; canvas restarts: `{repair.get('canvas_restarts')}`",
+                  f"- cumulative wall time: `{complexity.get('wall_time_ns')}` ns",
+                  f"- all provider attempts reused retained profile / pose: `{reuse.get('humanoid_profile_reused_for_all_provider_attempts')}` / `{reuse.get('pose_profile_reused_for_all_provider_attempts')}`; research provider calls: `{reuse.get('profile_research_provider_calls')}`",
+                  f"- evidence authority: `{authority.get('authoritative_evidence')}`; price conversion: `{authority.get('price_conversion')}`; price used for comparison: `{authority.get('price_fields_used_for_comparison')}`",
               ])
               comparison = complexity.get("p10_c4_comparison", {}).get("metrics", {})
               if comparison:
-                  detail_lines.append("- P10-C4 simple-creature → G8-H4 multipliers: " + ", ".join(
-                      f"{key} `{value.get('multiplier')}x`"
-                      for key, value in comparison.items()
-                      if isinstance(value, dict) and value.get("multiplier") is not None
-                  ))
+                  defined = []
+                  zero_baseline = []
+                  for key, value in comparison.items():
+                      if not isinstance(value, dict):
+                          continue
+                      percent = value.get("percent_change")
+                      if percent is not None:
+                          defined.append(f"{key} `{percent:+g}%` (`{value.get('multiplier')}x`)")
+                      elif value.get("rate_status") == "undefined-zero-baseline":
+                          zero_baseline.append(f"{key} delta `{value.get('absolute_delta')}` (P10 baseline 0; rate undefined)")
+                  if defined:
+                      detail_lines.append("- P10-C4 → cumulative G8-H4 raw-metric change: " + ", ".join(defined))
+                  if zero_baseline:
+                      detail_lines.append("- zero-baseline comparisons: " + ", ".join(zero_baseline))
+              incomplete = [
+                  key for key, value in (complexity.get("usage_completeness") or {}).items()
+                  if value is not True
+              ]
+              if incomplete:
+                  detail_lines.append(
+                      "- **raw usage is incomplete** for: " + ", ".join(incomplete) + "; H5 must not freeze exact cumulative cost evidence until resolved"
+                  )
+              else:
+                  detail_lines.append("- all cumulative raw usage fields required for H5 are exact/complete")
           if stages is not None:
               detail_lines.append(
-                  f"- retained QA-evaluation snapshots: `{len(stages.get('stages', []))}` (evidence only; not a new semantic stage authority)"
+                  f"- retained QA-evaluation snapshots in current candidate: `{len(stages.get('stages', []))}` (evidence only; not a new semantic stage authority)"
               )
           if failure is not None:
               detail_lines.extend([
@@ -147,7 +167,7 @@ jobs:
               f"{artifact_lines}\n\n"
               "Objective H4 evidence:\n"
               f"{details}\n\n"
-              "H5 remains the human perceptual gate. G9 animation and Trace2D integration remain blocked; this callback does not advance either lane."
+              "The cumulative raw metrics are authoritative evidence through this owner candidate; price conversion is derived/non-authoritative. If this image is accepted, H5 must freeze this exact cumulative evidence. H5 remains the human perceptual gate. G9 animation and Trace2D integration remain blocked."
           )
           payload = json.dumps({"body": body}).encode("utf-8")
           comment_request = urllib.request.Request(
