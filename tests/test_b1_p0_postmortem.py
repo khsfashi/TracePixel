@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from evidence.b1_p0.checkpoint import run
+from evidence.b1_p0.forward_checkpoint import run
 
 
 class B1P0PostmortemTests(unittest.TestCase):
