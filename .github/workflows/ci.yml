@@ -99,4 +99,6 @@ jobs:
       - name: G8-H0 humanoid promotion authority contract checkpoint
         run: python -m evidence.g8_h0.forward_checkpoint
       - name: G8-H1 humanoid anatomy/proportion/identity profile checkpoint
-        run: python -m evidence.g8_h1.checkpoint
+        run: python -m evidence.g8_h1.forward_checkpoint
+      - name: G8-H2 humanoid pose and equipment constraint checkpoint
+        run: python -m evidence.g8_h2.checkpoint
