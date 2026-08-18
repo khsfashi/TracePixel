@@ -93,4 +93,6 @@ jobs:
       - name: P10-C3 simple-creature request binding checkpoint
         run: python -m evidence.p10_c3.forward_checkpoint
       - name: P10-C4 retained simple-creature authoring checkpoint
-        run: python -m evidence.p10_c4.checkpoint
+        run: python -m evidence.p10_c4.forward_checkpoint
+      - name: P10-C5 owner review and promotion postmortem checkpoint
+        run: python -m evidence.p10_c5.checkpoint

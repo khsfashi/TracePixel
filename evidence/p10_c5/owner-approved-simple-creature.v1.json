@@ -1,0 +1,57 @@
+{
+  "schema": "tracepixel.p10-c5-owner-approved-simple-creature.v1",
+  "source_issue": 109,
+  "owner_approval_comment_id": 5323810558,
+  "owner_verdict": "accepted",
+  "scope": "retained-output",
+  "retained_authoring": {
+    "run_id": 32099831527,
+    "artifact_id": 9311214420,
+    "main_sha": "d736281c71c4a9a65ca44a0fd4202d994241decf",
+    "final_png_sha256": "1ce31cd4fdeeb3d19403a44e074dc6e32803870ae30c40fccaefc96582eb4532",
+    "canvas_width": 32,
+    "canvas_height": 32,
+    "provider_calls": 1,
+    "input_tokens": 18854,
+    "output_tokens": 3762,
+    "operation_calls": 1,
+    "pixel_edits": 270,
+    "changed_pixels": 270,
+    "final_deterministic_qa_findings": 0,
+    "canvas_restarts": 0,
+    "regeneration_provider_calls": 0,
+    "scheduler_provider_calls": 0,
+    "morphology_research_provider_calls": 0,
+    "retained_morphology_reused": true,
+    "retained_pose_reused": true,
+    "new_raster_authority_added": false
+  },
+  "perceptual_review": {
+    "recognizability": "accepted-generic-simple-creature",
+    "native_1x_readability": "accepted",
+    "silhouette_pose_readability": "accepted",
+    "stylized_anatomy": "accepted",
+    "visual_coherence": "accepted",
+    "owner_notes": [
+      "Reads as a four-legged creature standing on four supports.",
+      "Clearly faces to the right.",
+      "Tail is readable.",
+      "Light/shadow separation is appropriate for the small pixel target.",
+      "A simple ground shadow is readable."
+    ],
+    "species_specific_recognition": "not-required-for-synthetic-fixture",
+    "synthetic_subject_identity": {
+      "family_id": "fixture-family",
+      "species_id": "fixture-species",
+      "form_id": "fixture-form"
+    }
+  },
+  "authority": {
+    "owner_visual_acceptance_is_deterministic_qa": false,
+    "recognizability_is_deterministic_truth": false,
+    "pose_readability_is_deterministic_truth": false,
+    "stylized_anatomy_is_deterministic_truth": false,
+    "visual_coherence_is_deterministic_truth": false,
+    "pixelprogram_canvas_remain_raster_authority": true
+  }
+}
