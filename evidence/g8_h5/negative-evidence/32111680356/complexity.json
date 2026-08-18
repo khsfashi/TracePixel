@@ -1,0 +1,221 @@
+{
+  "accepted_run_id": null,
+  "attempt_count": 2,
+  "authority": {
+    "authoritative_evidence": "raw-usage-metrics",
+    "final_owner_acceptable_evidence_requires_complete_raw_usage": true,
+    "price_conversion": "derived-non-authoritative",
+    "price_fields_used_for_comparison": false
+  },
+  "cache_or_profile_reuse": {
+    "humanoid_profile_reused_for_all_provider_attempts": true,
+    "pose_profile_reused_for_all_provider_attempts": true,
+    "pose_reuse_complete": true,
+    "profile_research_provider_calls": 0,
+    "profile_reuse_complete": true
+  },
+  "candidate_run_id": 32111680356,
+  "changed_pixels": 1450,
+  "included_attempts": [
+    {
+      "owner_verdict": "pending",
+      "run_id": 32111453098,
+      "source_sha": "accb144a52b5acafcf2fbe6be3d2c3acfdeda095",
+      "status": "failed"
+    },
+    {
+      "owner_verdict": "pending",
+      "run_id": 32111680356,
+      "source_sha": "accb144a52b5acafcf2fbe6be3d2c3acfdeda095",
+      "status": "succeeded"
+    }
+  ],
+  "input_tokens": 91917,
+  "iterations": 5,
+  "known_partial_totals_when_incomplete": {
+    "canvas_restarts": 0,
+    "changed_pixels": 1450,
+    "input_tokens": 91917,
+    "iterations": 5,
+    "operation_calls": 5,
+    "output_tokens": 19060,
+    "pixel_edits": 1450,
+    "profile_research_provider_calls": 0,
+    "provider_calls": 5,
+    "regeneration_provider_calls": 0,
+    "repair_provider_calls": 3,
+    "revisions": 5,
+    "wall_time_ns": 517791799200
+  },
+  "measurement_scope": "all-retained-g8-h4-attempts-through-owner-acceptable-candidate",
+  "operation_calls": 5,
+  "output_tokens": 19060,
+  "owner_acceptance_state": "pending",
+  "p10_c4_comparison": {
+    "baseline": "P10-C4 owner-accepted retained simple-creature run 32099831527 / artifact 9311214420",
+    "baseline_facts": {
+      "artifact_id": 9311214420,
+      "canvas": {
+        "height": 32,
+        "width": 32
+      },
+      "canvas_restarts": 0,
+      "changed_pixels": 270,
+      "input_tokens": 18854,
+      "iterations": 1,
+      "operation_calls": 1,
+      "output_tokens": 3762,
+      "pixel_edits": 270,
+      "pose_reused": true,
+      "profile_research_provider_calls": 0,
+      "profile_reused": true,
+      "provider_calls": 1,
+      "regeneration_provider_calls": 0,
+      "repair_provider_calls": 0,
+      "revisions": 1,
+      "run_id": 32099831527,
+      "wall_time_ns": 107656174400
+    },
+    "metrics": {
+      "canvas_restarts": {
+        "absolute_delta": 0,
+        "g8_h4_cumulative": 0,
+        "multiplier": null,
+        "p10_c4": 0,
+        "percent_change": null,
+        "rate_status": "undefined-zero-baseline"
+      },
+      "changed_pixels": {
+        "absolute_delta": 1180,
+        "g8_h4_cumulative": 1450,
+        "multiplier": 5.3704,
+        "p10_c4": 270,
+        "percent_change": 437.04,
+        "rate_status": "defined"
+      },
+      "input_tokens": {
+        "absolute_delta": 73063,
+        "g8_h4_cumulative": 91917,
+        "multiplier": 4.8752,
+        "p10_c4": 18854,
+        "percent_change": 387.52,
+        "rate_status": "defined"
+      },
+      "iterations": {
+        "absolute_delta": 4,
+        "g8_h4_cumulative": 5,
+        "multiplier": 5.0,
+        "p10_c4": 1,
+        "percent_change": 400.0,
+        "rate_status": "defined"
+      },
+      "operation_calls": {
+        "absolute_delta": 4,
+        "g8_h4_cumulative": 5,
+        "multiplier": 5.0,
+        "p10_c4": 1,
+        "percent_change": 400.0,
+        "rate_status": "defined"
+      },
+      "output_tokens": {
+        "absolute_delta": 15298,
+        "g8_h4_cumulative": 19060,
+        "multiplier": 5.0665,
+        "p10_c4": 3762,
+        "percent_change": 406.65,
+        "rate_status": "defined"
+      },
+      "pixel_edits": {
+        "absolute_delta": 1180,
+        "g8_h4_cumulative": 1450,
+        "multiplier": 5.3704,
+        "p10_c4": 270,
+        "percent_change": 437.04,
+        "rate_status": "defined"
+      },
+      "profile_research_provider_calls": {
+        "absolute_delta": 0,
+        "g8_h4_cumulative": 0,
+        "multiplier": null,
+        "p10_c4": 0,
+        "percent_change": null,
+        "rate_status": "undefined-zero-baseline"
+      },
+      "provider_calls": {
+        "absolute_delta": 4,
+        "g8_h4_cumulative": 5,
+        "multiplier": 5.0,
+        "p10_c4": 1,
+        "percent_change": 400.0,
+        "rate_status": "defined"
+      },
+      "regeneration_provider_calls": {
+        "absolute_delta": 0,
+        "g8_h4_cumulative": 0,
+        "multiplier": null,
+        "p10_c4": 0,
+        "percent_change": null,
+        "rate_status": "undefined-zero-baseline"
+      },
+      "repair_provider_calls": {
+        "absolute_delta": 3,
+        "g8_h4_cumulative": 3,
+        "multiplier": null,
+        "p10_c4": 0,
+        "percent_change": null,
+        "rate_status": "undefined-zero-baseline"
+      },
+      "revisions": {
+        "absolute_delta": 4,
+        "g8_h4_cumulative": 5,
+        "multiplier": 5.0,
+        "p10_c4": 1,
+        "percent_change": 400.0,
+        "rate_status": "defined"
+      },
+      "wall_time_ns": {
+        "absolute_delta": 410135624800,
+        "g8_h4_cumulative": 517791799200,
+        "multiplier": 4.8097,
+        "p10_c4": 107656174400,
+        "percent_change": 380.97,
+        "rate_status": "defined"
+      }
+    },
+    "profile_reuse": {
+      "g8_h4_all_provider_attempts_pose_reused": true,
+      "g8_h4_all_provider_attempts_profile_reused": true,
+      "note": "profile reuse is boolean evidence; percentage change is not mathematically meaningful",
+      "p10_c4_pose_reused": true,
+      "p10_c4_profile_reused": true,
+      "percent_change": null,
+      "pose_reuse_complete": true,
+      "profile_reuse_complete": true
+    }
+  },
+  "pixel_edits": 1450,
+  "provider_attempt_count": 2,
+  "provider_calls": 5,
+  "repair_vs_regeneration": {
+    "canvas_restarts": 0,
+    "regeneration_provider_calls": 0,
+    "repair_provider_calls": 3
+  },
+  "revisions": 5,
+  "usage_completeness": {
+    "canvas_restarts": true,
+    "changed_pixels": true,
+    "input_tokens": true,
+    "iterations": true,
+    "operation_calls": true,
+    "output_tokens": true,
+    "pixel_edits": true,
+    "profile_research_provider_calls": true,
+    "provider_calls": true,
+    "regeneration_provider_calls": true,
+    "repair_provider_calls": true,
+    "revisions": true,
+    "wall_time_ns": true
+  },
+  "wall_time_ns": 517791799200
+}

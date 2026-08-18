@@ -1,0 +1,29 @@
+{
+  "animation_advanced": false,
+  "child": "G8-H5",
+  "complexity_sha256": "dd837bff88101dc155960761fd9f5f6c44bb3032ae70bdb082daf6689417e5bb",
+  "deterministic_qa": "green",
+  "native_png_sha256": "35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82",
+  "negative_evidence_retained": true,
+  "note": "The owner supplied an overall REJECT; this record does not invent which individual criterion was the decisive failure.",
+  "owner_rejection_issue_comment_id": 5325602327,
+  "owner_verdict": "reject",
+  "perceptual_criteria": {
+    "anatomy": "not-approved-under-overall-owner-reject",
+    "equipment_attachment": "not-approved-under-overall-owner-reject",
+    "identity": "not-approved-under-overall-owner-reject",
+    "material_readability": "not-approved-under-overall-owner-reject",
+    "pixel_cluster_quality": "not-approved-under-overall-owner-reject",
+    "pose_readability": "not-approved-under-overall-owner-reject",
+    "silhouette": "not-approved-under-overall-owner-reject"
+  },
+  "phase": "G8",
+  "product_quality_promotion": "failed",
+  "source_artifact_id": 9315292791,
+  "source_issue": 119,
+  "source_review_artifact_id": 9315711127,
+  "source_review_repack_run_id": 32113352716,
+  "source_run_id": 32111680356,
+  "technical_execution": "valid",
+  "trace2d_integration_advanced": false
+}

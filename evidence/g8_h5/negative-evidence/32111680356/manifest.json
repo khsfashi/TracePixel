@@ -1,0 +1,35 @@
+{
+  "files": {
+    "attempt-complexity.json": {
+      "bytes": 2948,
+      "sha256": "05b467a6909a472bbbc2b861042abeb9435cead68f29b3c55bd73e1fa171b865"
+    },
+    "complexity.json": {
+      "bytes": 6385,
+      "sha256": "dd837bff88101dc155960761fd9f5f6c44bb3032ae70bdb082daf6689417e5bb"
+    },
+    "final.png": {
+      "bytes": 4196,
+      "sha256": "35af63e33ea7d319a92aacbede1e641a4a1ca6aac7f428277e32bc0fb9e23d82"
+    },
+    "proposal-trace.json": {
+      "bytes": 588,
+      "sha256": "a8abdae23c6f1fcab9a1813b91fb778194164fd4cfa3608958dfc92fce8b84d6"
+    },
+    "qa-history.json": {
+      "bytes": 475,
+      "sha256": "b3a45f0d5b6b4153bc585753a4da76146f5f8166712f296648052b290c3b678a"
+    },
+    "telemetry.json": {
+      "bytes": 412,
+      "sha256": "11779d46cb1277bc7f6429613a08b75ab2949ec09c4ebdb9f859046e1b1d7d4c"
+    },
+    "verdict.json": {
+      "bytes": 1319,
+      "sha256": "baaf92a923f0b4d93bff5044f33bd0c8c12bb464fc80adbe2dd78508c89f5c9a"
+    }
+  },
+  "immutability_intent": "retained-negative-evidence; never replace with later candidate",
+  "source_artifact_id": 9315711127,
+  "source_run_id": 32111680356
+}
