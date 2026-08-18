@@ -1,0 +1,139 @@
+name: Owner P10-C4 retained creature authoring
+
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p10-c4-owner-retained-authoring
+  cancel-in-progress: false
+
+jobs:
+  retained-authoring:
+    if: >-
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/main' &&
+       github.actor == github.repository_owner) ||
+      (github.event_name == 'issue_comment' &&
+       github.actor == github.repository_owner &&
+       github.event.issue.number == 109 &&
+       github.event.comment.body == '/tracepixel p10-c4-author')
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 20
+
+    steps:
+      - name: Prepare exact dispatched checkout without marketplace action
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
+          git -C $env:GITHUB_WORKSPACE init
+          git -C $env:GITHUB_WORKSPACE remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C $env:GITHUB_WORKSPACE fetch --depth=1 origin $env:GITHUB_SHA
+          git -C $env:GITHUB_WORKSPACE checkout --detach FETCH_HEAD
+          $actual = (git -C $env:GITHUB_WORKSPACE rev-parse HEAD).Trim()
+          if ($actual -ne $env:GITHUB_SHA) {
+            throw "Manual checkout drifted from dispatched SHA: expected $env:GITHUB_SHA, got $actual"
+          }
+
+      - name: Resolve local Python 3.12 and install TracePixel
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $selectedExe = $null
+          $selectedPrefix = ""
+
+          $py = Get-Command py -ErrorAction SilentlyContinue
+          if ($py) {
+            & $py.Source -3.12 -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 12) else 1)"
+            if ($LASTEXITCODE -eq 0) {
+              $selectedExe = $py.Source
+              $selectedPrefix = "-3.12"
+            }
+          }
+
+          if (-not $selectedExe) {
+            $python = Get-Command python -ErrorAction SilentlyContinue
+            if ($python) {
+              & $python.Source -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 12) else 1)"
+              if ($LASTEXITCODE -eq 0) {
+                $selectedExe = $python.Source
+              }
+            }
+          }
+
+          if (-not $selectedExe -and $env:RUNNER_TOOL_CACHE) {
+            $cached = Get-ChildItem -LiteralPath $env:RUNNER_TOOL_CACHE -Filter python.exe -File -Recurse -ErrorAction SilentlyContinue |
+              Where-Object { $_.FullName -match '[\\/]Python[\\/]3\.12\.' }
+            foreach ($candidate in $cached) {
+              & $candidate.FullName -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 12) else 1)"
+              if ($LASTEXITCODE -eq 0) {
+                $selectedExe = $candidate.FullName
+                break
+              }
+            }
+          }
+
+          if (-not $selectedExe) {
+            throw "Python 3.12 is required on the trusted owner runner; actions/setup-python is intentionally avoided."
+          }
+
+          "TRACEPIXEL_PYTHON=$selectedExe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TRACEPIXEL_PYTHON_PREFIX=$selectedPrefix" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          $prefix = @()
+          if ($selectedPrefix) { $prefix += $selectedPrefix }
+          & $selectedExe @prefix -m pip install -e .
+          if ($LASTEXITCODE -ne 0) { throw "TracePixel editable install failed." }
+
+      - name: Verify trusted Codex CLI boundary
+        shell: pwsh
+        run: |
+          codex --version
+          $status = codex login status 2>&1 | Out-String
+          $status
+          if ($status -notmatch "Logged in using ChatGPT") {
+            throw "P10-C4 requires Codex CLI authenticated through the existing ChatGPT plan boundary."
+          }
+          if ($status -match "Logged in using an API key") {
+            throw "API-key billed Codex execution is not authorized for this owner gate."
+          }
+
+      - name: Run retained simple-creature authoring
+        shell: pwsh
+        run: |
+          $prefix = @()
+          if ($env:TRACEPIXEL_PYTHON_PREFIX) { $prefix += $env:TRACEPIXEL_PYTHON_PREFIX }
+          & $env:TRACEPIXEL_PYTHON @prefix -m evidence.p10_c4.retained_authoring --output artifacts/p10-c4-retained --source-sha $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw "P10-C4 retained authoring failed." }
+
+      - name: Verify full complexity evidence and owner gate
+        shell: pwsh
+        run: |
+          $summary = Get-Content artifacts/p10-c4-retained/summary.json -Raw | ConvertFrom-Json
+          $complexity = Get-Content artifacts/p10-c4-retained/complexity.json -Raw | ConvertFrom-Json
+          if ($summary.status -ne "succeeded") { throw "P10-C4 retained authoring did not succeed." }
+          if ($summary.review_scope -ne "retained-output") { throw "Expected retained-output review scope." }
+          if ($summary.owner_verdict -ne "pending") { throw "Automation must never self-approve P10-C5." }
+          if ($summary.new_raster_authority_added) { throw "P10-C4 must reuse the existing raster authority." }
+          if ($complexity.provider_calls -lt 1) { throw "P10-C4 must retain at least one real provider call." }
+          if ($null -eq $complexity.input_tokens -or $null -eq $complexity.output_tokens) { throw "Exact provider token totals are required." }
+          if ($complexity.hidden_scheduler_provider_calls -ne 0) { throw "Hidden scheduler provider work is forbidden." }
+          if ($complexity.repair_vs_regeneration.regeneration_provider_calls -ne 0) { throw "C4 must repair the same canvas, not regenerate it." }
+          if (-not $complexity.cache_or_profile_reuse.morphology_profile_reused) { throw "Bound morphology profile reuse evidence is missing." }
+          if ($complexity.cache_or_profile_reuse.profile_research_provider_calls -ne 0) { throw "C4 may not re-spend provider calls on retained morphology research." }
+          if ($null -ne $complexity.failure_category) { throw "Successful C4 evidence must have no failure category." }
+          if (-not (Test-Path artifacts/p10-c4-retained/final.png)) { throw "Retained native PNG is missing." }
+          if (-not (Test-Path artifacts/p10-c4-retained/review-package/index.html)) { throw "English owner review page is missing." }
+          if (-not (Test-Path artifacts/p10-c4-retained/review-package/index.ko.html)) { throw "Korean owner review page is missing." }
+
+      - name: Upload retained simple-creature review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p10-c4-retained-authoring-${{ github.run_id }}
+          path: artifacts/p10-c4-retained
+          if-no-files-found: error
+          retention-days: 7
