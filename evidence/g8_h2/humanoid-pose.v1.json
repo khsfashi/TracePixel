@@ -1,0 +1,82 @@
+{
+  "schema": "tracepixel.humanoid-pose.v1",
+  "pose_id": "g8-h2-grounded-guard",
+  "pose_name": "Grounded three-quarter-right guard",
+  "profile_ref": {
+    "profile_id": "fixture-static-humanoid-v1",
+    "profile_schema": "tracepixel.humanoid-profile.v1",
+    "sha256": "6211afefa340c4c0141aae8a14ac946cbc05acaee4270a60f4862ecf477c15a5"
+  },
+  "orientation_intent": {
+    "facing": "three-quarter-right",
+    "description": "Read as a stable three-quarter-right guard pose without asserting camera projection, skeletal solve, or raster coordinates."
+  },
+  "relations": [
+    {
+      "relation_id": "coarse-head-torso-read",
+      "kind": "landmark-relation",
+      "mode": "hint",
+      "landmark_ids": ["head", "spine", "pelvis"],
+      "value_range": null,
+      "text": "Keep the head, torso, and pelvis grouping readable as one static humanoid body."
+    },
+    {
+      "relation_id": "guard-head-angle",
+      "kind": "articulation",
+      "mode": "required-range",
+      "landmark_ids": ["head", "spine"],
+      "value_range": {
+        "minimum": -15.0,
+        "maximum": 20.0,
+        "unit": "degrees"
+      },
+      "text": "Keep the head articulation inside a bounded guard-pose range; this is a declarative constraint, not an IK solve."
+    },
+    {
+      "relation_id": "grounded-foot-contacts",
+      "kind": "support-contact",
+      "mode": "hint",
+      "landmark_ids": ["foot-left", "foot-right"],
+      "value_range": null,
+      "text": "Both declared support feet should read as coarse ground contacts without introducing a physics solve."
+    },
+    {
+      "relation_id": "pelvis-between-supports",
+      "kind": "balance-contact",
+      "mode": "hint",
+      "landmark_ids": ["pelvis", "foot-left", "foot-right"],
+      "value_range": null,
+      "text": "Keep the pelvis visually supported by the declared foot contacts as coarse balance intent only."
+    },
+    {
+      "relation_id": "right-facing-silhouette",
+      "kind": "silhouette-facing",
+      "mode": "hint",
+      "landmark_ids": ["head", "hand-left", "hand-right", "foot-left", "foot-right"],
+      "value_range": null,
+      "text": "Preserve a readable three-quarter-right silhouette while keeping both hands and support feet distinguishable."
+    }
+  ],
+  "equipment_attachments": [
+    {
+      "attachment_id": "right-hand-spear",
+      "anchor_id": "hand-right-grip",
+      "equipment_id": "fixture-short-spear",
+      "attachment_class": "handheld",
+      "side_intent": "right",
+      "occupancy_intent": "occupied",
+      "overlap_occlusion_intent": "in-front",
+      "text": "Occupy the right-hand grip with one handheld spear whose coarse read stays in front of the hand/torso overlap."
+    },
+    {
+      "attachment_id": "left-hand-clear",
+      "anchor_id": "hand-left-grip",
+      "equipment_id": null,
+      "attachment_class": "handheld",
+      "side_intent": "left",
+      "occupancy_intent": "clear",
+      "overlap_occlusion_intent": "none",
+      "text": "Keep the left-hand grip explicitly clear so the free-hand silhouette remains readable."
+    }
+  ]
+}
