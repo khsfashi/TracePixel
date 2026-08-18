@@ -15,7 +15,7 @@
     "ceiling": 3548,
     "actual": 3590,
     "excess": 42,
-    "excess_percent": 1.184893"
+    "excess_percent": 1.184893
   },
   "provider": {
     "model": "gpt-5.6-sol",
