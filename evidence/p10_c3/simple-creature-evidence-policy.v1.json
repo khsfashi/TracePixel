@@ -1,0 +1,22 @@
+{
+  "schema": "tracepixel.simple-creature-evidence-policy.v1",
+  "deterministic_facts": [
+    "schema-and-version-identity",
+    "digest-binding",
+    "finite-range-validity",
+    "landmark-reference-integrity",
+    "declared-required-relation-satisfaction-when-structured",
+    "support-contact-declarations",
+    "existing-raster-and-qa-facts",
+    "provider-cost-and-provenance-accounting"
+  ],
+  "perceptual_facts": [
+    "species-or-form-recognizability",
+    "silhouette-readability",
+    "stylized-anatomy-believability",
+    "pose-intent-readability",
+    "visual-identity-and-style-coherence"
+  ],
+  "vlm_is_deterministic_correctness": false,
+  "final_aesthetic_acceptance": "human"
+}
