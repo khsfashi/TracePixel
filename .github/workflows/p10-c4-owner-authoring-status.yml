@@ -1,0 +1,98 @@
+name: P10-C4 owner authoring status callback
+
+on:
+  workflow_run:
+    workflows: ["Owner P10-C4 retained creature authoring"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.event.workflow_run.actor.login == github.repository_owner &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main' &&
+      (github.event.workflow_run.event == 'workflow_dispatch' ||
+       github.event.workflow_run.event == 'issue_comment')
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Report retained authoring completion to issue 109
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["REPOSITORY"]
+          run_id = os.environ["RUN_ID"]
+          attempt = os.environ["RUN_ATTEMPT"]
+          conclusion = os.environ["RUN_CONCLUSION"]
+          run_url = os.environ["RUN_URL"]
+          event = os.environ["RUN_EVENT"]
+          head_sha = os.environ["HEAD_SHA"]
+          token = os.environ["GH_TOKEN"]
+
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "TracePixel-P10-C4-owner-authoring-status",
+          }
+
+          artifacts_request = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/artifacts?per_page=100",
+              headers=headers,
+          )
+          with urllib.request.urlopen(artifacts_request, timeout=30) as response:
+              artifacts_payload = json.load(response)
+
+          artifacts = [
+              artifact
+              for artifact in artifacts_payload.get("artifacts", [])
+              if not artifact.get("expired", False)
+          ]
+          if artifacts:
+              artifact_lines = "\n".join(
+                  f"- `{artifact['name']}` (artifact id `{artifact['id']}`)"
+                  for artifact in artifacts
+              )
+          else:
+              artifact_lines = "- no retained artifact was published"
+
+          body = (
+              "### P10-C4 owner authoring callback\n\n"
+              f"Run `{run_id}` attempt `{attempt}` completed with **{conclusion}** "
+              f"from `{event}` on main SHA `{head_sha}`.\n\n"
+              f"Run: {run_url}\n\n"
+              "Retained artifacts:\n"
+              f"{artifact_lines}\n\n"
+              "This callback reports execution/artifact state only. "
+              "`owner_verdict` remains `pending`; it does not approve P10-C5 aesthetics or promotion."
+          )
+          payload = json.dumps({"body": body}).encode("utf-8")
+          comment_request = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/issues/109/comments",
+              data=payload,
+              method="POST",
+              headers={**headers, "Content-Type": "application/json"},
+          )
+          with urllib.request.urlopen(comment_request, timeout=30) as response:
+              if response.status not in (200, 201):
+                  raise SystemExit(f"status callback failed with HTTP {response.status}")
+          PY
