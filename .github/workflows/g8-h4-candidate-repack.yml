@@ -30,20 +30,42 @@ jobs:
         id: meta
         shell: bash
         run: |
-          candidate="$(python -c "import json; print(json.load(open('.github/g8-h4-repack.trigger', encoding='utf-8'))['candidate_run_id'])")"
-          echo "candidate=$candidate" >> "$GITHUB_OUTPUT"
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          with open('.github/g8-h4-repack.trigger', encoding='utf-8') as handle:
+              value = json.load(handle)
+          prior = value['expected_prior_run_ids']
+          if len(prior) != 1:
+              raise SystemExit('current repack workflow requires exactly one retained prior attempt')
+          print(f"candidate={value['candidate_run_id']}")
+          print(f"prior={prior[0]}")
+          PY
 
-      - name: Repack successful candidate with cumulative raw usage
+      - name: Download succeeded candidate artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: g8-h4-retained-authoring-${{ steps.meta.outputs.candidate }}
+          path: artifacts/g8-h4-owner-review
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.meta.outputs.candidate }}
+
+      - name: Download prior retained attempt artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: g8-h4-retained-authoring-${{ steps.meta.outputs.prior }}
+          path: artifacts/g8-h4-repack-prior/${{ steps.meta.outputs.prior }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.meta.outputs.prior }}
+
+      - name: Repack downloaded attempts with cumulative raw usage
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
         run: |
-          python -m evidence.g8_h4.repack_candidate \
-            --repository "$REPOSITORY" \
-            --token "$GH_TOKEN" \
-            --trigger .github/g8-h4-repack.trigger \
-            --output artifacts/g8-h4-owner-review
+          python -m evidence.g8_h4.repack_local \
+            --current artifacts/g8-h4-owner-review \
+            --prior-root artifacts/g8-h4-repack-prior \
+            --trigger .github/g8-h4-repack.trigger
 
       - name: Upload owner H5 review package
         uses: actions/upload-artifact@v4
