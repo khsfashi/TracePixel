@@ -101,4 +101,6 @@ jobs:
       - name: G8-H1 humanoid anatomy/proportion/identity profile checkpoint
         run: python -m evidence.g8_h1.forward_checkpoint
       - name: G8-H2 humanoid pose and equipment constraint checkpoint
-        run: python -m evidence.g8_h2.checkpoint
+        run: python -m evidence.g8_h2.forward_checkpoint
+      - name: G8-H3 static humanoid request binding checkpoint
+        run: python -m evidence.g8_h3.checkpoint
