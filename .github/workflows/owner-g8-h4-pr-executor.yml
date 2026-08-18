@@ -7,18 +7,83 @@ on:
       - .github/g8-h4-pr-author.trigger
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Validate trusted owner trigger PR
+        id: check
+        shell: bash
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          OWNER: ${{ github.repository_owner }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          should_run=false
+          if [[ "$PR_AUTHOR" == "$OWNER" && "$HEAD_REPO" == "$REPOSITORY" && "$BASE_REF" == "main" && "$HEAD_REF" == agent/g8-h4-owner-run-* ]]; then
+            should_run=true
+          fi
+          echo "should_run=$should_run" >> "$GITHUB_OUTPUT"
+
   retained-authoring:
+    needs: gate
+    if: needs.gate.outputs.should_run == 'true'
     runs-on:
       - self-hosted
       - Windows
       - X64
-    timeout-minutes: 5
+    timeout-minutes: 25
     steps:
-      - name: Confirm trusted self-hosted H4 runner
+      - name: Prepare exact owner trigger head checkout
+        shell: pwsh
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
+          git -C $env:GITHUB_WORKSPACE init
+          git -C $env:GITHUB_WORKSPACE remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C $env:GITHUB_WORKSPACE fetch --depth=1 origin $env:PR_HEAD_SHA
+          git -C $env:GITHUB_WORKSPACE checkout --detach FETCH_HEAD
+          $actual = (git -C $env:GITHUB_WORKSPACE rev-parse HEAD).Trim()
+          if ($actual -ne $env:PR_HEAD_SHA) {
+            throw "Checkout drift: expected $env:PR_HEAD_SHA, got $actual"
+          }
+
+      - name: Run retained H4 owner authoring
+        id: authoring
+        continue-on-error: true
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          & .github/scripts/g8_h4_owner_author.ps1 -SourceSha $env:PR_HEAD_SHA
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scripted G8-H4 owner authoring failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Upload retained H4 review artifact
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-h4-retained-authoring-${{ github.run_id }}
+          path: artifacts/g8-h4-retained
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Fail job if retained authoring failed
+        if: steps.authoring.outcome != 'success'
         shell: pwsh
         run: |
-          Write-Host "G8-H4 self-hosted PR executor reached runner."
-          Write-Host "run=$env:GITHUB_RUN_ID sha=$env:GITHUB_SHA"
+          throw "G8-H4 retained authoring failed; inspect the retained artifact before the next minimal repair."
