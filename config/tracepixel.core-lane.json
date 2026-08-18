@@ -1,9 +1,9 @@
 {
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
-  "current": "P10",
-  "current_child": "P10-C5",
-  "active_issue": 109,
+  "current": "G8",
+  "current_child": "G8-H0",
+  "active_issue": 119,
   "sequence": [
     "P0",
     "P1",
@@ -17,6 +17,7 @@
     "B1",
     "P8",
     "P10",
+    "G8",
     "P9"
   ],
   "items": {
@@ -32,6 +33,7 @@
     "B1": "Held-out generalization benchmark",
     "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles, gated by batch cost-scaling evidence",
     "P10": "Simple-creature morphology and pose promotion",
+    "G8": "Static humanoid anatomy, identity, pose and equipment-anchor promotion",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
@@ -46,6 +48,7 @@
     "B1": ["B1-F0", "B1-S0", "B1-P0"],
     "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-C0", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
     "P10": ["P10-C0", "P10-C1", "P10-C2", "P10-C3", "P10-C4", "P10-C5"],
+    "G8": ["G8-H0", "G8-H1", "G8-H2", "G8-H3", "G8-H4", "G8-H5"],
     "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
@@ -94,7 +97,11 @@
     "P10 opens only after the frozen P8-B6 postmortem and the recorded G7 owner approval. P10-C0 is contract-only: it must freeze morphology/species-profile, pose/constraint, perceptual-evidence, and complexity-accounting boundaries before any creature raster generation or provider execution is permitted.",
     "P10 creature work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Morphology and pose data are digest-pinned authoring constraints/evidence, never a second raster authority or physical-simulation engine.",
     "P10-C4 real creature provider execution is owner-triggered on the trusted self-hosted runner only; portable PR CI remains provider-free, and retained output must preserve provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence without adding hidden scheduler work or a second raster authority.",
-    "Humanoid and animation implementation remain blocked behind later sequential G8/G9 promotion evidence; P10 must not pull them forward.",
+    "P10-C5 freezes the owner-accepted simple-creature evidence and authorizes only the dedicated G8 humanoid contract lane; it does not itself authorize humanoid provider/raster execution.",
+    "G8 opens only after frozen P10-C5 owner-accepted evidence and the recorded G8 owner approval. G8-H0 is contract-only: it must freeze anatomy/proportion/identity, static pose/equipment-anchor, perceptual-evidence, complexity-accounting, and authority boundaries before any humanoid provider execution or raster generation is permitted.",
+    "G8 humanoid work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Anatomy/identity profiles, pose constraints, and equipment anchors are digest-pinned authoring constraints/evidence, never a second raster authority, skeletal simulation authority, inverse-kinematics engine, or equipment-specific drawing engine.",
+    "G8-H4 is the earliest child that may perform retained real humanoid provider/raster work, and only after H1-H3 contracts are green; portable PR CI must remain provider-free and full provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence must be retained.",
+    "G9 animation/multi-frame implementation remains blocked until G8 static-humanoid evidence is frozen; G8 must not pull animation forward.",
     "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
   ]
 }
