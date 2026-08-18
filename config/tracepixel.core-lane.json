@@ -1,9 +1,9 @@
 {
   "schema": "tracepixel.core-lane.v2",
   "updated": "2026-08-18",
-  "current": "G8",
-  "current_child": "G8-H4",
-  "active_issue": 119,
+  "current": "P11",
+  "current_child": "P11-X0",
+  "active_issue": 151,
   "sequence": [
     "P0",
     "P1",
@@ -18,6 +18,7 @@
     "P8",
     "P10",
     "G8",
+    "P11",
     "P9"
   ],
   "items": {
@@ -33,7 +34,8 @@
     "B1": "Held-out generalization benchmark",
     "P8": "Production breadth for batch asset sets, research-backed forms, icons, props and tiles, gated by batch cost-scaling evidence",
     "P10": "Simple-creature morphology and pose promotion",
-    "G8": "Static humanoid anatomy, identity, pose and equipment-anchor promotion",
+    "G8": "Completed humanoid direct-authoring research lane; owner REJECT + PIVOT disposition",
+    "P11": "Generator-neutral quality controller pivot and owner review loop",
     "P9": "Trace2D adapter experiment"
   },
   "child_sequences": {
@@ -49,6 +51,7 @@
     "P8": ["P8-X0", "P8-R0", "P8-B0", "P8-B1", "P8-C0", "P8-B2", "P8-B3", "P8-B4", "P8-B5", "P8-B6"],
     "P10": ["P10-C0", "P10-C1", "P10-C2", "P10-C3", "P10-C4", "P10-C5"],
     "G8": ["G8-H0", "G8-H1", "G8-H2", "G8-H3", "G8-H4", "G8-H5"],
+    "P11": ["P11-X0", "P11-X1", "P11-X2", "P11-X3", "P11-B0", "P11-B1", "P11-P0"],
     "P9": ["P9-T0", "P9-T1", "P9-T2", "P9-T3"]
   },
   "engineering_checkpoints": {
@@ -56,54 +59,57 @@
     "P2-IR4": "IR compactness/replay/invalidity microbenchmark",
     "P4-Q5": "Seeded deterministic QA coverage suite",
     "P5-A5": "Non-scored Agent complexity pilot before B0",
-    "P8-C0": "Mandatory batch cost-scaling checkpoint before P8 breadth expansion"
+    "P8-C0": "Mandatory batch cost-scaling checkpoint before P8 breadth expansion",
+    "P11-B0": "Frozen 128x128 static north-star benchmark contract before any scored/provider execution",
+    "P11-P0": "Generator-neutral quality-controller value/postmortem checkpoint before animation or integration promotion"
   },
   "preview_milestones": {
     "P1-R3": "Native PNG and nearest-neighbor enlarged preview",
     "P3-S7": "Stage-by-stage preview evidence",
     "P4-Q5": "Preview plus deterministic QA findings",
     "P5-A5": "First opt-in AI-authored raster preview",
-    "P6-V5": "Mobile static review flow"
+    "P6-V5": "Mobile static review flow",
+    "P11-X1": "Reusable owner-run / awaiting-owner-review / natural-language feedback protocol",
+    "P11-B1": "Owner-triggered 128x128 static benchmark review package"
   },
   "owner_gates": [
     "G1 authoritative pixel representation",
     "G2 image/PNG dependency",
     "G3 first real Agent provider/model",
     "G4 VLM/perceptual judge",
-    "G5 Aseprite/MCP scored baseline",
-    "G6 home Windows self-hosted preview runner",
-    "G7 simple-creature promotion when materially new constraints appear",
-    "G8 humanoid scope promotion",
+    "G5 external/Aseprite/MCP scored baseline",
+    "G6 home Windows self-hosted preview/provider runner",
+    "G7 simple-creature promotion",
+    "G8 humanoid direct-authoring promotion — resolved PIVOT 2026-08-18",
     "G9 animation/multi-frame promotion",
-    "G10 Trace2D adapter experiment"
+    "G10 Trace2D adapter experiment",
+    "G11 post-P11 production-scope promotion"
   ],
   "rules": [
     "Continue an active implementation PR before opening later core-lane or child-lane scope.",
     "Do not advance the current child until its acceptance criteria and required checks are green.",
     "Stop at unresolved owner gates documented in docs/DECISION_GATES.md; do not silently choose scope/product decisions.",
-    "Run preregistered engineering checkpoints before the scored B0 cohort where specified.",
-    "Do not mutate or rerun a frozen scored benchmark cohort to improve its score.",
+    "Run preregistered engineering checkpoints before scored cohorts where specified.",
+    "Do not mutate, relabel, overwrite or rerun a frozen scored/negative evidence cohort merely to improve the recorded result.",
     "Public pull-request CI must not execute on the owner home self-hosted runner.",
-    "P8-X0 AssetSet/batch authoring must reuse the proven single-asset pipeline, isolate member failures, and keep execution concurrency explicit and bounded.",
-    "P8-R0 unfamiliar-form research must produce retained, versioned, digest-pinned reusable profile evidence before generation can rely on it; research/profile context never becomes raster authority.",
-    "P8-B0 batch requests must digest-bind every declared member to a validated single-asset request and derive an immutable declared-order bounded-concurrency schedule before execution.",
-    "P8-B1 must retain per-member and aggregate provider-call, input-token, output-token, retry/repair, cache, and wall-time telemetry sufficient for the mandatory P8-C0 cost-scaling checkpoint; P8-B1 must hand off to P8-C0, never directly to P8-B2.",
-    "P8-C0 must prove batch orchestration adds no hidden provider/token multiplier: all provider calls and tokens are attributable to member executions, successful siblings are not restarted by another member failure, concurrency stays bounded, aggregate budgets are enforced, and any batch-specific wall-time overhead is retained and reported before P8-B2 or later breadth work may begin.",
-    "P8-C0 is not allowed to claim that B1's roughly 4.6-5.1x single-asset staged cost is solved merely because batching is bounded; it must separately show that AssetSet execution does not add another uncontrolled multiplier on top of that known per-member cost.",
-    "P8-B2 must require one exact digest-pinned style profile across every AssetSet member; palette profiles, when used, must bind the whole set consistently. Profile identity is deterministic evidence, while visual style/palette similarity remains perceptual evidence unless a separately frozen measurable rule exists.",
-    "P8-B3 must prove representative item-icon and scene-prop members can coexist in one AssetSet through the existing validated request, schedule, consistency, and isolated-execution seams without a second authoring path, new provider work, or new raster authority; member-specific canvas/composition remains independent while exact shared-style binding is preserved.",
-    "P8-B4 must prove a representative terrain-tile family can reuse the same bounded single-asset AssetSet path with one exact tile grid plus shared style/palette bindings, while retained semantic edge intent fails closed on mismatched internal neighbors; semantic adjacency is deterministic evidence but visual pixel seamlessness remains perceptual evidence for P8-B5.",
-    "G7/G8/G9 are owner-approved long-term destinations as of 2026-08-17, but no creature, humanoid, or animation implementation belongs in P8; promotions occur only after P8-B6 through dedicated sequential post-P8 gates with creature evidence before humanoid and humanoid evidence before animation.",
-    "P10 opens only after the frozen P8-B6 postmortem and the recorded G7 owner approval. P10-C0 is contract-only: it must freeze morphology/species-profile, pose/constraint, perceptual-evidence, and complexity-accounting boundaries before any creature raster generation or provider execution is permitted.",
-    "P10 creature work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Morphology and pose data are digest-pinned authoring constraints/evidence, never a second raster authority or physical-simulation engine.",
-    "P10-C4 real creature provider execution is owner-triggered on the trusted self-hosted runner only; portable PR CI remains provider-free, and retained output must preserve provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence without adding hidden scheduler work or a second raster authority.",
-    "P10-C5 freezes the owner-accepted simple-creature evidence and authorizes only the dedicated G8 humanoid contract lane; it does not itself authorize humanoid provider/raster execution.",
-    "G8 opens only after frozen P10-C5 owner-accepted evidence and the recorded G8 owner approval. G8-H0 is contract-only: it must freeze anatomy/proportion/identity, static pose/equipment-anchor, perceptual-evidence, complexity-accounting, and authority boundaries before any humanoid provider execution or raster generation is permitted.",
-    "G8 humanoid work must reuse the existing single-asset PixelProgram/Canvas authoring authority. Anatomy/identity profiles, pose constraints, and equipment anchors are digest-pinned authoring constraints/evidence, never a second raster authority, skeletal simulation authority, inverse-kinematics engine, or equipment-specific drawing engine.",
-    "G8-H4 is the earliest child that may perform retained real humanoid provider/raster work, and only after H1-H3 contracts are green; portable PR CI must remain provider-free and full provider/token/iteration/edit/QA/repair/profile-reuse/failure evidence must be retained.",
-    "G8-H4 must treat H0-H3 as the sufficiency test surface: do not add a schema, authority, solver, scheduler, or abstraction unless retained H4 failure evidence demonstrates a concrete blocker; preserve that failure evidence first and make only the smallest fix necessary.",
-    "G8-H4 deterministic QA success is not visual-quality success; face, anatomy, pose, silhouette, equipment readability, and aesthetic acceptance remain H5 human perceptual evidence.",
-    "G9 animation/multi-frame implementation remains blocked until G8 static-humanoid evidence is frozen; G8 must not pull animation forward.",
-    "Trace2D integration remains deferred until independent benchmark evidence and explicit owner approval justify it."
+    "Provider/model calls must be owner-triggered and bounded by a frozen experiment contract; portable CI remains provider-free.",
+    "G8 issue #119 is closed with owner REJECT + PIVOT. Do not reopen humanoid direct-authoring retries or H0-H3 schema expansion as ordinary continuation.",
+    "P11 is generator-neutral: RAW, external and TracePixel-direct candidates must converge on the same downstream Canvas/QA/review authority; generator identity is provenance, not canonical raster truth.",
+    "TracePixel-direct remains an optional backend/control and precision local-repair path, not the privileged production generator.",
+    "P11-X0 is contract-only and must perform zero new provider generation calls.",
+    "P11-X1 must define an owner-operated state machine with frozen experiment -> owner-triggered run -> awaiting-owner-review -> accepted|repair-requested|rejected-stop, and must reuse existing P7 human-feedback authority where it fits.",
+    "When state is awaiting-owner-review, autonomous continuation must surface exact artifacts, deterministic QA, cost evidence and frozen perceptual criteria and must stop before another provider call.",
+    "Owner feedback may be natural language; agents must bind it to the exact reviewed artifact and interpret unspecified criteria conservatively rather than inventing success/failure or region/stage hints.",
+    "Deterministic QA green never implies aesthetic/product PASS. Anatomy, identity, material readability, motion quality, pixel-cluster craft and overall taste remain perceptual/human unless a narrower objective fact is separately frozen.",
+    "Do not implement an autonomous aesthetic-score-until-threshold regeneration loop. Cheap exact deterministic normalization may repeat provider-free; provider repair/regeneration is allowed only within the preregistered bounded budget.",
+    "P11-X2 should prioritize cheap objective QA/normalization before expensive perceptual review and must add only workload-justified exact checks.",
+    "P11-X3 should prefer bounded local repair tied to exact owner feedback and preserve unaffected pixels where required; full regeneration is a separate explicit budgeted action.",
+    "P11-B0 must freeze the 128x128 static task, candidate backends, matched information, provider/model settings, budgets, deterministic checks, human criteria and retention before P11-B1 runs.",
+    "P11-B1 must keep human-visible quality and provider/Agent cost as separate result layers and preserve every unsuccessful attempt.",
+    "G9 direct animation, unrestricted 128x128 expansion, additional humanoid schema/skeleton/IK/physics, a new direct-generation architecture and Trace2D integration remain blocked until P11-P0 plus the relevant explicit owner gate.",
+    "P11-P0 must ask the owner whether evidence supports static production expansion, a 32x32 animation/sprite-sheet benchmark, keeping direct authoring only as repair/control, retiring more direct generation, G10 integration evaluation, or project contraction; no option is automatic.",
+    "Existing P1 Canvas, P2 PixelProgram/replay, P4 QA, P7 feedback/repair/human-review and P6/P8 review-package seams must be reused before creating a competing authority.",
+    "External projects such as PerfectPixel and sprite-gen are references/candidate backends, not code to clone, vendor or integrate without an active-lane need and current license/version review.",
+    "Trace2D integration remains deferred until independent P11 evidence and explicit G10 owner approval justify it."
   ]
 }
